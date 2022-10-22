@@ -1,10 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
+import MainScreen from './screens/MainScreen';
+
+// App.js jest jak main - tutaj ma być mało kodu
+// głównie nawigacja - react-native-navigation
+
+// w ./screens - całe strony - profil / logowanie / strona główna
+// w ./components/[nazwa strony] - komponenty które budują daną strone np.: opis / karta/ nagłówek itd
+
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <MainScreen />
       <StatusBar style="auto" />
     </View>
   );
