@@ -2,11 +2,18 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
+import MainScreen from './screens/MainScreen';
+
+// App.js jest jak main - tutaj ma być mało kodu
+// głównie nawigacja - react-native-navigation
+
+// w ./screens - całe strony - profil / logowanie / strona główna
+// w ./components/[nazwa strony] - komponenty które budują daną strone np.: opis / karta/ nagłówek itd
+
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Welcome to Homie!</Text>
-      <Image source={require('./assets/test_image_to_delete.png')} style={{ height: 200, width: 200 }}/>
+      <MainScreen />
       <StatusBar style="auto" />
     </View>
   );
