@@ -1,14 +1,24 @@
 import React from 'react'; 
-import { StyleSheet, Text, View } from 'react-native';
-import { TextInput } from 'react-native-web';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 
 const MainScreen = () => {
+    const [login, onChangeLogin] = React.useState(null);
+    const [password, onChangePassword] = React.useState(null);
     return(
         <View style={styles.container}>
             <Text>To jest MainScreen! Tu będą wszytskie ogłoszenia! 1 strona po zalogowaniu</Text>
-            <TextInput value=' ' placeholder = "username" style = {styles.textboxes} ></TextInput>
-             <TextInput value=' ' placeholder = "password" style = {styles.textboxes} ></TextInput>
-
+            <TextInput
+        style={styles.textboxes}
+        onChangeText={onChangeLogin}
+        value={login}
+        placeholder="insert your login"
+      />
+            <TextInput
+        style={styles.textboxes}
+        onChangeText={onChangePassword}
+        value={password}
+        placeholder="insert your password"
+      />
         </View>
     )
 }
@@ -24,10 +34,10 @@ const styles = StyleSheet.create({
     },
     textboxes: {
         width: '90%',
-        fontSize: '18',
-        padding: '12',
+        fontSize: '18pt',
+        padding: '5%',
         borderColor: 'grey',
-        borderWidth: "0.2",
-        borderRadius: '10',
+        borderWidth: "1pt",
+        borderRadius: '10pt',
     }
   });
