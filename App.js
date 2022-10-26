@@ -3,9 +3,10 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
 import MainScreen from './screens/MainScreen';
+import SignInScreen from './screens/SignInScreen';
 
 // App.js jest jak main - tutaj ma być mało kodu
-// głównie nawigacja - react-native-navigation
+// głównie nawigacja - react-navigation
 
 // w ./screens - całe strony - profil / logowanie / strona główna
 // w ./components/[nazwa strony] - komponenty które budują daną strone np.: opis / karta/ nagłówek itd
@@ -13,7 +14,7 @@ import MainScreen from './screens/MainScreen';
 export default function App() {
   return (
     <View style={styles.container}>
-      <MainScreen />
+      <SignInScreen />
       <StatusBar style="auto" />
     </View>
   );
