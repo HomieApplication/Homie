@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { StyleSheet, Text, View, TextInput, Image, Dimensions, ImageBackground, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 
 import SignInBtn from '../components/signIn/SignInBtn';
 
@@ -29,15 +29,18 @@ const SignInScreen = () => {
     return(
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                {/* <Image source={require('../assets/icon.png')} style={styles.img}></Image> */}
-                <Text style={styles.h1}>Homie</Text>
+                <Image source={require('../assets/HomieLogo.png')} style={styles.img}></Image>
+                {/* <Text style={styles.h1}>Homie</Text> */}
             </View>
             <View style={styles.signInCard}>
                 <Text style={styles.h2}>Sign In</Text>
-                <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="insert your login"/>
-                <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="insert your password"/>
+                <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login"/>
+                <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
                 <SignInBtn title="Confirm" onPress={sendData}></SignInBtn>
             </View>
+            <TouchableOpacity>
+                <Text style={styles.register} onPress={sendData} >Register here</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -49,7 +52,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width:'100%',
-        backgroundColor: '#dceec8ff',
+        backgroundColor: '#679436ff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -59,9 +62,9 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        height: '30%',
+        height: '40%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     h1: {
         fontSize: 70,
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     img: {
-        height: '70%',
+        height: '90%',
         aspectRatio: 1,
     },
     signInCard:{
@@ -98,6 +101,11 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderWidth: 1,
         borderRadius: 10,
+    },
+    register:{
+        position:'relative',
+        color: 'white',
+        top: 10
     },
     h2: {
         fontSize: 30,
