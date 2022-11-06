@@ -2,6 +2,7 @@
   "name": "homieproject",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "proxy": "http://192.168.1.104:5000",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
