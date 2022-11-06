@@ -12,5 +12,7 @@ web-build/
 
 # macOS
 .DS_Store
-components/fireBase/config.jsx
+client/components/fireBase/config.jsx
+server/fireBase/config.js
 .vscode/launch.json
+client/components/fireBase/base.js
