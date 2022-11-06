@@ -15,4 +15,3 @@ web-build/
 client/components/fireBase/config.jsx
 server/fireBase/config.js
 .vscode/launch.json
-client/components/fireBase/base.js
