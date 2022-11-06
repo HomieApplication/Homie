@@ -14,4 +14,3 @@ web-build/
 .DS_Store
 components/fireBase/config.jsx
 .vscode/launch.json
-components/fireBase/base.js
