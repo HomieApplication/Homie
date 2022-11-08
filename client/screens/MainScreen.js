@@ -1,8 +1,7 @@
 import React from 'react'; 
 import { StyleSheet, Text, View } from 'react-native';
 
-const MainScreen = () => {
-
+const MainScreen = ({ navigation }) => {
     return(
         <View style={styles.container}>
             <Text>To jest MainScreen! Tu będą wszytskie ogłoszenia! 1 strona po zalogowaniu</Text>

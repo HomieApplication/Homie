@@ -3,10 +3,10 @@ import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableO
 
 import SignInBtn from '../components/signIn/SignInBtn';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
 
-    const [login, onChangeLogin] = React.useState(null);
-    const [password, onChangePassword] = React.useState(null);
+    const [login, onChangeLogin] = React.useState("");
+    const [password, onChangePassword] = React.useState("");
 
     const sendData = () =>{
         Alert.alert(
@@ -36,7 +36,10 @@ const SignInScreen = () => {
                 <Text style={styles.h2}>Sign In</Text>
                 <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login"/>
                 <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
-                <SignInBtn title="Confirm" onPress={sendData}></SignInBtn>
+                <SignInBtn title="Confirm" onPress={() => {
+                        navigation.push('MainScreen')
+                    }}>
+                </SignInBtn>
             </View>
             <TouchableOpacity>
                 <Text style={styles.register} onPress={sendData} >Register here</Text>
