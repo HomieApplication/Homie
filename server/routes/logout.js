@@ -1,4 +1,7 @@
+import { doc, getDoc } from "firebase/firestore";
 import express from "express";
+import { db } from "../fireBase/config.js";
+
 const router = express.Router();
 
 router.get("/", (req, res) => {

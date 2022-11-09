@@ -1,4 +1,7 @@
+import { doc, setDoc } from "firebase/firestore";
 import express from "express";
+import { db } from "../fireBase/config.js";
+
 const router = express.Router();
 
 // To też może nie potrzebne. To samo, co POST api/users
