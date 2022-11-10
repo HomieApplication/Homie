@@ -1,20 +1,20 @@
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import express from "express";
-import { db } from "../fireBase/config.js";
+import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
     // zwraca kolumnę offer_id z tabeli offers, ew. wszystkie kolumny ale tylko dla kilku ofert
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.get("/:id", (req, res) => {
     // zwraca pojedynczy rekord z tabeli offers, jeśli brak rekordu 404
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.post("/:id", (req, res) => {
@@ -23,7 +23,7 @@ router.post("/:id", (req, res) => {
     // itd...
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.put("/:id", (req, res) => {
@@ -32,14 +32,14 @@ router.put("/:id", (req, res) => {
     // itd...
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.delete("/:id", (req, res) => {
     // usuwa pojedynczy rekord z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 export default router;

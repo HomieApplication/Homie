@@ -1,13 +1,13 @@
 import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import express from "express";
-import { db } from "../fireBase/config.js";
+import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
     // zwraca kolumnę user_id z tabeli users, ew. wszystkie kolumny ale tylko dla kilku użytkowników
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.get("/:id", (req, res) => {

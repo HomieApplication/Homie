@@ -1,6 +1,6 @@
 import { doc, setDoc } from "firebase/firestore";
 import express from "express";
-import { db } from "../fireBase/config.js";
+import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post("/", (req, res) => {
     const password = req.body.password;
     // Tworzy nowego użytkownika
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 export default router;
