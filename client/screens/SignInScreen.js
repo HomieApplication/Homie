@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 
 import SignInBtn from '../components/signIn/SignInBtn';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -27,7 +28,7 @@ const SignInScreen = ({ navigation }) => {
     } 
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <Image source={require('../assets/HomieLogo.png')} style={styles.img}></Image>
                 {/* <Text style={styles.h1}>Homie</Text> */}
@@ -37,14 +38,14 @@ const SignInScreen = ({ navigation }) => {
                 <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login"/>
                 <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
                 <SignInBtn title="Confirm" onPress={() => {
-                        navigation.push('MainScreen')
+                        navigation.push('Main')
                     }}>
                 </SignInBtn>
             </View>
             <TouchableOpacity>
                 <Text style={styles.register} onPress={sendData} >Register here</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     )
 }
 
