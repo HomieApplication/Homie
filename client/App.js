@@ -18,57 +18,73 @@ import AddOfferScreen from './screens/AddOfferScreen';
 
 // w ./screens - całe strony - profil / logowanie / strona główna
 // w ./components/[nazwa strony] - komponenty które budują daną strone np.: opis / karta/ nagłówek itd
+
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
+
+const isLoggedIn = true;  // tu jest takie coś co trzeba będzie zroboić
+// bt ustawiało na true jesli udało się zalogować
+//jakoś gdzies indziej to trezba ogarnąć ale idk how 
+
+function Main() {
+  return(
+    <Tab.Navigator 
+    initialRouteName='MainScreen'
+    screenOptions={{
+      tabBarActiveTintColor: '#679436ff',
+      headerShown: false
+    }}>
+      <Tab.Screen 
+      name='Home' 
+      component={MainScreen}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home" color={color} size={35} />
+        ),
+        tabBarShowLabel: false 
+        }}/>
+      <Tab.Screen 
+      name='AddOffer' 
+      component={AddOfferScreen}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="plus-box" color={color} size={50}/>
+        ),
+        tabBarShowLabel: false 
+        }}/>
+      <Tab.Screen 
+      name='Profile' 
+      component={UserProfile}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="account" color={color} size={35} />
+        ),
+        tabBarShowLabel: false 
+        }}/>
+    </Tab.Navigator>
+  )
+}
 
 export default function App() {
   return (
     <SafeAreaProvider>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SignIn" component={SignInScreen}/>
-        <Stack.Screen name="AddOffer" component={AddOfferScreen}/>
-        <Stack.Screen name="Main">
-          {() => (
-            <Tab.Navigator 
-            initialRouteName='MainScreen'
-            screenOptions={{
-              tabBarActiveTintColor: '#679436ff',
-              headerShown: false
-            }}
-            >
-              <Tab.Screen 
-              name='Home' 
-              component={MainScreen}
-              options={{
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="home" color={color} size={35} />
-                ),
-                tabBarShowLabel: false 
-                
-                }}/>
-              <Tab.Screen 
-              name='AddOffer' 
-              component={AddOfferScreen}
-              options={{
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="plus-box" color={color} size={50}/>
-                ),
-                tabBarShowLabel: false 
-                }}/>
-              <Tab.Screen 
-              name='Profile' 
-              component={UserProfile}
-              options={{
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="account" color={color} size={35} />
-                ),
-                tabBarShowLabel: false 
-                }}/>
-            </Tab.Navigator>
-          )}
-        </Stack.Screen>
+
+        { !isLoggedIn ? (
+          <Stack.Group>
+            <Stack.Screen name="SignIn" component={SignInScreen}/>
+            {/* rejestracja idk */}
+          </Stack.Group>
+        ) : (
+          <Stack.Group>
+            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="AddOffer" component={AddOfferScreen}/>
+            <Stack.Screen name="Profile" component={UserProfile}/>
+        </Stack.Group>
+        )}
       </Stack.Navigator>
+
     </NavigationContainer>
     </SafeAreaProvider>
   );
