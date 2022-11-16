@@ -1,6 +1,8 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
-import indexRouter from "./routes/index.js";
+import loginRouter from "./routes/login.js";
+import offersRouter from "./routes/offers.js";
+import usersRouter from "./routes/users.js";
 
 const app = express();
 
@@ -13,7 +15,9 @@ app.use(
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
 
-app.use("/api", indexRouter);
+app.use("/api/login", loginRouter);
+app.use("/api/offers", offersRouter);
+app.use("/api/users", usersRouter);
 
 const PORT = process.env.PORT || 5000;
 
