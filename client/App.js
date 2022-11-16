@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import MainScreen from './screens/MainScreen';
 import SignInScreen from './screens/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import UserProfile from './screens/UserProfile';
 import AddOfferScreen from './screens/AddOfferScreen';
 
@@ -22,7 +23,7 @@ import AddOfferScreen from './screens/AddOfferScreen';
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
-const isLoggedIn = true;  // tu jest takie coś co trzeba będzie zroboić
+const isLoggedIn = false;  // tu jest takie coś co trzeba będzie zroboić
 // bt ustawiało na true jesli udało się zalogować
 //jakoś gdzies indziej to trezba ogarnąć ale idk how 
 
@@ -74,7 +75,7 @@ export default function App() {
         { !isLoggedIn ? (
           <Stack.Group>
             <Stack.Screen name="SignIn" component={SignInScreen}/>
-            {/* rejestracja idk */}
+            <Stack.Screen name="SignUp" component={SignUpScreen}/>
           </Stack.Group>
         ) : (
           <Stack.Group>
