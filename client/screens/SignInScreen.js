@@ -2,46 +2,38 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 
 import SignInBtn from '../components/signIn/SignInBtn';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
 
-    const [login, onChangeLogin] = React.useState(null);
-    const [password, onChangePassword] = React.useState(null);
+    const [login, onChangeLogin] = React.useState("");
+    const [password, onChangePassword] = React.useState("");
 
-    const sendData = () =>{
-        Alert.alert(
-            "Udało się wysłać dane",
-            "xd nie",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                },
-                { 
-                    text: "OK", 
-                    onPress: () => console.log("OK Pressed") 
-                }
-            ]
-        )
-    } 
 
     return(
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
-                <Image source={require('../assets/HomieLogo.png')} style={styles.img}></Image>
-                {/* <Text style={styles.h1}>Homie</Text> */}
+                <Image source={require('../assets/Logo.png')} style={styles.img}></Image>
+
             </View>
             <View style={styles.signInCard}>
                 <Text style={styles.h2}>Sign In</Text>
                 <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login"/>
                 <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
-                <SignInBtn title="Confirm" onPress={sendData}></SignInBtn>
+                <SignInBtn style={styles.button} title="Confirm" onPress={() => {
+                        navigation.push('Main')
+                    }}>
+                </SignInBtn>
             </View>
-            <TouchableOpacity>
-                <Text style={styles.register} onPress={sendData} >Register here</Text>
-            </TouchableOpacity>
-        </View>
+            <View style={styles.BottomContainer}>
+                <TouchableOpacity>
+                    <Text style={styles.register} onPress={() => {navigation.push('SignUp')}} >Register here</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={styles.register}>Forgot password</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     )
 }
 
@@ -52,7 +44,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width:'100%',
-        backgroundColor: '#679436ff',
+        backgroundColor: '#114B5F',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -93,14 +85,42 @@ const styles = StyleSheet.create({
 
         elevation: 3,
     },
+    button: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        marginVertical: 10,
+        borderRadius: 4,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+    
+        elevation: 3,
+        backgroundColor: '#1a936f',
+      },
     textboxes: {
         width: '90%',
         fontSize: 15,
         padding: '5%',
         margin: 10,
         borderColor: 'grey',
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderRadius: 10,
+        backgroundColor: '#fff',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
     },
     register:{
         position:'relative',
@@ -110,6 +130,11 @@ const styles = StyleSheet.create({
     h2: {
         fontSize: 30,
         marginVertical: 5,
+        color: '#1A936F',
+    },
+    BottomContainer: {
+        width: '90%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     }
-
 });
