@@ -1,6 +1,9 @@
 import React from 'react'; 
 import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
 import SignInBtn from '../components/signIn/SignInBtn';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
