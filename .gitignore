@@ -10,7 +10,10 @@ npm-debug.*
 *.orig.*
 web-build/
 config.js*
+base.js*
 
 # macOS
 .DS_Store
 .vscode/launch.json
+client/components/fireBase/base.js
+client/components/fireBase/base.js
