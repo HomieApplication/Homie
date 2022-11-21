@@ -51,7 +51,7 @@ router.post("/register", (req, res) => {
         });
 });
 
-router.get("/login", (req, res) => {
+router.post("/login", (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     // weryfikacja loginu i hasła
