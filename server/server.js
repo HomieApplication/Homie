@@ -1,6 +1,5 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
-import authRouter from "./routes/authentication.js";
 import offersRouter from "./routes/offers.js";
 import usersRouter from "./routes/users.js";
 
@@ -15,7 +14,6 @@ app.use(
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
 
-app.use("/api", authRouter);
 app.use("/api/offers", offersRouter);
 app.use("/api/users", usersRouter);
 
