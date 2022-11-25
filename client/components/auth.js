@@ -2,7 +2,7 @@
 import { getAuth } from "firebase/auth";
 
 export function isLoggedIn() {
-    return getAuth();
+    return getAuth().currentUser;
 }
 
 export function register(email, password, userData) {
