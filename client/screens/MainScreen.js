@@ -22,6 +22,7 @@ const fetchOffers = async () => {
 }
 
 
+
 const MainScreen = ({ navigation }) => {
 
     const [data, setData] = useState([])
@@ -39,6 +40,7 @@ const MainScreen = ({ navigation }) => {
     
     return(
         <SafeAreaView style={styles.container}>
+
             <ProfileHeader userName="Kinga" year='2'/>
             <Card userName="Kinga"  userSecondName="Wrona" year="2" description="Tutaj jest super fajny opis" localization="Kraków" localType="dormitory"/>
             <FlatList 

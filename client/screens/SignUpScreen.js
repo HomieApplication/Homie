@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, StyleSheet, Text, View, TextInput, useState } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import { register } from '../components/auth';
 import SignInBtn from '../components/signIn/SignInBtn';
 
 const SignUpScreen = ({ navigation }) => {
@@ -14,20 +15,6 @@ const [firstName, onChangeFirstName] = React.useState();
 const [secondName, onChangeSecondName] = React.useState();
 const [yearOfStudy, onChangeyearOfStudy] = React.useState();
 
-// var items = [
-//     {
-//       id: 1,
-//       name: 'Female',
-//     },
-//     {
-//       id: 2,
-//       name: 'Male',
-//     },
-//     {
-//       id: 3,
-//       name: 'Other',
-//     },
-//   ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,9 +56,13 @@ const [yearOfStudy, onChangeyearOfStudy] = React.useState();
               {
                 nestedScrollEnabled: true,
               }
-            }
-        /> */}
-        <SignInBtn style={styles.button} title="Sign up" onPress={() => { navigation.push('Main') }}></SignInBtn>
+
+        />
+        <SignInBtn style={styles.button} title="Sign up" onPress={() => {
+          register(login, password, {firstName: firstName, secondName: secondName, yearOfStudy: yearOfStudy}); 
+          navigation.push('Main')
+          }}>
+          </SignInBtn>
     </SafeAreaView>
   )
 }
