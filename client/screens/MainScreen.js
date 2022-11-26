@@ -3,6 +3,7 @@ import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from '../components/userProfile/ProfileHeader'
 import Card from '../components/mainScreen/Card';
+import { getAuth } from 'firebase/auth';
 
 
 const fetchOffers = async () => {
@@ -24,6 +25,11 @@ const fetchOffers = async () => {
 
 
 const MainScreen = ({ navigation }) => {
+    userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
+    useEffect(() => {
+        fetch(`http://192.168.123.89:3000/api/users/${userId}`).then(res => res.json()).then(data => setUser(data));
+    }, [])
 
     const [data, setData] = useState([])
 
@@ -42,7 +48,7 @@ const MainScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
 
             <ProfileHeader userName="Kinga" year='2'/>
-            <Card userName="Kinga"  userSecondName="Wrona" year="2" description="Tutaj jest super fajny opis" localization="Kraków" localType="dormitory"/>
+            <Card  userName={userData.firstName} year={userData.yearOfStudy}  userSecondName="Wrona" description="Tutaj jest super fajny opis" localization="Kraków" localType="dormitory"/>
             {/* <FlatList 
                 data={data}
                 renderItem={renderItem}
