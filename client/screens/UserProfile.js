@@ -34,7 +34,7 @@ const UserProfile = ({ navigation }) => {
 
     return (
       <View style={styles.container}>
-        <ProfileHeader />
+        <ProfileHeader userName="Kinga"/>
         <FlatList 
           data={Tabs}
           renderItem={renderItem}
