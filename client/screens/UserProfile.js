@@ -33,8 +33,8 @@ const UserProfile = ({ navigation }) => {
   );
 
     return (
-      <View style={styles.container}>
-        <ProfileHeader userName="Kinga"/>
+      <SafeAreaView style={styles.container}>
+        <ProfileHeader userName="Kinga" year="2"/>
         <FlatList 
           data={Tabs}
           renderItem={renderItem}
@@ -46,7 +46,7 @@ const UserProfile = ({ navigation }) => {
                         navigation.push('SignIn')
                     }}
                     />
-      </View>
+      </SafeAreaView>
     )
 }
 
