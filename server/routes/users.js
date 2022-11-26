@@ -5,14 +5,15 @@ import { db } from "../firebase/config.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    // zwraca kolumnę user_id z tabeli users, ew. wszystkie kolumny ale tylko dla kilku użytkowników
 
-    res.status(501).send("Not implemented");
+
+    res.status(404).send("Not implemented");
 });
 
 router.get("/:id", (req, res) => {
     // zwraca pojedynczy rekord z tabeli users, jeśli brak rekordu - 404
     const id = req.params.id;
+
 
     res.status(404).send("Not implemented");
 });
@@ -26,7 +27,7 @@ router.post("/:id", (req, res) => {
     res.status(404).send("Not implemented");
 });
 
-router.put("/:id", (req, res) => {
+router.put("/", (req, res) => {
     // zmienia pojedynczy rekord z tabeli users, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
     const title = req.body.name;
     // itd...

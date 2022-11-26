@@ -1,13 +1,14 @@
 import React from 'react'; 
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {  } from "firebase/auth";
 
 
 
 const MainScreen = ({ navigation }) => {
     return(
         <SafeAreaView style={styles.container}>
-            <Text>To jest MainScreen! Tu będą wszytskie ogłoszenia! 1 strona po zalogowaniu</Text>
+            <Text></Text>
         </SafeAreaView>
     )
 }

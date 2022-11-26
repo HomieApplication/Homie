@@ -17,6 +17,6 @@ app.use(urlencoded({ extended: false }));
 app.use("/api/offers", offersRouter);
 app.use("/api/users", usersRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
