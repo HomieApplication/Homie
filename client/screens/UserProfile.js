@@ -1,11 +1,10 @@
 import { Text, View, StyleSheet, FlatList, SafeAreaView, StatusBar, Button } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import ProfileHeader from '../components/userProfile/ProfileHeader'
 import Tab from '../components/userProfile/Tab'
 import SignInBtn from '../components/signIn/SignInBtn'
 import { logout } from '../components/auth'
-import { getAuth } from 'firebase/auth'
 
 const Tabs = [
   {
@@ -28,19 +27,14 @@ const Tabs = [
 
 
 const UserProfile = ({ navigation }) => {
-  userId = getAuth().currentUser.uid;
-  const [userData, setUser] = useState({});
-  useEffect(() => {
-    fetch(`http://192.168.123.89:3000/api/users/${userId}`).then(res => res.json()).then(data => setUser(data));
-  }, [])
 
   const renderItem = ({ item }) => (
     <Tab title={item.title} />
   );
 
     return (
-      <View style={styles.container}>
-        <ProfileHeader userName={getAuth().currentUser.displayName year = userData.yearOfStudy}/>
+      <SafeAreaView style={styles.container}>
+        <ProfileHeader userName="Kinga" year="2"/>
         <FlatList 
           data={Tabs}
           renderItem={renderItem}
