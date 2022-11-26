@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile} from "firebase/auth";
 
 export function isLoggedIn() {
     return getAuth().currentUser;
@@ -13,7 +13,14 @@ export function register(email, password, userData) {
                 photoURL: userData.photoURL,
                 phoneNumber: userData.phoneNumber,
             });
-            // ...
+            fetch(`http://192.168.123.136:3000/api/users/${getAuth().currentUser.uid}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData),
+            }).then(res=>res.json()).then(data=>console.log(JSON.stringify(data)));
         })
         .catch((error) => {
             console.log(`Register error: ${error.message}`);

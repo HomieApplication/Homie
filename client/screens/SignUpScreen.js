@@ -2,6 +2,7 @@ import React from 'react'
 import { Dimensions, StyleSheet, Text, View, TextInput, useState } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import { register } from '../components/auth';
 import SignInBtn from '../components/signIn/SignInBtn';
 
 const SignUpScreen = ({ navigation }) => {
@@ -71,7 +72,11 @@ var items = [
               }
             }
         />
-        <SignInBtn style={styles.button} title="Sign up" onPress={() => { navigation.push('Main') }}></SignInBtn>
+        <SignInBtn style={styles.button} title="Sign up" onPress={() => {
+          register(login, password, {age: age, gender: gender, yearOfStudy: yearOfStudy}); 
+          navigation.push('Main')
+          }}>
+          </SignInBtn>
     </SafeAreaView>
   )
 }
