@@ -1,8 +1,10 @@
-import { Text, View, StyleSheet, FlatList, SafeAreaView, StatusBar } from 'react-native'
+import { Text, View, StyleSheet, FlatList, SafeAreaView, StatusBar, Button } from 'react-native'
 import React from 'react'
 
 import ProfileHeader from '../components/userProfile/ProfileHeader'
 import Tab from '../components/userProfile/Tab'
+import SignInBtn from '../components/signIn/SignInBtn'
+import { logout } from '../components/auth'
 
 const Tabs = [
   {
@@ -24,7 +26,7 @@ const Tabs = [
 ]
 
 
-const UserProfile = () => {
+const UserProfile = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <Tab title={item.title} />
@@ -39,6 +41,11 @@ const UserProfile = () => {
           keyExtractor={item => item.id}
           style={styles.list}          
           />
+          <SignInBtn title="Log out" style={styles.btn} onPress={() => {
+                        logout()
+                        navigation.push('SignIn')
+                    }}
+                    />
       </View>
     )
 }
@@ -52,8 +59,27 @@ const styles = new StyleSheet.create({
       marginTop: StatusBar.currentHeight || 0,
       backgroundColor: '#f2f2f2',
       alignItems: 'center',
+      justifyContent: 'space-between',
     },
     list:{
       width: '100%',
+    },
+    btn: {
+      alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        marginVertical: 10,
+        borderRadius: 4,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+    
+        elevation: 3,
+        backgroundColor: '#1a936f',
     }
 })
