@@ -6,7 +6,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { auth } from "./components/firebase/config";
 import { isLoggedIn, logout, login, register } from "./components/auth";
 
 import MainScreen from "./screens/MainScreen";
@@ -14,6 +13,9 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
+
+import {auth } from "./components/firebase/config";
+
 import { onAuthStateChanged } from "firebase/auth";
 
 // App.js jest jak main - tutaj ma być mało kodu
@@ -129,3 +131,4 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
+
