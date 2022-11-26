@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, View, TextInput, useState } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SignInBtn from '../components/signIn/SignInBtn';
+import {getAuth} from "firebase/auth";
 
 const AddOfferScreen = ({ navigation }) => {
 
@@ -18,10 +19,10 @@ const sendData = () => {
         'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      userId: '123',
-      localType: {localType},
-      description: {description},
-      localization: {localization}
+      userId: getAuth().currentUser.uid,
+      localType: localType,
+      description: description,
+      localization: localization,
     })
 })
 
