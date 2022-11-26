@@ -24,40 +24,7 @@ const [yearOfStudy, onChangeyearOfStudy] = React.useState();
         <TextInput style={styles.textboxes} onChangeText={onChangeFirstName} value={firstName} placeholder="First name"/>
         <TextInput style={styles.textboxes} onChangeText={onChangeSecondName} value={secondName} placeholder="Second name"/>
         <TextInput style={styles.textboxes} onChangeText={onChangeyearOfStudy} value={yearOfStudy} placeholder="Year of study"/>
-        {/* <SearchableDropdown
-            containerStyle={{ padding: 5 }}
-            itemStyle={{
-              padding: 10,
-              marginTop: 2,
-              backgroundColor: '#ddd',
-              borderColor: '#bbb',
-              borderWidth: 1,
-              borderRadius: 5,
-            }}
-            onItemSelect={(item ) => item.name}
-            value={gender}
-            itemTextStyle={{ color: '#222' }}
-            itemsContainerStyle={{ maxHeight: 140 }}
-            items={items}
-            resetValue={false}
-            textInputProps={
-              {
-                placeholder: "Gender",
-                underlineColorAndroid: "transparent",
-                style: {
-                    padding: 12,
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 5,
-                },
-              }
-            }
-            listProps={
-              {
-                nestedScrollEnabled: true,
-              }
-
-        />
+        
         <SignInBtn style={styles.button} title="Sign up" onPress={() => {
           register(login, password, {firstName: firstName, secondName: secondName, yearOfStudy: yearOfStudy}); 
           navigation.push('Main')

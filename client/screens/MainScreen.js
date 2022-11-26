@@ -34,20 +34,20 @@ const MainScreen = ({ navigation }) => {
 
     }, []);
 
-    const renderItem = ({item}) => (
-        <Card userName={item.}/>
-    );
+    // const renderItem = ({item}) => (
+    //     <Card userName={item.}/>
+    // );
     
     return(
         <SafeAreaView style={styles.container}>
 
             <ProfileHeader userName="Kinga" year='2'/>
             <Card userName="Kinga"  userSecondName="Wrona" year="2" description="Tutaj jest super fajny opis" localization="Kraków" localType="dormitory"/>
-            <FlatList 
+            {/* <FlatList 
                 data={data}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
-            />
+            /> */}
         </SafeAreaView>
     )
 }
