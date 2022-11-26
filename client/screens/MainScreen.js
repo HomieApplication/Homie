@@ -6,9 +6,11 @@ import Card from '../components/mainScreen/Card';
 
 
 
+
 const MainScreen = ({ navigation }) => {
     return(
         <SafeAreaView style={styles.container}>
+
             <ProfileHeader userName="Kinga" year='2'/>
             <Card />
             {/* <FlatList 

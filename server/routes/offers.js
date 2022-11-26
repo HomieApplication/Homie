@@ -1,27 +1,21 @@
-import { doc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc, getFirestore, collection, getDocs } from "firebase/firestore";
 import express from "express";
 import { collection ,addDoc } from "firebase/firestore";
 import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    // zwraca kolumnę offer_id z tabeli offers, ew. wszystkie kolumny ale tylko dla kilku ofert
-    const doc = doc(db, "offers", "offer-id");
-    getDoc(doc)
-        .then((result) => {
-            if (result.exists()) {
-                res.send(result.data);
-            } else {
-                res.status(404).send({ message: "Not Found" });
-            }
-        })
-        .catch((error) => {
-            res.status(500).send({
-                errorCode: error.code,
-                message: error.message,
-            });
-        });
+router.get("/", async (req, res) => {
+    const querySnapshot = await getDocs(collection(db, "offers"));
+
+    const data = new Array();
+    querySnapshot.forEach((doc) => {
+        data.push({
+            offerId: doc.id,
+            ...doc.data()
+        }) 
+    });
+    res.send(data);
 });
 
 router.post("/", async (req, res) => {
