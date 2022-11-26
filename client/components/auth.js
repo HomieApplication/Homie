@@ -1,4 +1,3 @@
-// import auth from "@react-native-firebase/auth";
 import { getAuth } from "firebase/auth";
 
 export function isLoggedIn() {
