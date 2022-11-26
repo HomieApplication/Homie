@@ -1,5 +1,6 @@
 import { doc, setDoc, getDoc, deleteDoc, getFirestore, collection, getDocs } from "firebase/firestore";
 import express from "express";
+import { collection ,addDoc } from "firebase/firestore";
 import { db } from "../firebase/config.js";
 
 const router = express.Router();
@@ -17,8 +18,22 @@ router.get("/", async (req, res) => {
     res.send(data);
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
     // dodaje pojedynczy rekord o kolejnym id do tabeli offers, zwraca utworzony obiekt
+
+    const docData = {
+        userId: req.body.userId,
+        localType: req.body.localType,
+        description: req.body.description,
+        localization: req.body.localization,
+        // ..
+    };
+
+    const docRef = await addDoc(collection(db, "offers"), docData);
+    console.log("Document written with ID: ", docRef.id);
+    res.send(docData)
+  
+    
 });
 
 router.get("/:id", (req, res) => {

@@ -32,7 +32,7 @@ function Main() {
         <Tab.Navigator
             initialRouteName="MainScreen"
             screenOptions={{
-                tabBarActiveTintColor: "#679436ff",
+                tabBarActiveTintColor: '#114B5F',
                 headerShown: false,
             }}
         >

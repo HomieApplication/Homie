@@ -1,14 +1,22 @@
 import React from 'react'; 
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {  } from "firebase/auth";
+import ProfileHeader from '../components/userProfile/ProfileHeader'
+import Card from '../components/mainScreen/Card';
+
 
 
 
 const MainScreen = ({ navigation }) => {
     return(
         <SafeAreaView style={styles.container}>
-            <Text></Text>
+
+            <ProfileHeader userName="Kinga" year='2'/>
+            <Card />
+            {/* <FlatList 
+            
+            
+            /> */}
         </SafeAreaView>
     )
 }
@@ -20,6 +28,5 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      justifyContent: 'center',
     },
   });
