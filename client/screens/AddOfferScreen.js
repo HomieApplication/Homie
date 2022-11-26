@@ -10,6 +10,33 @@ const [localType, onChangeLocalType] = React.useState('');
 const [description, onChangeDescription] = React.useState('');
 const [localization, onChangeLocalization] = React.useState('');
 
+const sendData = () => {
+  fetch("http://192.168.123.89:3000/api/offers", {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userId: '123',
+      localType: {localType},
+      description: {description},
+      localization: {localization}
+    })
+})
+
+    .then((response) => response.json())
+    .then((responseData) => {
+        console.log(
+            "POST Response",
+            "Response Body -> " + JSON.stringify(responseData)
+        )
+    })
+    .then(() => navigation.push('Main'))
+
+}
+
+
   return (
     <SafeAreaView style={styles.container}>
         <Text style={styles.h2}>Post new offer</Text>
@@ -17,7 +44,7 @@ const [localization, onChangeLocalization] = React.useState('');
         <TextInput style={styles.textboxes} onChangeText={onChangeDescription} value={description} placeholder="Description"/>
         <TextInput style={styles.textboxes} onChangeText={onChangeLocalization} value={localization} placeholder="Localization (city for now...)"/>
         
-        <SignInBtn style={styles.button} title="Create offer" onPress={() => { navigation.push('Main') }}></SignInBtn>
+        <SignInBtn style={styles.button} title="Create offer" onPress={() => {sendData()}}></SignInBtn>  
     </SafeAreaView>
   )
 }

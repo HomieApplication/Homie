@@ -35,9 +35,9 @@ router.post("/", async (req, res) => {
         // ..
     };
 
-    res.send("ok")
     const docRef = await addDoc(collection(db, "offers"), docData);
-      console.log("Document written with ID: ", docRef.id);
+    console.log("Document written with ID: ", docRef.id);
+    res.send(docData)
   
     
 });
