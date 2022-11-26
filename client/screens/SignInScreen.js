@@ -3,10 +3,11 @@ import { StyleSheet, Text, View, TextInput, Image, Dimensions, Alert, TouchableO
 
 import SignInBtn from '../components/signIn/SignInBtn';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { login } from "../components/auth";
 
 const SignInScreen = ({ navigation }) => {
 
-    const [login, onChangeLogin] = React.useState("");
+    const [email, onChangeLogin] = React.useState("");
     const [password, onChangePassword] = React.useState("");
 
 
@@ -18,9 +19,10 @@ const SignInScreen = ({ navigation }) => {
             </View>
             <View style={styles.signInCard}>
                 <Text style={styles.h2}>Sign In</Text>
-                <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login"/>
+                <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={email} placeholder="Login"/>
                 <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
                 <SignInBtn style={styles.button} title="Confirm" onPress={() => {
+                        login(email, password)
                         navigation.push('Main')
                     }}>
                 </SignInBtn>

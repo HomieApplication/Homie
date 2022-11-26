@@ -14,7 +14,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
 
-import {auth } from "./components/firebase/config";
+import { auth } from "./components/firebase/config";
 
 import { onAuthStateChanged } from "firebase/auth";
 

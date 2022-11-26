@@ -1,12 +1,12 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from "firebase/auth";
 
 export function isLoggedIn() {
     return getAuth().currentUser;
 }
 
 export function register(email, password, userData) {
-    getAuth()
-        .createUserWithEmailAndPassword(email, password)
+    const auth = getAuth()
+    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             updateProfile(userCredential.user, {
                 displayName: userData.firstName + " " + userData.lastName,
@@ -21,8 +21,8 @@ export function register(email, password, userData) {
 }
 
 export function login(email, password) {
-    getAuth()
-        .signInWithEmailAndPassword(email, password)
+    const auth = getAuth()
+    signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             console.log(`Successfully logged out!`);
             // ...
@@ -33,8 +33,8 @@ export function login(email, password) {
 }
 
 export function logout() {
-    getAuth()
-        .signOut()
+    const auth = getAuth()
+    signOut(auth)
         .then(() => {
             console.log(`Successfully logged out!`);
             // ...
