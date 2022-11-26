@@ -40,7 +40,7 @@ const UserProfile = ({ navigation }) => {
 
     return (
       <View style={styles.container}>
-        <ProfileHeader userName={getAuth().currentUser.displayName}/>
+        <ProfileHeader userName={getAuth().currentUser.displayName year = userData.yearOfStudy}/>
         <FlatList 
           data={Tabs}
           renderItem={renderItem}
@@ -52,7 +52,7 @@ const UserProfile = ({ navigation }) => {
                         navigation.push('SignIn')
                     }}
                     />
-      </View>
+      </SafeAreaView>
     )
 }
 

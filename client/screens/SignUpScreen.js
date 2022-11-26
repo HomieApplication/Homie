@@ -11,34 +11,20 @@ const SignUpScreen = ({ navigation }) => {
 
 const [login, onChangeLogin] = React.useState('');
 const [password, onChangePassword] = React.useState('');
-const [age, onChangeAge] = React.useState();
-const [gender, onChangeGender] = React.useState();
+const [firstName, onChangeFirstName] = React.useState();
+const [secondName, onChangeSecondName] = React.useState();
 const [yearOfStudy, onChangeyearOfStudy] = React.useState();
 
-var items = [
-    {
-      id: 1,
-      name: 'Female',
-    },
-    {
-      id: 2,
-      name: 'Male',
-    },
-    {
-      id: 3,
-      name: 'Other',
-    },
-  ];
 
   return (
     <SafeAreaView style={styles.container}>
         <Text style={styles.h2}>Create Account</Text>
         <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={login} placeholder="Login (Email)"/>
         <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
-        <TextInput style={styles.textboxes} onChangeText={onChangeAge} value={age} placeholder="Age"/>
-        <TextInput style={styles.textboxes} onChangeText={onChangeGender} value={gender} placeholder="Gender"/>
+        <TextInput style={styles.textboxes} onChangeText={onChangeFirstName} value={firstName} placeholder="First name"/>
+        <TextInput style={styles.textboxes} onChangeText={onChangeSecondName} value={secondName} placeholder="Second name"/>
         <TextInput style={styles.textboxes} onChangeText={onChangeyearOfStudy} value={yearOfStudy} placeholder="Year of study"/>
-        <SearchableDropdown
+        {/* <SearchableDropdown
             containerStyle={{ padding: 5 }}
             itemStyle={{
               padding: 10,
@@ -70,10 +56,10 @@ var items = [
               {
                 nestedScrollEnabled: true,
               }
-            }
+
         />
         <SignInBtn style={styles.button} title="Sign up" onPress={() => {
-          register(login, password, {age: age, gender: gender, yearOfStudy: yearOfStudy}); 
+          register(login, password, {firstName: firstName, secondName: secondName, yearOfStudy: yearOfStudy}); 
           navigation.push('Main')
           }}>
           </SignInBtn>
