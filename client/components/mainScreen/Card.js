@@ -4,13 +4,13 @@ import { Text, View, StyleSheet, Pressable, Image } from 'react-native';
 const size = 100;
 
 export default function Card(props) { 
-  const { onPress, userName, userSecondName, description, year, imgUrl, localType, localization } = props;
+  const { onPress, userFirstName, userSecondName, description, year, imgUrl, localType, localization } = props;
   return (
     <View style={styles.container}>
         <View style={styles.upperHalf}>
             <Image style={styles.img} source={require('../../assets/cat.jpg')}/>
             <View>
-                <Text style={styles.nameText}>{userName} {userSecondName}, {year} year</Text>
+                <Text style={styles.nameText}>{userFirstName} {userSecondName}, {year} year</Text>
                 <Text style={styles.description}>{localType}, {localization}</Text>
             </View>
         </View>

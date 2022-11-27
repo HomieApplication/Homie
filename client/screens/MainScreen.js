@@ -34,6 +34,7 @@ const MainScreen = ({ navigation }) => {
     const [data, setData] = useState([])
 
     useEffect(() => {
+
         fetchOffers().then( (offers) => {
             setData(offers);
         })
@@ -47,13 +48,18 @@ const MainScreen = ({ navigation }) => {
     return(
         <SafeAreaView style={styles.container}>
 
-            <ProfileHeader userName="Kinga" year='2'/>
-            <Card  userName={userData.firstName} year={userData.yearOfStudy}  userSecondName="Wrona" description="Tutaj jest super fajny opis" localization="Kraków" localType="dormitory"/>
+            {/* <ProfileHeader userFirstName={userData.firstName} year={userData.yearOfStudy}/>  */}
+            <ProfileHeader userFirstName="Kinga" year="2"/> 
             {/* <FlatList 
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={() => }
             /> */}
+            {data.map((offer => {
+                return(
+                    <Card userFirstName={offer.firstName} userSecondName={offer.lastName} description={offer.description} />
+                )
+            }))}
         </SafeAreaView>
     )
 }

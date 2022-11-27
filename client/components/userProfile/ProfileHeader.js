@@ -5,11 +5,11 @@ import React from 'react'
 const size = 150;
 
 const ProfileHeader = (props) => {
-  const { userName, year, url } = props;
+  const { userFirstName, year, url } = props;
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.h1}>Hi, {userName}!</Text>
+        <Text style={styles.h1}>Hi, {userFirstName}!</Text>
         <View style={styles.textContainer}>
           <Text style={styles.text}>Year of study: {year}</Text>
           <Text style={styles.textDescription}>You can edit your profile in UserProfile screen! Tap right icon at the Tab bar.</Text>
