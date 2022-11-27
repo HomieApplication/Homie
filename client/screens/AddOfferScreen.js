@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SignInBtn from '../components/signIn/SignInBtn';
 import {getAuth} from "firebase/auth";
+import { SERVER_URL } from '../components/firebase/config';
 
 const AddOfferScreen = ({ navigation }) => {
 
@@ -12,7 +13,7 @@ const [description, onChangeDescription] = React.useState('');
 const [localization, onChangeLocalization] = React.useState('');
 
 const sendData = () => {
-  fetch("http://192.168.123.89:3000/api/offers", {
+  fetch(`${SERVER_URL}/api/offers`, {
     method: 'POST',
     headers: {
         'Accept': 'application/json',

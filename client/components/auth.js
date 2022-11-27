@@ -1,4 +1,5 @@
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile} from "firebase/auth";
+import { SERVER_URL } from "./firebase/config";
 
 export function isLoggedIn() {
     return getAuth().currentUser;
@@ -13,7 +14,7 @@ export function register(email, password, userData) {
                 photoURL: userData.photoURL,
                 phoneNumber: userData.phoneNumber,
             });
-            fetch(`http://192.168.123.136:3000/api/users/${getAuth().currentUser.uid}`, {
+            fetch(`${SERVER_URL}/api/users/${getAuth().currentUser.uid}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

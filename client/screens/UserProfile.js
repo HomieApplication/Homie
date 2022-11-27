@@ -34,7 +34,7 @@ const UserProfile = ({ navigation }) => {
 
     return (
       <SafeAreaView style={styles.container}>
-        <ProfileHeader userName="Kinga" year="2"/>
+        <ProfileHeader userFirstName="Kinga" year="2"/>
         <FlatList 
           data={Tabs}
           renderItem={renderItem}

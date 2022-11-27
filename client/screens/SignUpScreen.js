@@ -26,7 +26,7 @@ const [yearOfStudy, onChangeyearOfStudy] = React.useState();
         <TextInput style={styles.textboxes} onChangeText={onChangeyearOfStudy} value={yearOfStudy} placeholder="Year of study"/>
         
         <SignInBtn style={styles.button} title="Sign up" onPress={() => {
-          register(login, password, {firstName: firstName, secondName: secondName, yearOfStudy: yearOfStudy}); 
+          register(login, password, {firstName: firstName, lastName: secondName, yearOfStudy: yearOfStudy}); 
           navigation.push('Main')
           }}>
           </SignInBtn>
