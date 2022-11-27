@@ -5,14 +5,16 @@ import ProfileHeader from '../components/userProfile/ProfileHeader'
 import Card from '../components/mainScreen/Card';
 import { getAuth } from 'firebase/auth';
 
+import { SERVER_URL } from '../components/firebase/config';
+
 
 const fetchOffers = async () => {
-    const offers = await fetch("http://192.168.123.89:3000/api/offers")
+    const offers = await fetch(`${SERVER_URL}/api/offers`)
         .then(res => res.json())
     
     const offersWithUser = await Promise.all(
         offers.map( async offer => {
-            const userData = fetch(`http://192.168.123.89:3000/api/users/${offer.userId}`)
+            const userData = fetch(`${SERVER_URL}/api/users/${offer.userId}`)
                 .then(r => r.json())
             return {...userData, ...offer}
         })
@@ -25,10 +27,11 @@ const fetchOffers = async () => {
 
 
 const MainScreen = ({ navigation }) => {
+    
     userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     useEffect(() => {
-        fetch(`http://192.168.123.89:3000/api/users/${userId}`).then(res => res.json()).then(data => setUser(data));
+        fetch(`${SERVER_URL}/api/users/${userId}`).then(res => res.json()).then(data => setUser(data));
     }, [])
 
     const [data, setData] = useState([])
@@ -41,28 +44,21 @@ const MainScreen = ({ navigation }) => {
 
     }, []);
 
-    // const renderItem = ({item}) => (
-    //     <Card userName={item.}/>
-    // );
     
     return(
         <SafeAreaView style={styles.container}>
 
-            {/* <ProfileHeader userFirstName={userData.firstName} year={userData.yearOfStudy}/>  */}
-            <ProfileHeader userFirstName="Kinga" year="2"/> 
-            {/* <FlatList 
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={() => }
-            /> */}
-            {data.map((offer => {
+            <ProfileHeader userFirstName={userData.firstName} year={userData.yearOfStudy}/> 
+            {data.map((offer, i) => {
                 return(
-                    <Card userFirstName={offer.firstName} userSecondName={offer.lastName} description={offer.description} />
+                    <Card key={i} userFirstName={offer.firstName}/>
                 )
-            }))}
+            })}
         </SafeAreaView>
     )
 }
+
+// //userFirstName={offer.firstName} userSecondName={offer.lastName} 
 
 export default MainScreen;
 
