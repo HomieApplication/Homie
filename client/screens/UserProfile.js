@@ -12,6 +12,8 @@ import React, { useEffect, useState } from "react";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Tab from "../components/userProfile/Tab";
 import SignInBtn from "../components/signIn/SignInBtn";
+import * as ImagePicker from 'expo-image-picker';
+
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { SERVER_URL } from "../components/firebase/config";
@@ -35,6 +37,9 @@ const Tabs = [
     },
 ];
 
+
+
+
 const UserProfile = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
@@ -52,17 +57,41 @@ const UserProfile = ({ navigation }) => {
 
     const renderItem = ({ item }) => <Tab title={item.title} />;
 
+    const [image, setImage] = useState(null);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        }).catch((error) => console.log(error));
+        
+        console.log(result);
+
+        if (!result.cancelled){
+            setImage(result.uri);
+            console.log(result.uri);
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ProfileHeader
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
+                img={image}
             />
             <FlatList
                 data={Tabs}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 style={styles.list}
+            />
+            <SignInBtn 
+                title="Pick profile image" 
+                style={styles.btn}
+                onPress={pickImage} 
             />
             <SignInBtn
                 title="Log out"

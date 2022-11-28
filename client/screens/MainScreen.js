@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
 import { getAuth } from "firebase/auth";
 
+import * as ImagePicker from 'expo-image-picker';
+
 import { SERVER_URL } from "../components/firebase/config";
+import { async } from "@firebase/util";
 
 const fetchOffers = async () => {
     const offers = await fetch(`${SERVER_URL}/api/offers`).then((res) =>
@@ -23,6 +26,24 @@ const fetchOffers = async () => {
 
     return offersWithUser;
 };
+
+// const [image, setImage] = useState(null);
+
+// const pickImage = async () => {
+//     let result = await ImagePicker.launchImageLibraryAsync({
+//         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+//         allowsEditing: false,
+//         aspect: [4, 4],
+//         quality: 1,
+//     });
+    
+//     console.log(result);
+
+//     if (!result.cancelled){
+//         setImage(result.assets[0].uri);
+//     }
+// }
+
 
 const MainScreen = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
@@ -53,16 +74,17 @@ const MainScreen = ({ navigation }) => {
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
             />
+            
             <ScrollView style={styles.scroll}>
             {data.map((offer, i) => {
                 return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} />;
             })}
             </ScrollView>
+            
         </SafeAreaView>
     );
 };
 
-// //userFirstName={offer.firstName} userSecondName={offer.lastName}
 
 export default MainScreen;
 
