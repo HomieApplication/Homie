@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 2,
-    marginBottom: size/1.5,
+    marginBottom: size/1.8,
   },
   headerContainer:{
     flex:1,
@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
     borderRadius: size/2
   },
   h1:{
-    paddingLeft: size/5,
+    paddingLeft: size/6,
+    paddingTop: 10,
     color: '#fff',
-    fontSize: 30,
+    fontSize: 22,
   },
   text: {
     color: '#fff',

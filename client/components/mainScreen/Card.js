@@ -1,17 +1,17 @@
 import React from 'react';
 import { Text, View, StyleSheet, Pressable, Image } from 'react-native';
 
-const size = 100;
+const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userSecondName, description, year, imgUrl, localType, localization } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, localType, localization } = props;
   return (
     <View style={styles.container}>
         <View style={styles.upperHalf}>
             <Image style={styles.img} source={require('../../assets/cat.jpg')}/>
             <View>
-                <Text style={styles.nameText}>{userFirstName} {userSecondName}, {year} year</Text>
-                <Text style={styles.description}>{localType}, {localization}</Text>
+                <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
+                <Text style={styles.description}>{localType}, {localization}, {year} year</Text>
             </View>
         </View>
         <View>
@@ -24,10 +24,9 @@ export default function Card(props) {
 const styles = StyleSheet.create({
     container:{
         width:'95%',
-        marginVertical: 20,
-        paddingBottom: 10,
+        marginVertical: 15,
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,

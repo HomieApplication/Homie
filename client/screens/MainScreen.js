@@ -19,7 +19,7 @@ const fetchOffers = async () => {
             ).then((r) => r.json());
             return { ...userData, ...offer };
         })
-    );
+    ).catch((error) => console.log(error));
 
     return offersWithUser;
 };
@@ -53,9 +53,11 @@ const MainScreen = ({ navigation }) => {
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
             />
+            <ScrollView style={styles.scroll}>
             {data.map((offer, i) => {
-                return <Card key={i} userFirstName={offer.firstName} />;
+                return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} />;
             })}
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -69,5 +71,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f2f2f2",
         alignItems: "center",
+        justifyContent:'space-between',
     },
+    scroll: {
+        flex: 1,
+        width: '100%',
+        alignContent: 'center',
+    }
 });
