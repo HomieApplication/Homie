@@ -5,7 +5,7 @@ import React from 'react'
 const size = 150;
 
 const ProfileHeader = (props) => {
-  const { userFirstName, year, url } = props;
+  const { userFirstName, year, img } = props;
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -18,7 +18,7 @@ const ProfileHeader = (props) => {
           <MaterialCommunityIcons name="star" color={'white'} size={35}/>
         </Pressable>
       </View>    
-      <Image style={styles.img} source={require('../../assets/cat.jpg')}/>
+      <Image style={styles.img} source={{uri: img}}/>
       
     </View>
   )
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 2,
-    marginBottom: size/1.5,
+    marginBottom: size/1.8,
   },
   headerContainer:{
     flex:1,
@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
     borderRadius: size/2
   },
   h1:{
-    paddingLeft: size/5,
+    paddingLeft: size/6,
+    paddingTop: 10,
     color: '#fff',
-    fontSize: 30,
+    fontSize: 22,
   },
   text: {
     color: '#fff',
