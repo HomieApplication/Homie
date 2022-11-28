@@ -1,25 +1,35 @@
-import { doc, setDoc, getDoc, deleteDoc, addDoc, collection} from "firebase/firestore";
+import {
+    doc,
+    setDoc,
+    getDoc,
+    deleteDoc,
+    addDoc,
+    collection,
+} from "firebase/firestore";
 import express from "express";
 import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
-
     res.status(404).send("Not implemented");
 });
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-
-    const docRef = doc(db, "users", id);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-        res.send(docSnap.data());
-    } else {
-        res.status(404).send("No such document!");
-    }
+    await getDoc(doc(db, "users", id))
+        .then((docSnap) => {
+            if (docSnap.exists()) res.send(docSnap.data());
+            else
+                res.status(404).send({
+                    message: "User not found",
+                });
+        })
+        .catch(() =>
+            res.status(500).send({
+                message: "Server error",
+            })
+        );
 });
 
 router.post("/:id", async (req, res) => {
@@ -40,9 +50,11 @@ router.post("/:id", async (req, res) => {
         favs: [],
     };
 
-    await addDoc(collection(db, "users"), userData).then(() => {
-        res.send(userData);
-    }).catch((error)=>(res.send(error.message)));
+    await setDoc(doc(db, "users", id), userData)
+        .then(() => {
+            res.send(userData);
+        })
+        .catch(() => res.send({ message: "Server error" }));
 });
 
 router.put("/", (req, res) => {
