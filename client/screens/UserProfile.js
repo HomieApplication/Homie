@@ -21,15 +21,15 @@ import { SERVER_URL } from "../components/firebase/config";
 const Tabs = [
     {
         id: "1",
-        title: "Ulubione",
+        title: "Favourite offers",
     },
     {
         id: "2",
-        title: "Ustawienia",
+        title: "My offers",
     },
     {
         id: "3",
-        title: "O Autorach",
+        title: "Setting",
     },
     {
         id: "4",
@@ -55,44 +55,39 @@ const UserProfile = ({ navigation }) => {
             );
     }, []);
 
-    const renderItem = ({ item }) => <Tab title={item.title} />;
 
-    const [image, setImage] = useState(null);
+    // const [image, setImage] = useState(null);
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 4],
-            quality: 1,
-        }).catch((error) => console.log(error));
+    // const pickImage = async () => {
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [4, 4],
+    //         quality: 1,
+    //     }).catch((error) => console.log(error));
         
-        console.log(result);
+    //     console.log(result);
 
-        if (!result.cancelled){
-            setImage(result.uri);
-            console.log(result.uri);
-        }
-    }
+    //     if (!result.cancelled){
+    //         setImage(result.uri);
+    //         console.log(result.uri);
+    //     }
+    // }
 
     return (
         <SafeAreaView style={styles.container}>
             <ProfileHeader
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
-                img={image}
             />
-            <FlatList
-                data={Tabs}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.list}
-            />
-            <SignInBtn 
+            {Tabs.map((item) => {
+               return( <Tab key={item.id} title={item.title} /> )
+            })}
+            {/* <SignInBtn 
                 title="Pick profile image" 
                 style={styles.btn}
                 onPress={pickImage} 
-            />
+            /> */}
             <SignInBtn
                 title="Log out"
                 style={styles.btn}

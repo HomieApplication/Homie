@@ -5,7 +5,7 @@ const Tab = (props) => {
     const {title} = props
   return (
     <View style={styles.container}>
-      <Text>{title}</Text>
+      <Text style={styles.text}>{title}</Text>
     </View>
   )
 }
@@ -17,11 +17,15 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 70, //Dimensions.get('window').height/15,
         backgroundColor: 'white',
-        marginTop: 2,
         justifyContent: 'center',
         alignItems: 'center',
         color: 'a8a8a8',
-        
-
+    },
+    text:{
+      fontSize: 16,
+      lineHeight: 21,
+      fontWeight: 'bold',
+      letterSpacing: 0.5,
+      color: 'black',
     }
 })

@@ -2,10 +2,15 @@ import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-nati
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React from 'react'
 
-const size = 150;
+const size = 120;
 
 const ProfileHeader = (props) => {
   const { userFirstName, year, img } = props;
+  
+  ProfileHeader.defaultProps = {
+    img: require('../../assets/defaultImg.png'),
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -18,7 +23,7 @@ const ProfileHeader = (props) => {
           <MaterialCommunityIcons name="star" color={'white'} size={35}/>
         </Pressable>
       </View>    
-      <Image style={styles.img} source={{uri: img}}/>
+      <Image style={styles.img} source={img}/>
       
     </View>
   )
@@ -63,8 +68,8 @@ const styles = StyleSheet.create({
   },
   img:{
     position: 'absolute',
-    top: size/2,
-    right: size*1.3,
+    top: size/1.9,
+    right: size*1.9,
     width: size,
     height: size,
     borderRadius: size/2
@@ -82,6 +87,6 @@ const styles = StyleSheet.create({
   icon:{
     position: 'absolute',
     left: Dimensions.get('window').width * 0.8,
-    top: size*0.6,
+    top: size*0.75,
   },
 })
