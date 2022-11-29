@@ -46,8 +46,10 @@ const fetchOffers = async () => {
 
 
 const MainScreen = ({ navigation }) => {
+
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
+
     useEffect(() => {
         fetch(`${SERVER_URL}/api/users/${userId}`)
             .then((res) => res.json())
@@ -77,7 +79,7 @@ const MainScreen = ({ navigation }) => {
             
             <ScrollView style={styles.scroll}>
             {data.map((offer, i) => {
-                return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} />;
+                return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} imgUrl={require('../assets/defaultImg.png')}/>;
             })}
             </ScrollView>
             
@@ -94,10 +96,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#f2f2f2",
         alignItems: "center",
         justifyContent:'space-between',
+        margin: 0,
     },
     scroll: {
         flex: 1,
         width: '100%',
+        flexDirection: 'column',
         alignContent: 'center',
+        marginLeft: 15,
     }
 });

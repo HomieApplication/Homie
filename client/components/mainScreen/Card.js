@@ -5,10 +5,15 @@ const size = 80;
 
 export default function Card(props) { 
   const { onPress, userFirstName, userLastName, description, year, imgUrl, localType, localization } = props;
+
+  Card.defaultProps = {
+    imgUrl: require('../../assets/defaultImg.png')
+  }
+
   return (
     <View style={styles.container}>
         <View style={styles.upperHalf}>
-            <Image style={styles.img} source={require('../../assets/cat.jpg')}/>
+            <Image style={styles.img} source={imgUrl}/>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
                 <Text style={styles.description}>{localType}, {localization}, {year} year</Text>
