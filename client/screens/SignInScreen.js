@@ -22,8 +22,12 @@ const SignInScreen = ({ navigation }) => {
                 <TextInput style={styles.textboxes} onChangeText={onChangeLogin} value={email} placeholder="Login"/>
                 <TextInput style={styles.textboxes} onChangeText={onChangePassword} value={password} placeholder="Password" secureTextEntry/>
                 <SignInBtn style={styles.button} title="Confirm" onPress={() => {
-                        login(email, password)
-                        navigation.push('Main')
+                        try {
+                            login(email, password);
+                            // navigation.push("Main");
+                        } catch (error) {
+                            displayAlertBox("Failed to sign in", error.message);
+                        }
                     }}>
                 </SignInBtn>
             </View>

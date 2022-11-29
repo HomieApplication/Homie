@@ -5,6 +5,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import SignInBtn from '../components/signIn/SignInBtn';
 import {getAuth} from "firebase/auth";
 import { SERVER_URL } from '../components/firebase/config';
+import { displayAlertBox } from '../components/alert';
 
 const AddOfferScreen = ({ navigation }) => {
 
@@ -34,8 +35,13 @@ const sendData = () => {
             "Response Body -> " + JSON.stringify(responseData)
         )
     })
-    .then(() => navigation.push('Main'))
-
+    .then(() => {
+        displayAlertBox("Offer succesfully published!");
+        navigation.push("Main");
+    })
+    .catch((error) => {
+        displayAlertBox("Please, try again later", error.message);
+    });
 }
 
 
@@ -46,7 +52,13 @@ const sendData = () => {
         <TextInput style={styles.textboxes} onChangeText={onChangeDescription} value={description} placeholder="Description"/>
         <TextInput style={styles.textboxes} onChangeText={onChangeLocalization} value={localization} placeholder="Localization (city for now...)"/>
         
-        <SignInBtn style={styles.button} title="Create offer" onPress={() => {sendData()}}></SignInBtn>  
+        <SignInBtn style={styles.button} title="Create offer" onPress={() => {
+            try {
+                sendData();
+            } catch (error) {
+                displayAlertBox("Please, try again later", error.message);
+            }}}>
+        </SignInBtn>  
     </SafeAreaView>
   )
 }
