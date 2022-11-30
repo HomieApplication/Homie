@@ -22,12 +22,13 @@ router.get("/:id", async (req, res) => {
             if (docSnap.exists()) res.send(docSnap.data());
             else
                 res.status(404).send({
-                    message: "User not found",
+                    cause: "User not found",
                 });
         })
-        .catch(() =>
+        .catch((error) =>
             res.status(500).send({
-                message: "Server error",
+                cause: "Server Error",
+                message: error.message,
             })
         );
 });
@@ -50,16 +51,28 @@ router.post("/:id", async (req, res) => {
         favs: [],
     };
 
-    await setDoc(doc(db, "users", id), userData)
-        .then(() => {
-            res.send(userData);
-        })
-        .catch(() => res.send({ message: "Server error" }));
+    try {
+        await setDoc(doc(db, "users", id), userData)
+            .then(() => {
+                res.send(userData);
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    message: error.message,
+                    cause: "Server error",
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
 router.put("/", (req, res) => {
     // zmienia pojedynczy rekord z tabeli users, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const nae = req.body.name;
+    const name = req.body.name;
     // itd...
     const id = req.params.id;
 

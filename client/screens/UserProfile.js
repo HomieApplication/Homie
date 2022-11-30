@@ -17,6 +17,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { SERVER_URL } from "../components/firebase/config";
+import { displayAlertBox } from "../components/alert";
 
 const Tabs = [
     {
@@ -50,9 +51,10 @@ const UserProfile = ({ navigation }) => {
                 setUser(data);
                 console.log(data);
             })
-            .catch((error) =>
-                console.log("Connection error: " + error.message)
-            );
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                displayAlertBox("Please, try again later", error.message);
+            });
     }, []);
 
 
@@ -92,8 +94,10 @@ const UserProfile = ({ navigation }) => {
                 title="Log out"
                 style={styles.btn}
                 onPress={() => {
-                    logout();
-                    navigation.push("SignIn");
+                    try {logout();} catch (error) {
+                        displayAlertBox("Failed to sign out", error.message);
+                    }
+                    // navigation.push("SignIn");
                 }}
             />
         </SafeAreaView>
