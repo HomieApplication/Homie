@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Tab from "../components/userProfile/Tab";
 import SignInBtn from "../components/signIn/SignInBtn";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
@@ -39,31 +39,27 @@ const Tabs = [
     },
 ];
 
-
-
-
 const UserProfile = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     useEffect(() => {
-  auth.currentUser.getIdToken().then((idToken) => {
-    fetch(`${SERVER_URL}/api/users/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUser(data);
-                console.log(data);
+        auth.currentUser.getIdToken().then((idToken) => {
+            fetch(`${SERVER_URL}/api/users/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`,
+                },
             })
-            .catch((error) => {
-                console.log("Connection error: " + error.message);
-                displayAlertBox("Please, try again later", error.message);
-            });
-        })
+                .then((res) => res.json())
+                .then((data) => {
+                    setUser(data);
+                    console.log(data);
+                })
+                .catch((error) => {
+                    console.log("Connection error: " + error.message);
+                    displayAlertBox("Please, try again later", error.message);
+                });
+        });
     }, []);
-
 
     // const [image, setImage] = useState(null);
 
@@ -74,7 +70,7 @@ const UserProfile = ({ navigation }) => {
     //         aspect: [4, 4],
     //         quality: 1,
     //     }).catch((error) => console.log(error));
-        
+
     //     console.log(result);
 
     //     if (!result.cancelled){
@@ -90,7 +86,7 @@ const UserProfile = ({ navigation }) => {
                 year={userData.yearOfStudy}
             />
             {Tabs.map((item) => {
-               return( <Tab key={item.id} title={item.title} /> )
+                return <Tab key={item.id} title={item.title} />;
             })}
             {/* <SignInBtn 
                 title="Pick profile image" 
@@ -101,7 +97,9 @@ const UserProfile = ({ navigation }) => {
                 title="Log out"
                 style={styles.btn}
                 onPress={() => {
-                    try {logout();} catch (error) {
+                    try {
+                        logout();
+                    } catch (error) {
                         displayAlertBox("Failed to sign out", error.message);
                     }
                     // navigation.push("SignIn");

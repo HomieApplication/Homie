@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Button,
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
 import { getAuth } from "firebase/auth";
 import { auth } from "../components/firebase/config";
 
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 import { SERVER_URL } from "../components/firebase/config";
 
@@ -15,18 +22,22 @@ const fetchOffers = async (idToken) => {
         headers: {
             Authorization: `Bearer ${idToken}`,
         },
-    }).then((res) =>
-        res.json()
-    ).catch((error) => console.log(error));
+    })
+        .then((res) => res.json())
+        .catch((error) => console.log(error));
 
     const offersWithUser = await Promise.all(
         offers.map(async (offer) => {
             const userData = await fetch(
-                `${SERVER_URL}/api/users/${offer.userId}`, {
+                `${SERVER_URL}/api/users/${offer.userId}`,
+                {
                     headers: {
                         Authorization: `Bearer ${idToken}`,
                     },
-                }).then((r) => r.json()).catch((error) => console.log(error));
+                }
+            )
+                .then((r) => r.json())
+                .catch((error) => console.log(error));
             return { ...userData, ...offer };
         })
     ).catch((error) => console.log(error));
@@ -43,7 +54,7 @@ const fetchOffers = async (idToken) => {
 //         aspect: [4, 4],
 //         quality: 1,
 //     });
-    
+
 //     console.log(result);
 
 //     if (!result.cancelled){
@@ -51,9 +62,7 @@ const fetchOffers = async (idToken) => {
 //     }
 // }
 
-
 const MainScreen = ({ navigation }) => {
-
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     const [idToken, setIdToken] = useState("");
@@ -92,17 +101,26 @@ const MainScreen = ({ navigation }) => {
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
             />
-            
+
             <ScrollView style={styles.scroll}>
-            {data.map((offer, i) => {
-                return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} imgUrl={require('../assets/defaultImg.png')}/>;
-            })}
+                {data.map((offer, i) => {
+                    return (
+                        <Card
+                            key={i}
+                            userFirstName={offer.firstName}
+                            userLastName={offer.lastName}
+                            description={offer.description}
+                            year={offer.yearOfStudy}
+                            localType={offer.localType}
+                            localization={offer.localization}
+                            imgUrl={require("../assets/defaultImg.png")}
+                        />
+                    );
+                })}
             </ScrollView>
-            
         </SafeAreaView>
     );
 };
-
 
 export default MainScreen;
 
@@ -111,14 +129,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f2f2f2",
         alignItems: "center",
-        justifyContent:'space-between',
+        justifyContent: "space-between",
         margin: 0,
     },
     scroll: {
         flex: 1,
-        width: '100%',
-        flexDirection: 'column',
-        alignContent: 'center',
+        width: "100%",
+        flexDirection: "column",
+        alignContent: "center",
         marginLeft: 15,
-    }
+    },
 });
