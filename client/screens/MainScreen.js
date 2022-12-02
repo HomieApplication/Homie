@@ -65,33 +65,29 @@ const fetchOffers = async (idToken) => {
 const MainScreen = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
-    const [idToken, setIdToken] = useState("");
-
-    auth.currentUser.getIdToken().then((idToken) => {
-        setIdToken(idToken);
-    });
+    const [offersData, setOffersData] = useState([]);
 
     useEffect(() => {
-        fetch(`${SERVER_URL}/api/users/${userId}`, {
-            headers: new Headers({
-                Authorization: `Bearer ${idToken}`,
-            }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUser(data);
-                // console.log(data);
+        auth.currentUser.getIdToken().then((idToken) => {
+            fetch(`${SERVER_URL}/api/users/${userId}`, {
+                headers: new Headers({
+                    Authorization: `Bearer ${idToken}`,
+                }),
             })
-            .catch((error) =>
-                console.log("Connection error: " + error.message)
-            );
-    }, []);
+                .then((res) => res.json())
+                .then((data) => {
+                    setUser(data);
+                    // console.log(data);
+                })
+                .catch((error) =>
+                    console.log("Connection error: " + error.message)
+                );
 
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        fetchOffers(idToken).then((offers) => {
-            setData(offers);
+            fetchOffers(idToken)
+                .then((offers) => {
+                    setOffersData(offers);
+                })
+                .catch((error) => console.log(error));
         });
     }, []);
 
@@ -103,7 +99,7 @@ const MainScreen = ({ navigation }) => {
             />
 
             <ScrollView style={styles.scroll}>
-                {data.map((offer, i) => {
+                {offersData.map((offer, i) => {
                     return (
                         <Card
                             key={i}

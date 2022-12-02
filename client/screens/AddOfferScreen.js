@@ -31,20 +31,18 @@ const AddOfferScreen = ({ navigation }) => {
                         Authorization: `Bearer ${idToken}`,
                     },
                     body: JSON.stringify({
-                        userId: auth.currentUser.uid,
                         localType: localType,
                         description: description,
                         localization: localization,
                     }),
-                });
-            })
-
-            .then((response) => response.json())
-            .then((responseData) => {
-                console.log(
-                    "POST Response",
-                    "Response Body -> " + JSON.stringify(responseData)
-                );
+                })
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        // console.log(
+                        //     "POST Response",
+                        //     "Response Body -> " + JSON.stringify(responseData)
+                        // );
+                    });
             })
             .then(() => {
                 displayAlertBox("Offer succesfully published!");
