@@ -4,6 +4,13 @@ import { db } from "../firebase/config.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     try {
         const querySnapshot = await db.collection("offers").get(db);
 
@@ -25,8 +32,15 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     // dodaje pojedynczy rekord o kolejnym id do tabeli offers, zwraca utworzony obiekt
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     const docData = {
-        userId: req.body.userId,
+        userId: user.uid,
         localType: req.body.localType,
         description: req.body.description,
         localization: req.body.localization,

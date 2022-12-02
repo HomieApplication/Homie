@@ -18,6 +18,7 @@ import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { SERVER_URL } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
+import { auth } from "../components/firebase/config";
 
 const Tabs = [
     {
@@ -45,7 +46,12 @@ const UserProfile = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     useEffect(() => {
-        fetch(`${SERVER_URL}/api/users/${userId}`)
+  auth.currentUser.getIdToken().then((idToken) => {
+    fetch(`${SERVER_URL}/api/users/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUser(data);
@@ -55,6 +61,7 @@ const UserProfile = ({ navigation }) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
             });
+        })
     }, []);
 
 

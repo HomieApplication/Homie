@@ -3,8 +3,8 @@ import { Dimensions, StyleSheet, Text, View, TextInput, useState } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import SignInBtn from '../components/signIn/SignInBtn';
-import {getAuth} from "firebase/auth";
-import { SERVER_URL } from '../components/firebase/config';
+import { getAuth } from "firebase/auth";
+import { auth, SERVER_URL } from '../components/firebase/config';
 import { displayAlertBox } from '../components/alert';
 
 const AddOfferScreen = ({ navigation }) => {
@@ -14,19 +14,22 @@ const [description, onChangeDescription] = React.useState('');
 const [localization, onChangeLocalization] = React.useState('');
 
 const sendData = () => {
-  fetch(`${SERVER_URL}/api/offers`, {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      userId: getAuth().currentUser.uid,
-      localType: localType,
-      description: description,
-      localization: localization,
-    })
-})
+  auth.currentUser.getIdToken().then((idToken) => {
+    fetch(`${SERVER_URL}/api/offers`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+        userId: auth.currentUser.uid,
+        localType: localType,
+        description: description,
+        localization: localization,
+        }),
+    });
+  })
 
     .then((response) => response.json())
     .then((responseData) => {

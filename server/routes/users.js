@@ -3,22 +3,21 @@ import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.status(404).send("Not implemented");
-});
-
 router.get("/:id", async (req, res) => {
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     try {
-        const id = req.params.id;
         await db
             .collection("users")
-            .doc(id)
+            .doc(req.params.id)
+            .get()
             .then((docSnap) => {
-                if (docSnap.exists()) res.send(docSnap.data());
-                else
-                    res.status(404).send({
-                        cause: "User not found",
-                    });
+                res.send(docSnap.data());
             })
             .catch((error) =>
                 res.status(500).send({
@@ -34,12 +33,17 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/:id", async (req, res) => {
+router.post("/", async (req, res) => {
     // dodaje nowego użytkownika do tabeli users, zwraca utworzony obiekt
-    // itd...
-    const id = req.params.id;
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     const userData = {
-        userId: id,
+        userId: user.uid,
         firstName: req.body.firstName || "",
         lastName: req.body.lastName || "",
         age: req.body.age || 0,
@@ -55,7 +59,7 @@ router.post("/:id", async (req, res) => {
     try {
         await db
             .collection("users")
-            .doc(id)
+            .doc(user.uid)
             .set(userData)
             .then(() => {
                 res.send(userData);
@@ -80,14 +84,14 @@ router.put("/", (req, res) => {
     // itd...
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.delete("/:id", (req, res) => {
     // usuwa pojedynczy rekord z tabeli users, nic nie zwraca, jeśli brak rekordu - 404
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 // To poniżej opcjonalnie
@@ -96,7 +100,7 @@ router.get("/:id/favs", (req, res) => {
     // zwraca tablicę id polubionych ofert z tabeli users, jeśli brak rekordu - 404
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.put("/:id/favs", (req, res) => {
@@ -105,7 +109,7 @@ router.put("/:id/favs", (req, res) => {
     // itd...
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 // Te dwie już całkiem dodatkowe
@@ -116,14 +120,14 @@ router.post("/:id/favs", (req, res) => {
     // itd...
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 router.delete("/:id/favs", (req, res) => {
     // usuwa pojedyncze pole favs z tabeli users dla danego id, nic nie zwraca, jeśli brak rekordu - 404
     const id = req.params.id;
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 export default router;

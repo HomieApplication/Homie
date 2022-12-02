@@ -4,22 +4,29 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
 import { getAuth } from "firebase/auth";
+import { auth } from "../components/firebase/config";
 
 import * as ImagePicker from 'expo-image-picker';
 
 import { SERVER_URL } from "../components/firebase/config";
-import { async } from "@firebase/util";
 
-const fetchOffers = async () => {
-    const offers = await fetch(`${SERVER_URL}/api/offers`).then((res) =>
+const fetchOffers = async (idToken) => {
+    const offers = await fetch(`${SERVER_URL}/api/offers`, {
+        headers: {
+            Authorization: `Bearer ${idToken}`,
+        },
+    }).then((res) =>
         res.json()
-    );
+    ).catch((error) => console.log(error));
 
     const offersWithUser = await Promise.all(
         offers.map(async (offer) => {
             const userData = await fetch(
-                `${SERVER_URL}/api/users/${offer.userId}`
-            ).then((r) => r.json());
+                `${SERVER_URL}/api/users/${offer.userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${idToken}`,
+                    },
+                }).then((r) => r.json()).catch((error) => console.log(error));
             return { ...userData, ...offer };
         })
     ).catch((error) => console.log(error));
@@ -49,13 +56,22 @@ const MainScreen = ({ navigation }) => {
 
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
+    const [idToken, setIdToken] = useState("");
+
+    auth.currentUser.getIdToken().then((idToken) => {
+        setIdToken(idToken);
+    });
 
     useEffect(() => {
-        fetch(`${SERVER_URL}/api/users/${userId}`)
+        fetch(`${SERVER_URL}/api/users/${userId}`, {
+            headers: new Headers({
+                Authorization: `Bearer ${idToken}`,
+            }),
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                // console.log(data);
             })
             .catch((error) =>
                 console.log("Connection error: " + error.message)
@@ -65,7 +81,7 @@ const MainScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetchOffers().then((offers) => {
+        fetchOffers(idToken).then((offers) => {
             setData(offers);
         });
     }, []);

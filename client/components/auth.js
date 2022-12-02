@@ -21,14 +21,17 @@ export function register(email, password, userData) {
                 photoURL: userData.photoURL,
                 phoneNumber: userData.phoneNumber,
             }).then(() => {
-                fetch(`${SERVER_URL}/api/users/${getAuth().currentUser.uid}`, {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(userData),
-                }).then((res) => res.json());
+                auth.currentUser.getIdToken().then((idToken) => {
+                    fetch(`${SERVER_URL}/api/users`, {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${idToken}`,
+                        },
+                        body: JSON.stringify(userData),
+                    }).then((res) => res.json());
+                });
             });
         })
         .catch((error) => {
