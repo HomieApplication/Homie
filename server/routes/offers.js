@@ -1,29 +1,26 @@
-import {
-    doc,
-    setDoc,
-    getDoc,
-    deleteDoc,
-    getFirestore,
-    collection,
-    getDocs,
-} from "firebase/firestore";
 import express from "express";
-import { addDoc } from "firebase/firestore";
 import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const querySnapshot = await getDocs(collection(db, "offers"));
+    try {
+        const querySnapshot = await db.collection("offers").get(db);
 
-    const data = new Array();
-    querySnapshot.forEach((doc) => {
-        data.push({
-            offerId: doc.id,
-            ...doc.data(),
+        const data = new Array();
+        querySnapshot.forEach((doc) => {
+            data.push({
+                offerId: doc.id,
+                ...doc.data(),
+            });
         });
-    });
-    res.send(data);
+        res.send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
 router.post("/", async (req, res) => {
@@ -36,17 +33,25 @@ router.post("/", async (req, res) => {
         photoURL: req.body.photoURL || "",
     };
 
-    const docRef = await addDoc(collection(db, "offers"), docData)
-        .then(() => {
-            res.send(docData);
-        })
-        .catch((error) =>
-            res.status(500).send({
-                message: error.message,
-                cause: "Server error",
+    try {
+        const offersRef = db.collection("offers");
+        await offersRef
+            .add(docData)
+            .then(() => {
+                res.send(docData);
             })
-        );
-    // console.log("Document written with ID: ", docRef.id);
+            .catch((error) =>
+                res.status(500).send({
+                    message: error.message,
+                    cause: "Server error",
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
 router.get("/:id", (req, res) => {

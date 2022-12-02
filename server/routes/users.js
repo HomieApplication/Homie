@@ -1,11 +1,3 @@
-import {
-    doc,
-    setDoc,
-    getDoc,
-    deleteDoc,
-    addDoc,
-    collection,
-} from "firebase/firestore";
 import express from "express";
 import { db } from "../firebase/config.js";
 
@@ -16,21 +8,30 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const id = req.params.id;
-    await getDoc(doc(db, "users", id))
-        .then((docSnap) => {
-            if (docSnap.exists()) res.send(docSnap.data());
-            else
-                res.status(404).send({
-                    cause: "User not found",
-                });
-        })
-        .catch((error) =>
-            res.status(500).send({
-                cause: "Server Error",
-                message: error.message,
+    try {
+        const id = req.params.id;
+        await db
+            .collection("users")
+            .doc(id)
+            .then((docSnap) => {
+                if (docSnap.exists()) res.send(docSnap.data());
+                else
+                    res.status(404).send({
+                        cause: "User not found",
+                    });
             })
-        );
+            .catch((error) =>
+                res.status(500).send({
+                    cause: "Server Error",
+                    message: error.message,
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server Error",
+            message: error.message,
+        });
+    }
 });
 
 router.post("/:id", async (req, res) => {
@@ -52,7 +53,10 @@ router.post("/:id", async (req, res) => {
     };
 
     try {
-        await setDoc(doc(db, "users", id), userData)
+        await db
+            .collection("users")
+            .doc(id)
+            .set(userData)
             .then(() => {
                 res.send(userData);
             })

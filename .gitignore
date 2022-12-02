@@ -12,6 +12,7 @@ web-build/
 config*
 *key.json
 *Key.json
+settings.json
 
 # macOS
 .DS_Store
