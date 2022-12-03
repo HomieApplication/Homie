@@ -12,6 +12,8 @@ import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
 import { getAuth } from "firebase/auth";
 import { auth } from "../components/firebase/config";
+import { displayAlertBox } from "../components/alert";
+import { logout } from "../components/auth";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -24,7 +26,11 @@ const fetchOffers = async (idToken) => {
         },
     })
         .then((res) => res.json())
-        .catch((error) => console.log(error));
+        .catch((error) => {
+            console.log(error);
+            displayAlertBox("Please, try again later", error.message);
+            // logout();
+        });
 
     const offersWithUser = await Promise.all(
         offers.map(async (offer) => {
@@ -37,10 +43,18 @@ const fetchOffers = async (idToken) => {
                 }
             )
                 .then((r) => r.json())
-                .catch((error) => console.log(error));
+                .catch((error) => {
+                    console.log(error);
+                    displayAlertBox("Please, try again later", error.message);
+                    // logout();
+                });
             return { ...userData, ...offer };
         })
-    ).catch((error) => console.log(error));
+    ).catch((error) => {
+        console.log(error);
+        displayAlertBox("Please, try again later", error.message);
+        // logout();
+    });
 
     return offersWithUser;
 };
@@ -69,25 +83,31 @@ const MainScreen = ({ navigation }) => {
 
     useEffect(() => {
         auth.currentUser.getIdToken().then((idToken) => {
-            fetch(`${SERVER_URL}/api/users/${userId}`, {
-                headers: new Headers({
+            fetch(`${SERVER_URL}/api/users`, {
+                headers: {
                     Authorization: `Bearer ${idToken}`,
-                }),
+                },
             })
                 .then((res) => res.json())
                 .then((data) => {
                     setUser(data);
                     // console.log(data);
                 })
-                .catch((error) =>
-                    console.log("Connection error: " + error.message)
-                );
+                .catch((error) => {
+                    console.log("Connection error: " + error.message);
+                    displayAlertBox("Please, try again later", error.message);
+                    // logout();
+                });
 
             fetchOffers(idToken)
                 .then((offers) => {
                     setOffersData(offers);
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => {
+                    console.log(error);
+                    displayAlertBox("Please, try again later", error.message);
+                    // logout();
+                });
         });
     }, []);
 
