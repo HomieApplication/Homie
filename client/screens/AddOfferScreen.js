@@ -45,7 +45,7 @@ const AddOfferScreen = ({ navigation }) => {
                     });
             })
             .then(() => {
-                displayAlertBox("Offer succesfully published!");
+                displayAlertBox("Offer successfully published!");
                 navigation.push("Main");
             })
             .catch((error) => {
@@ -60,7 +60,7 @@ const AddOfferScreen = ({ navigation }) => {
                 style={styles.textboxes}
                 onChangeText={onChangeLocalType}
                 value={localType}
-                placeholder="Local type dormitory/flat"
+                placeholder="Local type (dormitory/flat)"
             />
             <TextInput
                 style={styles.textboxes}

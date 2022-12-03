@@ -77,7 +77,6 @@ const fetchOffers = async (idToken) => {
 // }
 
 const MainScreen = ({ navigation }) => {
-    const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     const [offersData, setOffersData] = useState([]);
 
