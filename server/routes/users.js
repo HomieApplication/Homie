@@ -17,6 +17,41 @@ router.get("/:id", async (req, res) => {
             .doc(req.params.id)
             .get()
             .then((docSnap) => {
+                const { firstName, lastName, yearOfStudy } = docSnap.data();
+                res.send({
+                    firstName: firstName,
+                    lastName: lastName,
+                    yearOfStudy: yearOfStudy,
+                });
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    cause: "Server Error",
+                    message: error.message,
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server Error",
+            message: error.message,
+        });
+    }
+});
+
+router.get("/", async (req, res) => {
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
                 res.send(docSnap.data());
             })
             .catch((error) =>
