@@ -12,7 +12,15 @@ router.get("/", async (req, res) => {
     }
 
     try {
-        const querySnapshot = await db.collection("offers").get(db);
+        const querySnapshot = await db
+            .collection("offers")
+            .get(db)
+            .catch((error) => {
+                res.status(404).send({
+                    message: error.message,
+                    cause: "Server error",
+                });
+            });
 
         const data = new Array();
         querySnapshot.forEach((doc) => {

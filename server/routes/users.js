@@ -52,7 +52,14 @@ router.get("/", async (req, res) => {
             .doc(user.uid)
             .get()
             .then((docSnap) => {
-                res.send(docSnap.data());
+                if (docSnap.exists) {
+                    res.send(docSnap.data());
+                } else {
+                    res.status(404).send({
+                        cause: "User not found",
+                        message: error.message,
+                    });
+                }
             })
             .catch((error) =>
                 res.status(500).send({
