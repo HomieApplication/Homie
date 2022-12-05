@@ -1,5 +1,6 @@
 import express from "express";
 import { db } from "../firebase/config.js";
+import { Timestamp } from "firebase-admin/firestore";
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.get("/", async (req, res) => {
                 ...doc.data(),
             });
         });
-        res.send(data.slice((end = 50)));
+        res.send(data.slice(0, 50));
     } catch (error) {
         res.status(500).send({
             message: error.message,
@@ -55,6 +56,7 @@ router.post("/", async (req, res) => {
         localization: req.body.localization,
         photoURLArray: req.body.photoURLArray || [],
         title: req.body.title || "",
+        creationDate: Timestamp.now(),
     };
 
     try {
