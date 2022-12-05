@@ -4,6 +4,7 @@ import { db } from "../firebase/config.js";
 const router = express.Router();
 
 router.get("/:id", async (req, res) => {
+    // zwraca niektóre dane użytkownika o danym id
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -17,11 +18,23 @@ router.get("/:id", async (req, res) => {
             .doc(req.params.id)
             .get()
             .then((docSnap) => {
-                const { firstName, lastName, yearOfStudy } = docSnap.data();
+                const {
+                    firstName,
+                    lastName,
+                    yearOfStudy,
+                    phoneNumber,
+                    birthDate,
+                    gender,
+                    photoURL,
+                } = docSnap.data();
                 res.send({
                     firstName: firstName,
                     lastName: lastName,
                     yearOfStudy: yearOfStudy,
+                    phoneNumber: phoneNumber,
+                    birthDate: birthDate,
+                    gender: gender,
+                    photoURL: photoURL,
                 });
             })
             .catch((error) =>
@@ -39,6 +52,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+    // zwraca dane obecnie zalogowanego użytkownika
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -76,7 +90,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    // dodaje nowego użytkownika do tabeli users, zwraca utworzony obiekt
+    // dodaje nowozarejestrowanego użytkownika do tabeli users, zwraca utworzony obiekt
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -121,53 +135,73 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/", (req, res) => {
-    // zmienia pojedynczy rekord z tabeli users, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const name = req.body.name;
-    // itd...
-    const id = req.params.id;
+    // aktualizuje dane obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
     res.status(501).send("Not implemented");
 });
 
-router.delete("/:id", (req, res) => {
-    // usuwa pojedynczy rekord z tabeli users, nic nie zwraca, jeśli brak rekordu - 404
-    const id = req.params.id;
+router.delete("/", (req, res) => {
+    // usuwa obecnie zalogowanego użytkownika z bazy danych, nic nie zwraca, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
     res.status(501).send("Not implemented");
 });
 
-// To poniżej opcjonalnie
-
-router.get("/:id/favs", (req, res) => {
-    // zwraca tablicę id polubionych ofert z tabeli users, jeśli brak rekordu - 404
-    const id = req.params.id;
-
-    res.status(501).send("Not implemented");
-});
-
-router.put("/:id/favs", (req, res) => {
-    // zmienia tablicę favs z tabeli users dla danego id, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const title = req.body.name;
-    // itd...
-    const id = req.params.id;
+router.get("/favs", (req, res) => {
+    // zwraca tablicę danych polubionych ofert obecnie zalogowanego użytkownika, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
     res.status(501).send("Not implemented");
 });
 
-// Te dwie już całkiem dodatkowe
-
-router.post("/:id/favs", (req, res) => {
-    // dodaje nową tablicę favs do tabeli users dla danego id, zwraca utworzoną tablicę
-    const title = req.body.name;
-    // itd...
-    const id = req.params.id;
+router.put("/favs", (req, res) => {
+    // aktualizuje tablicę polubionych ofert obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
     res.status(501).send("Not implemented");
 });
 
-router.delete("/:id/favs", (req, res) => {
-    // usuwa pojedyncze pole favs z tabeli users dla danego id, nic nie zwraca, jeśli brak rekordu - 404
-    const id = req.params.id;
+router.get("/my-offers", (req, res) => {
+    // zwraca tablicę danych opublikowanych przez obecnie zalogowanego użytkownika ofert, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
+    res.status(501).send("Not implemented");
+});
+
+router.put("/my-offers", (req, res) => {
+    // aktualizuje tablicę opublikowanych przez obecnie zalogowanego użytkownika ofert, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
     res.status(501).send("Not implemented");
 });

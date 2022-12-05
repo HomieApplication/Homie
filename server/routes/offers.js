@@ -4,6 +4,7 @@ import { db } from "../firebase/config.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+    // zwraca dane 50 ofert
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
                 ...doc.data(),
             });
         });
-        res.send(data);
+        res.send(data.slice((end = 50)));
     } catch (error) {
         res.status(500).send({
             message: error.message,
@@ -39,7 +40,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    // dodaje pojedynczy rekord o kolejnym id do tabeli offers, zwraca utworzony obiekt
+    // dodaje nową ofertę do tabeli offers, zwraca utworzony obiekt
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -52,7 +53,8 @@ router.post("/", async (req, res) => {
         localType: req.body.localType,
         description: req.body.description,
         localization: req.body.localization,
-        photoURL: req.body.photoURL || "",
+        photoURLArray: req.body.photoURLArray || [],
+        title: req.body.title || "",
     };
 
     try {
@@ -77,23 +79,41 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-    // zwraca pojedynczy rekord z tabeli offers, jeśli brak rekordu 404
+    // zwraca ofertę o danym id z tabeli offers, jeśli brak rekordu 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
     const id = req.params.id;
 
     res.status(501).send("Not implemented");
 });
 
 router.put("/:id", (req, res) => {
-    // zmienia pojedynczy rekord z tabeli offers, zwraca zaktualizowany obiekt, jeśli brak rekordu 404
+    // aktualizuje ofertę o danym id w tabeli offers, zwraca zaktualizowany obiekt, jeśli brak rekordu 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+    const id = req.params.id;
     const title = req.body.title;
     // itd...
-    const id = req.params.id;
 
     res.status(501).send("Not implemented");
 });
 
 router.delete("/:id", (req, res) => {
-    // usuwa pojedynczy rekord z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
+    // usuwa ofertę o danym id z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
     const id = req.params.id;
 
     res.status(501).send("Not implemented");
