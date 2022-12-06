@@ -194,16 +194,4 @@ router.get("/my-offers", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
-router.put("/my-offers", (req, res) => {
-    // aktualizuje tablicę opublikowanych przez obecnie zalogowanego użytkownika ofert, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const user = req["currentUser"];
-    if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
-    }
-
-    res.status(501).send("Not implemented");
-});
-
 export default router;

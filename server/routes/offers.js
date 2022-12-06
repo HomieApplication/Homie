@@ -64,6 +64,7 @@ router.post("/", async (req, res) => {
         await offersRef
             .add(docData)
             .then(() => {
+                docData.creationDate = docData.creationDate.toDate();
                 res.send(docData);
             })
             .catch((error) =>
