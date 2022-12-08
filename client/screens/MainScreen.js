@@ -11,19 +11,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
 import * as ImagePicker from "expo-image-picker";
-import { getAuth } from "firebase/auth";
-import { auth } from "../components/firebase/config";
+import axios from "axios";
+
 import { displayAlertBox } from "../components/alert";
 import { logout } from "../components/auth";
-import { SERVER_URL } from "../components/firebase/config";
 
-const fetchOffers = async (idToken) => {
-    const offers = await fetch(`${SERVER_URL}/api/offers`, {
-        headers: {
-            Authorization: `Bearer ${idToken}`,
-        },
-    })
-        .then((res) => res.json())
+const fetchOffers = async () => {
+    const offers = await axios
+        .get("/api/offers")
+        .then((res) => res.data)
         .catch((error) => {
             console.log(error);
             displayAlertBox("Please, try again later", error.message);
@@ -32,15 +28,9 @@ const fetchOffers = async (idToken) => {
 
     const offersWithUser = await Promise.all(
         offers.map(async (offer) => {
-            const userData = await fetch(
-                `${SERVER_URL}/api/users/${offer.userId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${idToken}`,
-                    },
-                }
-            )
-                .then((r) => r.json())
+            const userData = await axios
+                .get(`/api/users/${offer.userId}`)
+                .then((res) => res.data)
                 .catch((error) => {
                     console.log(error);
                     displayAlertBox("Please, try again later", error.message);
@@ -79,42 +69,25 @@ const MainScreen = ({ navigation }) => {
     const [offersData, setOffersData] = useState([]);
 
     useEffect(() => {
-        auth.currentUser
-            .getIdToken()
-            .then((idToken) => {
-                fetch(`${SERVER_URL}/api/users`, {
-                    headers: {
-                        Authorization: `Bearer ${idToken}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setUser(data);
-                        // console.log(data);
-                    })
-                    .catch((error) => {
-                        console.log("Connection error: " + error.message);
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                        // logout();
-                    });
-
-                fetchOffers(idToken)
-                    .then((offers) => {
-                        setOffersData(offers);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                        // logout();
-                    });
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
+            .then((data) => {
+                setUser(data);
+                // console.log(data);
             })
             .catch((error) => {
+                console.log("Connection error: " + error.message);
+                displayAlertBox("Please, try again later", error.message);
+                // logout();
+            });
+
+        fetchOffers()
+            .then((offers) => {
+                setOffersData(offers);
+            })
+            .catch((error) => {
+                console.log(error);
                 displayAlertBox("Please, try again later", error.message);
                 // logout();
             });

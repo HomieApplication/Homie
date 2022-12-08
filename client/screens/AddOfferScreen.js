@@ -10,8 +10,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import SignInBtn from "../components/signIn/SignInBtn";
-import { getAuth } from "firebase/auth";
-import { auth, SERVER_URL } from "../components/firebase/config";
+import axios from "axios";
+
 import { displayAlertBox } from "../components/alert";
 
 const AddOfferScreen = ({ navigation }) => {
@@ -20,29 +20,11 @@ const AddOfferScreen = ({ navigation }) => {
     const [localization, onChangeLocalization] = React.useState("");
 
     const sendData = () => {
-        auth.currentUser
-            .getIdToken()
-            .then((idToken) => {
-                fetch(`${SERVER_URL}/api/offers`, {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${idToken}`,
-                    },
-                    body: JSON.stringify({
-                        localType: localType,
-                        description: description,
-                        localization: localization,
-                    }),
-                })
-                    .then((response) => response.json())
-                    .then((responseData) => {
-                        // console.log(
-                        //     "POST Response",
-                        //     "Response Body -> " + JSON.stringify(responseData)
-                        // );
-                    });
+        axios
+            .post(`/api/offers`, {
+                localType: localType,
+                description: description,
+                localization: localization,
             })
             .then(() => {
                 displayAlertBox("Offer successfully published!");

@@ -9,9 +9,9 @@ import {
     Alert,
     TouchableOpacity,
 } from "react-native";
-
 import SignInBtn from "../components/signIn/SignInBtn";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { login } from "../components/auth";
 
 const SignInScreen = ({ navigation }) => {

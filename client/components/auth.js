@@ -5,6 +5,8 @@ import {
     signOut,
     updateProfile,
 } from "firebase/auth";
+import axios from "axios";
+
 import { displayAlertBox } from "./alert";
 import { SERVER_URL } from "./firebase/config";
 
@@ -16,22 +18,8 @@ export function register(email, password, userData) {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            updateProfile(userCredential.user, {
-                displayName: userData.firstName + " " + userData.lastName,
-                photoURL: userData.photoURL,
-                phoneNumber: userData.phoneNumber,
-            }).then(() => {
-                auth.currentUser.getIdToken().then((idToken) => {
-                    fetch(`${SERVER_URL}/api/users`, {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${idToken}`,
-                        },
-                        body: JSON.stringify(userData),
-                    }).then((res) => res.json());
-                });
+            axios.post("/api/users", userData).catch((error) => {
+                displayAlertBox("Failed to register", error.message);
             });
         })
         .catch((error) => {

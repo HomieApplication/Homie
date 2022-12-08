@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchableDropdown from "react-native-searchable-dropdown";
-import { register } from "../components/auth";
 import SignInBtn from "../components/signIn/SignInBtn";
+
+import { register } from "../components/auth";
 
 const SignUpScreen = ({ navigation }) => {
     //jescze nie wiem jak zrobić taką fajną listę nie działa wybieranie

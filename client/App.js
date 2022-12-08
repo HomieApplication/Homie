@@ -6,7 +6,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { isLoggedIn, logout, login, register } from "./components/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import axios from "axios";
 
 import MainScreen from "./screens/MainScreen";
 import SignInScreen from "./screens/SignInScreen";
@@ -14,9 +15,8 @@ import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
 
-import { auth } from "./components/firebase/config";
-
-import { onAuthStateChanged } from "firebase/auth";
+import { isLoggedIn, logout, login, register } from "./components/auth";
+import { auth, SERVER_URL } from "./components/firebase/config";
 
 // App.js jest jak main - tutaj ma być mało kodu
 // głównie nawigacja - react-navigation
@@ -27,14 +27,29 @@ import { onAuthStateChanged } from "firebase/auth";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-LogBox.ignoreAllLogs()
+LogBox.ignoreAllLogs();
+
+axios.interceptors.request.use(
+    async (config) => {
+        config.baseURL = SERVER_URL;
+        await getAuth()
+            .currentUser?.getIdToken()
+            .then((idToken) => {
+                config.headers.authorization = `Bearer ${idToken}`;
+            });
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 function Main() {
     return (
         <Tab.Navigator
             initialRouteName="MainScreen"
             screenOptions={{
-                tabBarActiveTintColor: '#114B5F',
+                tabBarActiveTintColor: "#114B5F",
                 headerShown: false,
             }}
         >
@@ -133,4 +148,3 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
-
