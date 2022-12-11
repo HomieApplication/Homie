@@ -81,17 +81,34 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.get("/:id", (req, res) => {
-    // zwraca ofertę o danym id z tabeli offers, jeśli brak rekordu 404
+// To napisał bot XD
+router.get("/:id", async (req, res) => {
+    // returns an offer with given id from offers table
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
             message: "User not logged in!",
         });
     }
-    const id = req.params.id;
 
-    res.status(501).send("Not implemented");
+    try {
+        const id = req.params.id;
+        const offerSnapshot = await db.collection("offers").doc(id).get();
+
+        if (offerSnapshot.exists) {
+            res.send(offerSnapshot.data());
+        } else {
+            res.status(404).send({
+                cause: "Offer not found",
+                message: `Offer with ID ${id} does not exist`,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server error",
+            message: error.message,
+        });
+    }
 });
 
 router.put("/:id", (req, res) => {
