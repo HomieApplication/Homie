@@ -27,11 +27,11 @@ import { auth, SERVER_URL } from "./components/firebase/config";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 
 axios.interceptors.request.use(
     async (config) => {
-        config.baseURL = SERVER_URL;
+        config.baseURL = SERVER_URL ?? "https://homiebackend.azurewebsites.net";
         await getAuth()
             .currentUser?.getIdToken()
             .then((idToken) => {

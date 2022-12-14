@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
     "start": "node server",
     "dev": "nodemon server"
   },
@@ -19,7 +19,9 @@
     "firebase-admin": "^11.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "@babel/plugin-syntax-import-assertions": "^7.20.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   },
   "type": "module"
 }
