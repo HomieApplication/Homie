@@ -8,7 +8,7 @@ export async function decodeIdToken(req, res, next) {
             req["currentUser"] = decodedToken;
             next();
         } catch (error) {
-            res.status(500).send({
+            res.status(403).send({
                 cause: "Authorization Error",
                 message: error.message,
             });
