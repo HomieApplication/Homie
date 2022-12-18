@@ -81,7 +81,9 @@ const MainScreen = ({ navigation }) => {
                 displayAlertBox("Please, try again later", error.message);
                 // logout();
             });
+    }, []);
 
+    useEffect(() => {
         fetchOffers()
             .then((offers) => {
                 setOffersData(offers);
