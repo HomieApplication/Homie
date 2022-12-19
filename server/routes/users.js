@@ -110,6 +110,7 @@ router.post("/", async (req, res) => {
         description: req.body.description || "No description",
         myOffers: [],
         favs: [],
+        interests: [],
     };
 
     try {

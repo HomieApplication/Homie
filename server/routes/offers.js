@@ -5,7 +5,7 @@ import { Timestamp } from "firebase-admin/firestore";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    // zwraca dane 50 ofert
+    // zwraca dane wszystkich ofert
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
                 ...doc.data(),
             });
         });
-        res.send(data.slice(0, 50));
+        res.send(data);
     } catch (error) {
         res.status(500).send({
             message: error.message,
@@ -73,6 +73,7 @@ router.post("/", async (req, res) => {
                     cause: "Server error",
                 })
             );
+        
     } catch (error) {
         res.status(500).send({
             message: error.message,
