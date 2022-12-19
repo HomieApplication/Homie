@@ -1,72 +1,140 @@
-import {
-    doc,
-    setDoc,
-    getDoc,
-    deleteDoc,
-    getFirestore,
-    collection,
-    getDocs,
-} from "firebase/firestore";
 import express from "express";
-import { addDoc } from "firebase/firestore";
 import { db } from "../firebase/config.js";
+import { Timestamp } from "firebase-admin/firestore";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    const querySnapshot = await getDocs(collection(db, "offers"));
-
-    const data = new Array();
-    querySnapshot.forEach((doc) => {
-        data.push({
-            offerId: doc.id,
-            ...doc.data(),
+    // zwraca dane wszystkich ofert
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
         });
-    });
-    res.send(data);
+    }
+
+    try {
+        const querySnapshot = await db
+            .collection("offers")
+            .get(db)
+            .catch((error) => {
+                res.status(404).send({
+                    message: error.message,
+                    cause: "Server error",
+                });
+            });
+
+        const data = new Array();
+        querySnapshot.forEach((doc) => {
+            data.push({
+                offerId: doc.id,
+                ...doc.data(),
+            });
+        });
+        res.send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
 router.post("/", async (req, res) => {
-    // dodaje pojedynczy rekord o kolejnym id do tabeli offers, zwraca utworzony obiekt
+    // dodaje nową ofertę do tabeli offers, zwraca utworzony obiekt
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     const docData = {
-        userId: req.body.userId,
+        userId: user.uid,
         localType: req.body.localType,
         description: req.body.description,
         localization: req.body.localization,
-        photoURL: req.body.photoURL || "",
+        photoURLArray: req.body.photoURLArray || [],
+        title: req.body.title || "",
+        creationDate: Timestamp.now(),
     };
 
-    const docRef = await addDoc(collection(db, "offers"), docData)
-        .then(() => {
-            res.send(docData);
-        })
-        .catch((error) =>
-            res.status(500).send({
-                message: error.message,
-                cause: "Server error",
+    try {
+        const offersRef = db.collection("offers");
+        await offersRef
+            .add(docData)
+            .then(() => {
+                docData.creationDate = docData.creationDate.toDate();
+                res.send(docData);
             })
-        );
-    // console.log("Document written with ID: ", docRef.id);
+            .catch((error) =>
+                res.status(500).send({
+                    message: error.message,
+                    cause: "Server error",
+                })
+            );
+        
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
-router.get("/:id", (req, res) => {
-    // zwraca pojedynczy rekord z tabeli offers, jeśli brak rekordu 404
-    const id = req.params.id;
+// To napisał bot XD
+router.get("/:id", async (req, res) => {
+    // returns an offer with given id from offers table
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-    res.status(501).send("Not implemented");
+    try {
+        const id = req.params.id;
+        const offerSnapshot = await db.collection("offers").doc(id).get();
+
+        if (offerSnapshot.exists) {
+            res.send(offerSnapshot.data());
+        } else {
+            res.status(404).send({
+                cause: "Offer not found",
+                message: `Offer with ID ${id} does not exist`,
+            });
+        }
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server error",
+            message: error.message,
+        });
+    }
 });
 
 router.put("/:id", (req, res) => {
-    // zmienia pojedynczy rekord z tabeli offers, zwraca zaktualizowany obiekt, jeśli brak rekordu 404
+    // aktualizuje ofertę o danym id w tabeli offers, zwraca zaktualizowany obiekt, jeśli brak rekordu 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+    const id = req.params.id;
     const title = req.body.title;
     // itd...
-    const id = req.params.id;
 
     res.status(501).send("Not implemented");
 });
 
 router.delete("/:id", (req, res) => {
-    // usuwa pojedynczy rekord z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
+    // usuwa ofertę o danym id z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
     const id = req.params.id;
 
     res.status(501).send("Not implemented");

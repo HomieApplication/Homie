@@ -1,28 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Button, FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Button,
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
-import { getAuth } from "firebase/auth";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 
-import * as ImagePicker from 'expo-image-picker';
-
-import { SERVER_URL } from "../components/firebase/config";
-import { async } from "@firebase/util";
+import { displayAlertBox } from "../components/alert";
+import { logout } from "../components/auth";
 
 const fetchOffers = async () => {
-    const offers = await fetch(`${SERVER_URL}/api/offers`).then((res) =>
-        res.json()
-    );
+    const offers = await axios
+        .get("/api/offers")
+        .then((res) => res.data)
+        .catch((error) => {
+            console.log(error);
+            displayAlertBox("Please, try again later", error.message);
+            // logout();
+        });
 
     const offersWithUser = await Promise.all(
         offers.map(async (offer) => {
-            const userData = await fetch(
-                `${SERVER_URL}/api/users/${offer.userId}`
-            ).then((r) => r.json());
+            const userData = await axios
+                .get(`/api/users/${offer.userId}`)
+                .then((res) => res.data)
+                .catch((error) => {
+                    console.log(error);
+                    displayAlertBox("Please, try again later", error.message);
+                    // logout();
+                });
             return { ...userData, ...offer };
         })
-    ).catch((error) => console.log(error));
+    ).catch((error) => {
+        console.log(error);
+        displayAlertBox("Please, try again later", error.message);
+        // logout();
+    });
 
     return offersWithUser;
 };
@@ -36,7 +56,7 @@ const fetchOffers = async () => {
 //         aspect: [4, 4],
 //         quality: 1,
 //     });
-    
+
 //     console.log(result);
 
 //     if (!result.cancelled){
@@ -44,30 +64,35 @@ const fetchOffers = async () => {
 //     }
 // }
 
-
 const MainScreen = ({ navigation }) => {
-
-    const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
+    const [offersData, setOffersData] = useState([]);
 
     useEffect(() => {
-        fetch(`${SERVER_URL}/api/users/${userId}`)
-            .then((res) => res.json())
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                // console.log(data);
             })
-            .catch((error) =>
-                console.log("Connection error: " + error.message)
-            );
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                displayAlertBox("Please, try again later", error.message);
+                // logout();
+            });
     }, []);
 
-    const [data, setData] = useState([]);
-
     useEffect(() => {
-        fetchOffers().then((offers) => {
-            setData(offers);
-        });
+        fetchOffers()
+            .then((offers) => {
+                setOffersData(offers);
+            })
+            .catch((error) => {
+                console.log(error);
+                displayAlertBox("Please, try again later", error.message);
+                // logout();
+            });
     }, []);
 
     return (
@@ -76,17 +101,26 @@ const MainScreen = ({ navigation }) => {
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
             />
-            
+
             <ScrollView style={styles.scroll}>
-            {data.map((offer, i) => {
-                return <Card key={i} userFirstName={offer.firstName} userLastName={offer.lastName} description={offer.description} year={offer.yearOfStudy} localType={offer.localType} localization={offer.localization} imgUrl={require('../assets/defaultImg.png')}/>;
-            })}
+                {offersData.map((offer, i) => {
+                    return (
+                        <Card
+                            key={i}
+                            userFirstName={offer.firstName}
+                            userLastName={offer.lastName}
+                            description={offer.description}
+                            year={offer.yearOfStudy}
+                            localType={offer.localType}
+                            localization={offer.localization}
+                            imgUrl={require("../assets/defaultImg.png")}
+                        />
+                    );
+                })}
             </ScrollView>
-            
         </SafeAreaView>
     );
 };
-
 
 export default MainScreen;
 
@@ -95,14 +129,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f2f2f2",
         alignItems: "center",
-        justifyContent:'space-between',
+        justifyContent: "space-between",
         margin: 0,
     },
     scroll: {
         flex: 1,
-        width: '100%',
-        flexDirection: 'column',
-        alignContent: 'center',
+        width: "100%",
+        flexDirection: "column",
+        alignContent: "center",
         marginLeft: 15,
-    }
+    },
 });

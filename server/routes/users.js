@@ -1,44 +1,105 @@
-import {
-    doc,
-    setDoc,
-    getDoc,
-    deleteDoc,
-    addDoc,
-    collection,
-} from "firebase/firestore";
 import express from "express";
 import { db } from "../firebase/config.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.status(404).send("Not implemented");
-});
-
 router.get("/:id", async (req, res) => {
-    const id = req.params.id;
-    await getDoc(doc(db, "users", id))
-        .then((docSnap) => {
-            if (docSnap.exists()) res.send(docSnap.data());
-            else
-                res.status(404).send({
-                    cause: "User not found",
+    // zwraca niektóre dane użytkownika o danym id
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
+    try {
+        await db
+            .collection("users")
+            .doc(req.params.id)
+            .get()
+            .then((docSnap) => {
+                const {
+                    firstName,
+                    lastName,
+                    yearOfStudy,
+                    phoneNumber,
+                    birthDate,
+                    gender,
+                    photoURL,
+                } = docSnap.data();
+                res.send({
+                    firstName: firstName,
+                    lastName: lastName,
+                    yearOfStudy: yearOfStudy,
+                    phoneNumber: phoneNumber,
+                    birthDate: birthDate,
+                    gender: gender,
+                    photoURL: photoURL,
                 });
-        })
-        .catch((error) =>
-            res.status(500).send({
-                cause: "Server Error",
-                message: error.message,
             })
-        );
+            .catch((error) =>
+                res.status(500).send({
+                    cause: "Server Error",
+                    message: error.message,
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server Error",
+            message: error.message,
+        });
+    }
 });
 
-router.post("/:id", async (req, res) => {
-    // dodaje nowego użytkownika do tabeli users, zwraca utworzony obiekt
-    // itd...
-    const id = req.params.id;
+router.get("/", async (req, res) => {
+    // zwraca dane obecnie zalogowanego użytkownika
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
+                if (docSnap.exists) {
+                    res.send(docSnap.data());
+                } else {
+                    res.status(404).send({
+                        cause: "User not found",
+                        message: error.message,
+                    });
+                }
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    cause: "Server Error",
+                    message: error.message,
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server Error",
+            message: error.message,
+        });
+    }
+});
+
+router.post("/", async (req, res) => {
+    // dodaje nowozarejestrowanego użytkownika do tabeli users, zwraca utworzony obiekt
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
     const userData = {
-        userId: id,
+        userId: user.uid,
         firstName: req.body.firstName || "",
         lastName: req.body.lastName || "",
         age: req.body.age || 0,
@@ -49,10 +110,14 @@ router.post("/:id", async (req, res) => {
         description: req.body.description || "No description",
         myOffers: [],
         favs: [],
+        interests: [],
     };
 
     try {
-        await setDoc(doc(db, "users", id), userData)
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .set(userData)
             .then(() => {
                 res.send(userData);
             })
@@ -71,55 +136,63 @@ router.post("/:id", async (req, res) => {
 });
 
 router.put("/", (req, res) => {
-    // zmienia pojedynczy rekord z tabeli users, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const name = req.body.name;
-    // itd...
-    const id = req.params.id;
+    // aktualizuje dane obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
-router.delete("/:id", (req, res) => {
-    // usuwa pojedynczy rekord z tabeli users, nic nie zwraca, jeśli brak rekordu - 404
-    const id = req.params.id;
+router.delete("/", (req, res) => {
+    // usuwa obecnie zalogowanego użytkownika z bazy danych, nic nie zwraca, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
-// To poniżej opcjonalnie
+router.get("/favs", (req, res) => {
+    // zwraca tablicę danych polubionych ofert obecnie zalogowanego użytkownika, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-router.get("/:id/favs", (req, res) => {
-    // zwraca tablicę id polubionych ofert z tabeli users, jeśli brak rekordu - 404
-    const id = req.params.id;
-
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
-router.put("/:id/favs", (req, res) => {
-    // zmienia tablicę favs z tabeli users dla danego id, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
-    const title = req.body.name;
-    // itd...
-    const id = req.params.id;
+router.put("/favs", (req, res) => {
+    // aktualizuje tablicę polubionych ofert obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
-// Te dwie już całkiem dodatkowe
+router.get("/my-offers", (req, res) => {
+    // zwraca tablicę danych opublikowanych przez obecnie zalogowanego użytkownika ofert, jeśli brak rekordu - 404
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
 
-router.post("/:id/favs", (req, res) => {
-    // dodaje nową tablicę favs do tabeli users dla danego id, zwraca utworzoną tablicę
-    const title = req.body.name;
-    // itd...
-    const id = req.params.id;
-
-    res.status(404).send("Not implemented");
-});
-
-router.delete("/:id/favs", (req, res) => {
-    // usuwa pojedyncze pole favs z tabeli users dla danego id, nic nie zwraca, jeśli brak rekordu - 404
-    const id = req.params.id;
-
-    res.status(404).send("Not implemented");
+    res.status(501).send("Not implemented");
 });
 
 export default router;
