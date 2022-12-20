@@ -136,7 +136,6 @@ export default function App() {
                             <Stack.Screen
                                 name="Offer"
                                 component={OfferScreen}
-                                initialParams={{ idOffer: 0 }}
                             />
                         </Stack.Group>
                     )}
