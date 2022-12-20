@@ -70,8 +70,7 @@ router.get("/", async (req, res) => {
                     res.send(docSnap.data());
                 } else {
                     res.status(404).send({
-                        cause: "User not found",
-                        message: error.message,
+                        message: "User not found",
                     });
                 }
             })
@@ -147,7 +146,7 @@ router.put("/", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
-router.delete("/", (req, res) => {
+router.delete("/", async (req, res) => {
     // usuwa obecnie zalogowanego użytkownika z bazy danych, nic nie zwraca, jeśli brak rekordu - 404
     const user = req["currentUser"];
     if (!user) {
@@ -156,7 +155,26 @@ router.delete("/", (req, res) => {
         });
     }
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .delete()
+            .then(() => {
+                res.sendStatus(200);
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    cause: "Server Error",
+                    message: error.message,
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            cause: "Server Error",
+            message: error.message,
+        });
+    }
 });
 
 router.get("/favs", (req, res) => {
