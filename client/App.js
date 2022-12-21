@@ -14,6 +14,7 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
+import FulfillProfile from "./screens/FulfillProfile";
 
 import { isLoggedIn, logout, login, register } from "./components/auth";
 import { auth, SERVER_URL } from "./components/firebase/config";
@@ -131,6 +132,10 @@ export default function App() {
                             <Stack.Screen
                                 name="Profile"
                                 component={UserProfile}
+                            />
+                            <Stack.Screen
+                                name="EditProfile"
+                                component={FulfillProfile}
                             />
                         </Stack.Group>
                     )}

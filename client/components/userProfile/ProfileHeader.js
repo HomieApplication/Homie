@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-native'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React from 'react'
+import SignInBtn from "../signIn/SignInBtn";
 
 const size = 120;
 
 const ProfileHeader = (props) => {
-  const { userFirstName, year, img } = props;
+  const { userFirstName, year, img, id, onPress } = props;
   
   ProfileHeader.defaultProps = {
     img: require('../../assets/defaultImg.png'),
@@ -18,9 +19,14 @@ const ProfileHeader = (props) => {
         <View style={styles.textContainer}>
           <Text style={styles.text}>Year of study: {year}</Text>
           <Text style={styles.textDescription}>You can edit your profile in UserProfile screen! Tap right icon at the Tab bar.</Text>
+          <SignInBtn
+                    style={styles.button}
+                    title="Edit"
+                    onPress={onPress}
+                ></SignInBtn>
         </View>
         <Pressable style={styles.icon}>
-          <MaterialCommunityIcons name="star" color={'white'} size={35}/>
+          <MaterialCommunityIcons name="star" color={'yellow'} size={35}/>
         </Pressable>
       </View>    
       <Image style={styles.img} source={img}/>
@@ -89,4 +95,23 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.8,
     top: size*0.75,
   },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "50%",
+    paddingVertical: 2,
+    // paddingHorizontal: 10,
+    marginTop: 10,
+    borderRadius: 9,
+    shadowColor: "#000",
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+    backgroundColor: "#1a936f",
+},
 })

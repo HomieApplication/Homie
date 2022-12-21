@@ -95,11 +95,18 @@ const MainScreen = ({ navigation }) => {
             });
     }, []);
 
+    const sendUserId = () => {
+        console.log(userData.userId)
+        navigation.push("EditProfile", {id: userData.userId})
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ProfileHeader
                 userFirstName={userData.firstName}
                 year={userData.yearOfStudy}
+                id={userData.userId}
+                onPress={sendUserId}
             />
 
             <ScrollView style={styles.scroll}>
