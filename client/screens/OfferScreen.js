@@ -4,61 +4,45 @@ import axios from 'axios'
 import { async } from '@firebase/util';
 
 
-const fetchOffer = async (id) => {
-    const offer = await axios
-        .get(`/api/offers/${id}`)
+const fetchUser = async (o) => {
+    const userData = await axios
+        .get(`/api/users/${o.userId}`)
         .then((res) => res.data)
         .catch((error) => {
             console.log(error);
-            displayAlertBox("Please, try again later", error.message);
         });
-    
-    console.log(offer)
 
-    const offerWithUser = await Promise.all(
-        offer.map(async (o) => {
-            const userData = await axios
-                .get(`/api/users/${o.userId}`)
-                .then((res) => res.data)
-                .catch((error) => {
-                    console.log(error);
-                });
-            return { ...userData, ...offer}
-        })
-    ).catch((error) => {
-        console.log(error);
-    });
-
-    // const user = await axios
-    //     .get(`/api/users/${offer.userId}`)
-    //     .then((res) => res.data)
-    //     .catch((error) => {
-    //         console.log(error);
-    //         displayAlertBox("Please, try again later", error.message);
-    //     })
-
-    return offerWithUser;
+    console.log(userData)
+    return userData
 }
 
 const OfferScreen = ({route, navigation}) => {
-    const {id} = route.params;
-    const [offerData, setOfferData] = useState([]);
 
-    useEffect((id) => {
-        fetchOffer(id)
-            .then((offer) => {
-                setOfferData(offer)
+    const [offerData, setOfferData] = useState([]);
+    const [userData, setUserData] = useState([]);
+    const {offer} = route.params;  
+
+    useEffect(()=>{
+        setOfferData(offer)
+    },[])
+
+    
+    useEffect(() => {
+        fetchUser(offer)
+            .then((user) => {
+                setUserData(user)
             })
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             })
-    })
+            console.log("fetchUser")
+    }, [])
 
     return (
         <View style={styles.container}>
-            <Text>{id}</Text>
             <Text>{offerData.localType}</Text>
+            <Text>{userData.firstName}</Text>
         </View>
     )
 }

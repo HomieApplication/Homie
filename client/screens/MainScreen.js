@@ -108,7 +108,7 @@ const MainScreen = ({ navigation }) => {
 
                     const push = () => {
                         console.log(offer.offerId)
-                        navigation.push("Offer", {id: offer.offerId})
+                        navigation.push("Offer", {offer: offer})
                     }
 
                     console.log(offer)
