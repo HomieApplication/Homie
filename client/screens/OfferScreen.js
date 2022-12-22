@@ -60,12 +60,15 @@ const OfferScreen = ({route, navigation}) => {
                         {/* <Text style={styles.text}>{userData.description}</Text> */}
                     </View>
                     <Pressable style={styles.icon}>
-                         <MaterialCommunityIcons name="star" color={'white'} size={35}/>
+                         <MaterialCommunityIcons name="star" color={'#ffb703'} size={35}/>
                      </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.textTitle}>TU BĘDZIE TYTUŁ OGŁOSZENIA</Text>
-                    <Text style={styles.text}>{offer.description}</Text>
+                    <Text style={styles.text}>{offer.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+                    <View style={styles.galleryContainer}>
+                        <View style={styles.galleryImg}><Text>GALERIA</Text></View>
+                    </View>
                 </View>
             </View>
             <View style={styles.mapContainer}>
@@ -126,7 +129,6 @@ const styles = StyleSheet.create({
     },
     text:{
       fontSize: 15,
-      //fontWeight: 'bold',
       letterSpacing: 0.25,
       color: 'grey',
     },
@@ -140,12 +142,11 @@ const styles = StyleSheet.create({
 
     headerContainer:{
         width: '100%',
-        paddingTop: 20,
         paddingLeft: 20,
         flexDirection: 'row',
         //backgroundColor: 'blue',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
         flex:1,
     },
     headerText:{
@@ -154,13 +155,14 @@ const styles = StyleSheet.create({
     },
     icon:{
         position: 'absolute',
-        left: Dimensions.get('window').width * 0.8,
-        top: 20,
+        right: 20,
+        top: Dimensions.get('window').height *0.07,
       },
 
     descriptionContainer:{
         width: '100%',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         flex:2,
     },
 
@@ -169,6 +171,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: "#114B5F",
+    },
+
+    galleryContainer:{
+       // borderWidth: 1,
+        width: '100%',
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    galleryImg:{
+        height: '90%',
+        aspectRatio: 1,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor:'#114B5F',
     },
 
     //map
