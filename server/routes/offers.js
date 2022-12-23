@@ -45,10 +45,7 @@ router.get("/", async (req, res) => {
 
         const data = new Array();
         querySnapshot.forEach((doc) => {
-            data.push({
-                offerId: doc.id,
-                ...doc.data(),
-            });
+            data.push({ ...doc.data(), offerId: doc.id });
         });
         res.send(data);
     } catch (error) {
@@ -105,9 +102,23 @@ router.post("/", async (req, res) => {
         const offersRef = db.collection("offers");
         await offersRef
             .add(docData)
-            .then(() => {
-                docData.creationDate = docData.creationDate.toDate();
-                res.send(docData);
+            .then(async (docSnap) => {
+                await offersRef
+                    .doc(docSnap.id)
+                    .update({ offerId: docSnap.id })
+                    .then(() => {
+                        res.send({
+                            ...docData,
+                            offerId: docSnap.id,
+                            creationDate: docData.creationDate.toDate(),
+                        });
+                    })
+                    .catch((error) =>
+                        res.status(500).send({
+                            message: error.message,
+                            cause: "Server error",
+                        })
+                    );
             })
             .catch((error) =>
                 res.status(500).send({
@@ -157,7 +168,7 @@ router.get("/:id", async (req, res) => {
         const offerSnapshot = await db.collection("offers").doc(id).get();
 
         if (offerSnapshot.exists) {
-            res.send(offerSnapshot.data());
+            res.send({ ...offerSnapshot.data(), offerId: offerSnapshot.id });
         } else {
             res.status(404).send({
                 cause: "Offer not found",

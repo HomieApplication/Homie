@@ -38,24 +38,31 @@ router.get("/:id", async (req, res) => {
             .doc(req.params.id)
             .get()
             .then((docSnap) => {
-                const {
-                    firstName,
-                    lastName,
-                    yearOfStudy,
-                    phoneNumber,
-                    birthDate,
-                    gender,
-                    photoURL,
-                } = docSnap.data();
-                res.send({
-                    firstName: firstName,
-                    lastName: lastName,
-                    yearOfStudy: yearOfStudy,
-                    phoneNumber: phoneNumber,
-                    age: calculateAge(birthDate.toDate()),
-                    gender: gender,
-                    photoURL: photoURL,
-                });
+                if (docSnap.exists) {
+                    const {
+                        firstName,
+                        lastName,
+                        yearOfStudy,
+                        phoneNumber,
+                        birthDate,
+                        gender,
+                        photoURL,
+                        age,
+                    } = docSnap.data();
+                    res.send({
+                        firstName: firstName,
+                        lastName: lastName,
+                        yearOfStudy: yearOfStudy,
+                        phoneNumber: phoneNumber,
+                        age: birthDate ? calculateAge(birthDate) : age,
+                        gender: gender,
+                        photoURL: photoURL,
+                    });
+                } else {
+                    res.status(404).send({
+                        message: "User not found!",
+                    });
+                }
             })
             .catch((error) =>
                 res.status(500).send({
@@ -113,8 +120,10 @@ router.get("/", async (req, res) => {
             .then((docSnap) => {
                 if (docSnap.exists) {
                     let userData = docSnap.data();
-                    userData.birthDate = userData.birthDate.toDate();
-                    userData.age = calculateAge(userData.birthDate);
+                    userData.birthDate = userData.birthDate?.toDate();
+                    userData.age = userData.birthDate
+                        ? calculateAge(userData.birthDate)
+                        : userData.age;
                     res.send(userData);
                 } else {
                     res.status(404).send({
