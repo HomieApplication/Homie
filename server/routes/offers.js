@@ -45,7 +45,11 @@ router.get("/", async (req, res) => {
 
         const data = new Array();
         querySnapshot.forEach((doc) => {
-            data.push({ ...doc.data(), offerId: doc.id });
+            data.push({
+                ...doc.data(),
+                offerId: doc.id,
+                creationDate: doc.data().creationDate?.toDate(),
+            });
         });
         res.send(data);
     } catch (error) {
@@ -168,7 +172,11 @@ router.get("/:id", async (req, res) => {
         const offerSnapshot = await db.collection("offers").doc(id).get();
 
         if (offerSnapshot.exists) {
-            res.send({ ...offerSnapshot.data(), offerId: offerSnapshot.id });
+            res.send({
+                ...offerSnapshot.data(),
+                offerId: offerSnapshot.id,
+                creationDate: offerSnapshot.data().creationDate?.toDate(),
+            });
         } else {
             res.status(404).send({
                 cause: "Offer not found",
