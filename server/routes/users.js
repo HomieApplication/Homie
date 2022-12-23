@@ -1,10 +1,30 @@
 import express from "express";
 import { db } from "../firebase/config.js";
+import { Timestamp } from "firebase-admin/firestore";
 
 const router = express.Router();
 
+/**
+ * Gets part of user data with given id from users table, sends it in response
+ * If user is not logged in, sends 403 status code
+ * If user is not in database, sends 404 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.params.id
+ *
+ * @returns {UserData}
+ * @typedef {Object} UserData
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} yearOfStudy
+ * @property {string} phoneNumber
+ * @property {number} age
+ * @property {number} gender
+ * @property {string} photoURL
+ */
 router.get("/:id", async (req, res) => {
-    // zwraca niektóre dane użytkownika o danym id
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -32,7 +52,7 @@ router.get("/:id", async (req, res) => {
                     lastName: lastName,
                     yearOfStudy: yearOfStudy,
                     phoneNumber: phoneNumber,
-                    birthDate: birthDate,
+                    age: calculateAge(birthDate.toDate()),
                     gender: gender,
                     photoURL: photoURL,
                 });
@@ -51,8 +71,33 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+/**
+ * Gets currently logged in user data from users table, sends it in response
+ * If user is not logged in, sends 403 status code
+ * If user is not in database, sends 404 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ *
+ * @returns {UserData}
+ * @typedef {Object} UserData
+ * @property {string} userId
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} yearOfStudy
+ * @property {string} phoneNumber
+ * @property {number} age
+ * @property {Date} birthDate
+ * @property {string} gender
+ * @property {string} photoURL
+ * @property {string} phoneNumber
+ * @property {string} description
+ * @property {Array<string>} myOffers
+ * @property {Array<string>} favs
+ * @property {Array<string>} interests
+ */
 router.get("/", async (req, res) => {
-    // zwraca dane obecnie zalogowanego użytkownika
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -67,7 +112,10 @@ router.get("/", async (req, res) => {
             .get()
             .then((docSnap) => {
                 if (docSnap.exists) {
-                    res.send(docSnap.data());
+                    let userData = docSnap.data();
+                    userData.birthDate = userData.birthDate.toDate();
+                    userData.age = calculateAge(userData.birthDate);
+                    res.send(userData);
                 } else {
                     res.status(404).send({
                         message: "User not found",
@@ -88,8 +136,41 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * Adds new user to users table, sends created object in response
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends created user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.firstName
+ * @param {string} req.body.lastName
+ * @param {Date} req.body.birthDate
+ * @param {string} req.body.yearOfStudy
+ * @param {string} req.body.phoneNumber
+ * @param {string} req.body.gender
+ * @param {string} req.body.photoURL
+ * @param {string} req.body.description
+ * @param {Array<string>} req.body.interests
+ *
+ * @returns {UserData}
+ * @typedef {Object} UserData
+ * @property {string} userId
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} yearOfStudy
+ * @property {string} phoneNumber
+ * @property {number} age
+ * @property {Date} birthDate
+ * @property {string} gender
+ * @property {string} photoURL
+ * @property {string} phoneNumber
+ * @property {string} description
+ * @property {Array<string>} myOffers
+ * @property {Array<string>} favs
+ * @property {Array<string>} interests
+ */
 router.post("/", async (req, res) => {
-    // dodaje nowozarejestrowanego użytkownika do tabeli users, zwraca utworzony obiekt
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -101,7 +182,9 @@ router.post("/", async (req, res) => {
         userId: user.uid,
         firstName: req.body.firstName || "",
         lastName: req.body.lastName || "",
-        age: req.body.age || 0,
+        birthDate: req.body.birthDate
+            ? Timestamp.fromDate(new Date(req.body.birthDate))
+            : Timestamp.fromDate(new Date(2000, 1, 1)),
         gender: req.body.gender || "Unknown",
         yearOfStudy: req.body.yearOfStudy || "Not a student",
         photoURL: req.body.photoURL || "No photo",
@@ -109,7 +192,7 @@ router.post("/", async (req, res) => {
         description: req.body.description || "No description",
         myOffers: [],
         favs: [],
-        interests: [],
+        interests: req.body.interests || [],
     };
 
     try {
@@ -118,7 +201,11 @@ router.post("/", async (req, res) => {
             .doc(user.uid)
             .set(userData)
             .then(() => {
-                res.send(userData);
+                res.send({
+                    ...userData,
+                    birthDate: userData.birthDate.toDate(),
+                    age: calculateAge(userData.birthDate.toDate()),
+                });
             })
             .catch((error) =>
                 res.status(500).send({
@@ -134,8 +221,41 @@ router.post("/", async (req, res) => {
     }
 });
 
+/**
+ * Updates currently logged in user's data in users table, sends updated object in response
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends updated user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.firstName
+ * @param {string} req.body.lastName
+ * @param {Date} req.body.birthDate
+ * @param {string} req.body.yearOfStudy
+ * @param {string} req.body.phoneNumber
+ * @param {string} req.body.gender
+ * @param {string} req.body.photoURL
+ * @param {string} req.body.description
+ * @param {Array<string>} req.body.interests
+ *
+ * @returns {UserData}
+ * @typedef {Object} UserData
+ * @property {string} userId
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} yearOfStudy
+ * @property {string} phoneNumber
+ * @property {number} age
+ * @property {Date} birthDate
+ * @property {string} gender
+ * @property {string} photoURL
+ * @property {string} phoneNumber
+ * @property {string} description
+ * @property {Array<string>} myOffers
+ * @property {Array<string>} favs
+ * @property {Array<string>} interests
+ */
 router.put("/", (req, res) => {
-    // aktualizuje dane obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -146,8 +266,14 @@ router.put("/", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
+/**
+ * Deletes currently logged in user from users table, sends 200 status code
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
 router.delete("/", async (req, res) => {
-    // usuwa obecnie zalogowanego użytkownika z bazy danych, nic nie zwraca, jeśli brak rekordu - 404
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -177,8 +303,19 @@ router.delete("/", async (req, res) => {
     }
 });
 
+/**
+ * Gets currently logged in user's liked offers(favs array)
+ * from users table and their data from offers table, sends them in response
+ * If user is not logged in, sends 403 status code
+ * If user is not in database, sends 404 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends user's offers
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.offerId - id of offer to add to favs
+ * ...
+ */
 router.get("/favs", (req, res) => {
-    // zwraca tablicę danych polubionych ofert obecnie zalogowanego użytkownika, jeśli brak rekordu - 404
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -189,8 +326,18 @@ router.get("/favs", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
-router.put("/favs", (req, res) => {
-    // aktualizuje tablicę polubionych ofert obecnie zalogowanego użytkownika, zwraca zaktualizowany obiekt, jeśli brak rekordu - 404
+/**
+ * Adds offer to currently logged in user's favs array in users table,
+ * sends updated object in response
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends updated user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.offerId - id of offer to add to favs
+ * ...
+ */
+router.post("/favs", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -201,8 +348,46 @@ router.put("/favs", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
+/**
+ * Deletes offer from currently logged in user's favs array in users table,
+ * sends updated object in response
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends updated user data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.offerId - id of offer to delete from favs
+ * ...
+ */
+router.delete("/favs", (req, res) => {
+    const user = req["currentUser"];
+    if (!user) {
+        res.status(403).send({
+            message: "User not logged in!",
+        });
+    }
+
+    res.status(501).send("Not implemented");
+});
+
+/**
+ * Gets currently logged in user's offers from users table and their data from offers table,
+ * sends them in response
+ * If user is not logged in, sends 403 status code
+ * If user is not in database, sends 404 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends user's offers
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.offerId - id of offer to delete from favs
+ * ...
+ *
+ * @returns {Offer[]} - array of offers
+ * @typedef {Object} Offer
+ * @property {string} id
+ * @property {string} title
+ */
 router.get("/my-offers", (req, res) => {
-    // zwraca tablicę danych opublikowanych przez obecnie zalogowanego użytkownika ofert, jeśli brak rekordu - 404
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
@@ -212,5 +397,11 @@ router.get("/my-offers", (req, res) => {
 
     res.status(501).send("Not implemented");
 });
+
+function calculateAge(birthday) {
+    const ageDifMs = Date.now() - birthday;
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 export default router;

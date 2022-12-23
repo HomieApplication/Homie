@@ -7,7 +7,7 @@ const idToken = await auth.currentUser.getIdToken();
 const testUserData = {
     firstName: "Test",
     lastName: "User",
-    age: 20,
+    birthDate: new Date(2000, 1, 1),
     gender: "male",
     yearOfStudy: 1,
     photoURL: "https://example.com",
@@ -46,7 +46,9 @@ describe("GET /api/users", () => {
         );
         expect(response.body).toEqual({
             userId: auth.currentUser.uid,
+            age: calculateAge(testUserData.birthDate),
             ...testUserData,
+            birthDate: testUserData.birthDate.toISOString(),
         });
     });
 
@@ -88,7 +90,9 @@ describe("POST /api/users", () => {
             .send(testUserData);
         expect(postResponse.body).toEqual({
             userId: auth.currentUser.uid,
+            age: calculateAge(testUserData.birthDate),
             ...testUserData,
+            birthDate: testUserData.birthDate.toISOString(),
         });
 
         const getResponse = await request(app)
@@ -96,7 +100,9 @@ describe("POST /api/users", () => {
             .set("Authorization", "Bearer " + idToken);
         expect(getResponse.body).toEqual({
             userId: auth.currentUser.uid,
+            age: calculateAge(testUserData.birthDate),
             ...testUserData,
+            birthDate: testUserData.birthDate.toISOString(),
         });
     });
 });
@@ -131,3 +137,9 @@ describe("DELETE /api/users", () => {
             .send(testUserData);
     });
 });
+
+function calculateAge(birthday) {
+    const ageDifMs = Date.now() - birthday;
+    const ageDate = new Date(ageDifMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
