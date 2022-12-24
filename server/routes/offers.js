@@ -217,16 +217,58 @@ router.get("/:id", async (req, res) => {
  * @property {string} title
  * @property {Date} creationDate
  */
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({
             message: "User not logged in!",
         });
     }
+
     const id = req.params.id;
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
+                if (!docSnap.data().myOffers.includes(id)) {
+                    res.status(403).send({
+                        message: "User does not have access to this offer",
+                    });
+                }
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    message: error.message,
+                    cause: "Server error",
+                })
+            );
+
+        await db
+            .collection("offers")
+            .doc(id)
+            .update(req.body)
+            .then((docSnap) => {
+                res.send({
+                    ...docSnap.data(),
+                    offerId: docSnap.id,
+                    creationDate: docData.creationDate.toDate(),
+                });
+            })
+            .catch((error) =>
+                res.status(500).send({
+                    message: error.message,
+                    cause: "Server error",
+                })
+            );
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            cause: "Server error",
+        });
+    }
 });
 
 /**
