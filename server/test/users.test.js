@@ -138,6 +138,64 @@ describe("DELETE /api/users", () => {
     });
 });
 
+describe("PUT /api/users", () => {
+    test("should return 403 status if not authorized", async () => {
+        const response = await request(app).put("/api/users");
+        expect(response.statusCode).toBe(403);
+    });
+
+    test("should return 200 status", async () => {
+        const response = await request(app)
+            .put("/api/users")
+            .set("Authorization", "Bearer " + idToken);
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("should update user", async () => {
+        const putResponse = await request(app)
+            .put("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send({
+                firstName: "Updated",
+                lastName: "User",
+                birthDate: new Date(2000, 1, 1),
+            });
+        expect(putResponse.body).toEqual({
+            userId: auth.currentUser.uid,
+            age: calculateAge(new Date(2000, 1, 1)),
+            firstName: "Updated",
+            lastName: "User",
+            birthDate: new Date(2000, 1, 1).toISOString(),
+            description: "This is a description",
+            interests: [],
+            favs: [],
+        });
+
+        const getResponse = await request(app)
+            .get("/api/users")
+            .set("Authorization", "Bearer " + idToken);
+        expect(getResponse.body).toEqual({
+            userId: auth.currentUser.uid,
+            age: calculateAge(new Date(2000, 1, 1)),
+            firstName: "Updated",
+            lastName: "User",
+            birthDate: new Date(2000, 1, 1).toISOString(),
+            description: "This is a description",
+            interests: [],
+            favs: [],
+        });
+
+        await request(app)
+            .put("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send({
+                firstName: "Test",
+                lastName: "User",
+                birthDate: new Date(2000, 1, 1),
+            });
+    });
+});
+
 function calculateAge(birthday) {
     const ageDifMs = Date.now() - birthday;
     const ageDate = new Date(ageDifMs);
