@@ -1,6 +1,6 @@
 import express from "express";
 import { db } from "../firebase/config.js";
-import { Timestamp } from "firebase-admin/firestore";
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ const router = express.Router();
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {string} localization - for now: later array [lat, lng]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -27,9 +27,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     try {
@@ -37,10 +35,7 @@ router.get("/", async (req, res) => {
             .collection("offers")
             .get(db)
             .catch((error) => {
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                });
+                res.status(500).send({ message: error.message });
             });
 
         const data = new Array();
@@ -53,10 +48,7 @@ router.get("/", async (req, res) => {
         });
         res.send(data);
     } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -69,7 +61,7 @@ router.get("/", async (req, res) => {
  * @param {express.Response} res
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization
+ * @param {string} req.body.localization - for now: later array [lat, lng]
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -79,7 +71,7 @@ router.get("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {string} localization - for now: later array [lat, lng]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -87,11 +79,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
+    // TODO: Add validation, localization to geopoint
     const docData = {
         userId: user.uid,
         localType: req.body.localType,
@@ -104,37 +95,30 @@ router.post("/", async (req, res) => {
 
     try {
         const offersRef = db.collection("offers");
-        await offersRef
+        const docSnap = await offersRef
             .add(docData)
-            .then(async (docSnap) => {
-                await offersRef
-                    .doc(docSnap.id)
-                    .update({ offerId: docSnap.id })
-                    .then(() => {
-                        res.send({
-                            ...docData,
-                            offerId: docSnap.id,
-                            creationDate: docData.creationDate.toDate(),
-                        });
-                    })
-                    .catch((error) =>
-                        res.status(500).send({
-                            message: error.message,
-                            cause: "Server error",
-                        })
-                    );
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await offersRef
+            .doc(docSnap.id)
+            .update({ offerId: docSnap.id })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                myOffers: FieldValue.arrayUnion(docSnap.id),
             })
-            .catch((error) =>
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                })
-            );
-    } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.send({
+            ...docData,
+            offerId: docSnap.id,
+            creationDate: docData.creationDate.toDate(),
         });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -154,7 +138,7 @@ router.post("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {string} localization - for now: later array [lat, lng]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -162,15 +146,12 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
+    const offerId = req.params.id;
 
     try {
-        const id = req.params.id;
-        const offerSnapshot = await db.collection("offers").doc(id).get();
-
+        const offerSnapshot = await db.collection("offers").doc(offerId).get();
         if (offerSnapshot.exists) {
             res.send({
                 ...offerSnapshot.data(),
@@ -179,15 +160,11 @@ router.get("/:id", async (req, res) => {
             });
         } else {
             res.status(404).send({
-                cause: "Offer not found",
-                message: `Offer with ID ${id} does not exist`,
+                message: `Offer with ID ${offerId} does not exist`,
             });
         }
     } catch (error) {
-        res.status(500).send({
-            cause: "Server error",
-            message: error.message,
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -202,7 +179,7 @@ router.get("/:id", async (req, res) => {
  * @param {string} req.params.id
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization
+ * @param {string} req.body.localization - for now: later array [lat, lng]
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -212,7 +189,7 @@ router.get("/:id", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {string} localization - for now: later array [lat, lng]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -220,12 +197,10 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
-    const id = req.params.id;
+    const offerId = req.params.id;
 
     try {
         await db
@@ -233,22 +208,17 @@ router.put("/:id", async (req, res) => {
             .doc(user.uid)
             .get()
             .then((docSnap) => {
-                if (!docSnap.data().myOffers.includes(id)) {
+                if (!docSnap.data().myOffers.includes(offerId)) {
                     res.status(403).send({
                         message: "User does not have access to this offer",
                     });
                 }
             })
-            .catch((error) =>
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
 
         await db
             .collection("offers")
-            .doc(id)
+            .doc(offerId)
             .update(req.body)
             .then((docSnap) => {
                 res.send({
@@ -257,17 +227,9 @@ router.put("/:id", async (req, res) => {
                     creationDate: docData.creationDate.toDate(),
                 });
             })
-            .catch((error) =>
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
     } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -281,16 +243,45 @@ router.put("/:id", async (req, res) => {
  * @param {express.Response} res
  * @param {string} req.params.id
  */
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
-    const id = req.params.id;
+    const offerId = req.params.id;
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
+                if (!docSnap.data().myOffers.includes(offerId)) {
+                    res.status(403).send({
+                        message: "User does not have access to this offer",
+                    });
+                }
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                myOffers: FieldValue.arrayRemove(offerId),
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("offers")
+            .doc(offerId)
+            .delete()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 export default router;

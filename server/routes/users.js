@@ -27,9 +27,7 @@ const router = express.Router();
 router.get("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     try {
@@ -59,22 +57,12 @@ router.get("/:id", async (req, res) => {
                         photoURL: photoURL,
                     });
                 } else {
-                    res.status(404).send({
-                        message: "User not found!",
-                    });
+                    res.status(404).send({ message: "User not found!" });
                 }
             })
-            .catch((error) =>
-                res.status(500).send({
-                    cause: "Server Error",
-                    message: error.message,
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
     } catch (error) {
-        res.status(500).send({
-            cause: "Server Error",
-            message: error.message,
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -107,9 +95,7 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     try {
@@ -126,22 +112,12 @@ router.get("/", async (req, res) => {
                         : userData.age;
                     res.send(userData);
                 } else {
-                    res.status(404).send({
-                        message: "User not found",
-                    });
+                    res.status(404).send({ message: "User not found" });
                 }
             })
-            .catch((error) =>
-                res.status(500).send({
-                    cause: "Server Error",
-                    message: error.message,
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
     } catch (error) {
-        res.status(500).send({
-            cause: "Server Error",
-            message: error.message,
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -182,11 +158,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
+    // TODO: Add validation
     const userData = {
         userId: user.uid,
         firstName: req.body.firstName || "",
@@ -216,17 +191,9 @@ router.post("/", async (req, res) => {
                     age: calculateAge(userData.birthDate.toDate()),
                 });
             })
-            .catch((error) =>
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
     } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -267,9 +234,7 @@ router.post("/", async (req, res) => {
 router.put("/", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     res.status(501).send("Not implemented");
@@ -285,9 +250,7 @@ router.put("/", (req, res) => {
 router.delete("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     try {
@@ -298,17 +261,9 @@ router.delete("/", async (req, res) => {
             .then(() => {
                 res.sendStatus(200);
             })
-            .catch((error) =>
-                res.status(500).send({
-                    cause: "Server Error",
-                    message: error.message,
-                })
-            );
+            .catch((error) => res.status(500).send({ message: error.message }));
     } catch (error) {
-        res.status(500).send({
-            cause: "Server Error",
-            message: error.message,
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -327,9 +282,7 @@ router.delete("/", async (req, res) => {
 router.get("/favs", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     res.status(501).send("Not implemented");
@@ -349,9 +302,7 @@ router.get("/favs", (req, res) => {
 router.post("/favs", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     res.status(501).send("Not implemented");
@@ -371,9 +322,7 @@ router.post("/favs", (req, res) => {
 router.delete("/favs", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     res.status(501).send("Not implemented");
@@ -399,9 +348,7 @@ router.delete("/favs", (req, res) => {
 router.get("/my-offers", (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     res.status(501).send("Not implemented");
