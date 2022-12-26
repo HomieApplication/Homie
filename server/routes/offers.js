@@ -1,6 +1,6 @@
 import express from "express";
 import { db } from "../firebase/config.js";
-import { Timestamp, FieldValue } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 
 const router = express.Router();
 
@@ -54,6 +54,7 @@ router.get("/", async (req, res) => {
 
 /**
  * Adds new offer to offers table, sends it in response
+ * Adds offerId to user's myOffers array
  * If user is not logged in, sends 403 status code
  * If there is an error, sends 500 status code
  * If everything is ok, sends 200 status and requested data
@@ -90,7 +91,7 @@ router.post("/", async (req, res) => {
         localization: req.body.localization,
         photoURLArray: req.body.photoURLArray || [],
         title: req.body.title || "",
-        creationDate: Timestamp.now(),
+        creationDate: new Date(),
     };
 
     try {
@@ -115,7 +116,6 @@ router.post("/", async (req, res) => {
         res.send({
             ...docData,
             offerId: docSnap.id,
-            creationDate: docData.creationDate.toDate(),
         });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -224,7 +224,7 @@ router.put("/:id", async (req, res) => {
                 res.send({
                     ...docSnap.data(),
                     offerId: docSnap.id,
-                    creationDate: docData.creationDate.toDate(),
+                    creationDate: docSnap.data().creationDate?.toDate(),
                 });
             })
             .catch((error) => res.status(500).send({ message: error.message }));
@@ -235,6 +235,7 @@ router.put("/:id", async (req, res) => {
 
 /**
  * Deletes offer with given id from offers table
+ * Removes offer from user's myOffers array
  * If user is not logged in, sends 403 status code
  * If the offer is not in current user's offers, sends 403 status code
  * If there is an error, sends 500 status code

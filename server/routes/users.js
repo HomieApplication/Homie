@@ -1,6 +1,5 @@
 import express from "express";
 import { db } from "../firebase/config.js";
-import { Timestamp } from "firebase-admin/firestore";
 
 const router = express.Router();
 
@@ -167,8 +166,8 @@ router.post("/", async (req, res) => {
         firstName: req.body.firstName || "",
         lastName: req.body.lastName || "",
         birthDate: req.body.birthDate
-            ? Timestamp.fromDate(new Date(req.body.birthDate))
-            : Timestamp.fromDate(new Date(2000, 1, 1)),
+            ? new Date(req.body.birthDate)
+            : new Date(2000, 1, 1),
         gender: req.body.gender || "Unknown",
         yearOfStudy: req.body.yearOfStudy || "Not a student",
         photoURL: req.body.photoURL || "No photo",
@@ -187,8 +186,7 @@ router.post("/", async (req, res) => {
             .then(() => {
                 res.send({
                     ...userData,
-                    birthDate: userData.birthDate.toDate(),
-                    age: calculateAge(userData.birthDate.toDate()),
+                    age: calculateAge(userData.birthDate),
                 });
             })
             .catch((error) => res.status(500).send({ message: error.message }));
@@ -231,13 +229,41 @@ router.post("/", async (req, res) => {
  * @property {Array<string>} favs
  * @property {Array<string>} interests
  */
-router.put("/", (req, res) => {
+router.put("/", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({ message: "User not logged in!" });
     }
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                ...req.body,
+                birthDate: req.body.birthDate
+                    ? new Date(req.body.birthDate)
+                    : req.body.birthDate,
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        const docRef = await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .catch((error) => res.status(500).send({ message: error.message }));
+        const userData = docRef.data();
+
+        res.send({
+            ...userData,
+            birthDate: userData.birthDate.toDate(),
+            age: userData.birthDate
+                ? calculateAge(userData.birthDate.toDate())
+                : userData.age,
+        });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 /**

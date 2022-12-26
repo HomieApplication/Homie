@@ -160,30 +160,20 @@ describe("PUT /api/users", () => {
                 lastName: "User",
                 birthDate: new Date(2000, 1, 1),
             });
-        expect(putResponse.body).toEqual({
-            userId: auth.currentUser.uid,
-            age: calculateAge(new Date(2000, 1, 1)),
-            firstName: "Updated",
-            lastName: "User",
-            birthDate: new Date(2000, 1, 1).toISOString(),
-            description: "This is a description",
-            interests: [],
-            favs: [],
-        });
+        expect(putResponse.body.firstName).toEqual("Updated");
+        expect(putResponse.body.lastName).toEqual("User");
+        expect(putResponse.body.birthDate).toEqual(
+            new Date(2000, 1, 1).toISOString()
+        );
 
         const getResponse = await request(app)
             .get("/api/users")
             .set("Authorization", "Bearer " + idToken);
-        expect(getResponse.body).toEqual({
-            userId: auth.currentUser.uid,
-            age: calculateAge(new Date(2000, 1, 1)),
-            firstName: "Updated",
-            lastName: "User",
-            birthDate: new Date(2000, 1, 1).toISOString(),
-            description: "This is a description",
-            interests: [],
-            favs: [],
-        });
+        expect(getResponse.body.firstName).toEqual("Updated");
+        expect(getResponse.body.lastName).toEqual("User");
+        expect(getResponse.body.birthDate).toEqual(
+            new Date(2000, 1, 1).toISOString()
+        );
 
         await request(app)
             .put("/api/users")
