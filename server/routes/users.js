@@ -247,12 +247,12 @@ router.put("/", async (req, res) => {
             })
             .catch((error) => res.status(500).send({ message: error.message }));
 
-        const docRef = await db
+        const docSnap = await db
             .collection("users")
             .doc(user.uid)
             .get()
             .catch((error) => res.status(500).send({ message: error.message }));
-        const userData = docRef.data();
+        const userData = docSnap.data();
 
         res.send({
             ...userData,
@@ -302,8 +302,17 @@ router.delete("/", async (req, res) => {
  * If everything is ok, sends user's offers
  * @param {express.Request} req
  * @param {express.Response} res
- * @param {string} req.body.offerId - id of offer to add to favs
- * ...
+ *
+ * @returns {Array<Offer>}
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
  */
 router.get("/favs", (req, res) => {
     const user = req["currentUser"];
@@ -323,7 +332,17 @@ router.get("/favs", (req, res) => {
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {string} req.body.offerId - id of offer to add to favs
- * ...
+ *
+ * @returns {Array<Offer>}
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
  */
 router.post("/favs", (req, res) => {
     const user = req["currentUser"];
@@ -343,7 +362,6 @@ router.post("/favs", (req, res) => {
  * @param {express.Request} req
  * @param {express.Response} res
  * @param {string} req.body.offerId - id of offer to delete from favs
- * ...
  */
 router.delete("/favs", (req, res) => {
     const user = req["currentUser"];
@@ -363,13 +381,17 @@ router.delete("/favs", (req, res) => {
  * If everything is ok, sends user's offers
  * @param {express.Request} req
  * @param {express.Response} res
- * @param {string} req.body.offerId - id of offer to delete from favs
- * ...
  *
- * @returns {Offer[]} - array of offers
+ * @returns {Array<Offer>}
  * @typedef {Object} Offer
- * @property {string} id
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
  * @property {string} title
+ * @property {Date} creationDate
  */
 router.get("/my-offers", (req, res) => {
     const user = req["currentUser"];
@@ -380,8 +402,13 @@ router.get("/my-offers", (req, res) => {
     res.status(501).send("Not implemented");
 });
 
-function calculateAge(birthday) {
-    const ageDifMs = Date.now() - birthday;
+/**
+ * Calculates user's age from their birthDate
+ * @param {Date} birthDate
+ * @returns {number} age - integer
+ */
+function calculateAge(birthDate) {
+    const ageDifMs = Date.now() - birthDate;
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
