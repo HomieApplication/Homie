@@ -220,14 +220,19 @@ router.put("/:id", async (req, res) => {
             .collection("offers")
             .doc(offerId)
             .update(req.body)
-            .then((docSnap) => {
-                res.send({
-                    ...docSnap.data(),
-                    offerId: docSnap.id,
-                    creationDate: docSnap.data().creationDate?.toDate(),
-                });
-            })
             .catch((error) => res.status(500).send({ message: error.message }));
+
+        const docSnap = await db
+            .collection("offers")
+            .doc(offerId)
+            .get()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.send({
+            ...docSnap.data(),
+            offerId: offerId,
+            creationDate: docSnap.data().creationDate?.toDate(),
+        });
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
