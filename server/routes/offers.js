@@ -1,16 +1,33 @@
 import express from "express";
 import { db } from "../firebase/config.js";
-import { Timestamp } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 
 const router = express.Router();
 
+/**
+ * Gets all offers from offers table, send their data in response
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends 200 status and requested data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.params.id
+ *
+ * @returns {Array<Offer>} Array of offers
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
+ */
 router.get("/", async (req, res) => {
-    // zwraca dane wszystkich ofert
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
     try {
@@ -18,37 +35,55 @@ router.get("/", async (req, res) => {
             .collection("offers")
             .get(db)
             .catch((error) => {
-                res.status(404).send({
-                    message: error.message,
-                    cause: "Server error",
-                });
+                res.status(500).send({ message: error.message });
             });
 
         const data = new Array();
         querySnapshot.forEach((doc) => {
             data.push({
-                offerId: doc.id,
                 ...doc.data(),
+                offerId: doc.id,
+                creationDate: doc.data().creationDate?.toDate(),
             });
         });
         res.send(data);
     } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
+/**
+ * Adds new offer to offers table, sends it in response
+ * Adds offerId to user's myOffers array
+ * If user is not logged in, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends 200 status and requested data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.body.localType
+ * @param {string} req.body.description
+ * @param {string} req.body.localization - for now: later array [lat, lng]
+ * @param {Array<string>} req.body.photoURLArray
+ * @param {string} req.body.title
+ *
+ * @returns {Offer} Added offer
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
+ */
 router.post("/", async (req, res) => {
-    // dodaje nową ofertę do tabeli offers, zwraca utworzony obiekt
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
 
+    // TODO: Add validation, localization to geopoint
     const docData = {
         userId: user.uid,
         localType: req.body.localType,
@@ -56,88 +91,203 @@ router.post("/", async (req, res) => {
         localization: req.body.localization,
         photoURLArray: req.body.photoURLArray || [],
         title: req.body.title || "",
-        creationDate: Timestamp.now(),
+        creationDate: new Date(),
     };
 
     try {
         const offersRef = db.collection("offers");
-        await offersRef
+        const docSnap = await offersRef
             .add(docData)
-            .then(() => {
-                docData.creationDate = docData.creationDate.toDate();
-                res.send(docData);
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await offersRef
+            .doc(docSnap.id)
+            .update({ offerId: docSnap.id })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                myOffers: FieldValue.arrayUnion(docSnap.id),
             })
-            .catch((error) =>
-                res.status(500).send({
-                    message: error.message,
-                    cause: "Server error",
-                })
-            );
-        
-    } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            cause: "Server error",
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.send({
+            ...docData,
+            offerId: docSnap.id,
         });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
     }
 });
 
-// To napisał bot XD
+/**
+ * Gets an offer with given id from offers table, sends it in response
+ * If user is not logged in, sends 403 status code
+ * If offer is not in database, sends 404 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends 200 status and requested data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.params.id
+ *
+ * @returns {Offer} Offer with given id
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
+ */
 router.get("/:id", async (req, res) => {
-    // returns an offer with given id from offers table
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
+    const offerId = req.params.id;
 
     try {
-        const id = req.params.id;
-        const offerSnapshot = await db.collection("offers").doc(id).get();
-
+        const offerSnapshot = await db.collection("offers").doc(offerId).get();
         if (offerSnapshot.exists) {
-            res.send(offerSnapshot.data());
+            res.send({
+                ...offerSnapshot.data(),
+                offerId: offerSnapshot.id,
+                creationDate: offerSnapshot.data().creationDate?.toDate(),
+            });
         } else {
             res.status(404).send({
-                cause: "Offer not found",
-                message: `Offer with ID ${id} does not exist`,
+                message: `Offer with ID ${offerId} does not exist`,
             });
         }
     } catch (error) {
-        res.status(500).send({
-            cause: "Server error",
-            message: error.message,
-        });
+        res.status(500).send({ message: error.message });
     }
 });
 
-router.put("/:id", (req, res) => {
-    // aktualizuje ofertę o danym id w tabeli offers, zwraca zaktualizowany obiekt, jeśli brak rekordu 404
+/**
+ * Updates offer with given id in offers table, sends it in response
+ * If user is not logged in, sends 403 status code
+ * If the offer is not in current user's offers, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends 200 status and requested data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.params.id
+ * @param {string} req.body.localType
+ * @param {string} req.body.description
+ * @param {string} req.body.localization - for now: later array [lat, lng]
+ * @param {Array<string>} req.body.photoURLArray
+ * @param {string} req.body.title
+ *
+ * @returns {Offer} Added offer
+ * @typedef {Object} Offer
+ * @property {string} offerId
+ * @property {string} userId
+ * @property {string} localType
+ * @property {string} description
+ * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<string>} photoURLArray
+ * @property {string} title
+ * @property {Date} creationDate
+ */
+router.put("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
-    const id = req.params.id;
-    const title = req.body.title;
-    // itd...
 
-    res.status(501).send("Not implemented");
+    const offerId = req.params.id;
+
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
+                if (!docSnap.data().myOffers.includes(offerId)) {
+                    res.status(403).send({
+                        message: "User does not have access to this offer",
+                    });
+                }
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("offers")
+            .doc(offerId)
+            .update(req.body)
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        const docSnap = await db
+            .collection("offers")
+            .doc(offerId)
+            .get()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.send({
+            ...docSnap.data(),
+            offerId: offerId,
+            creationDate: docSnap.data().creationDate?.toDate(),
+        });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
-router.delete("/:id", (req, res) => {
-    // usuwa ofertę o danym id z tabeli offers, nic nie zwraca, jeśli brak rekordu 404
+/**
+ * Deletes offer with given id from offers table
+ * Removes offer from user's myOffers array
+ * If user is not logged in, sends 403 status code
+ * If the offer is not in current user's offers, sends 403 status code
+ * If there is an error, sends 500 status code
+ * If everything is ok, sends 200 status and requested data
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {string} req.params.id
+ */
+router.delete("/:id", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
-        res.status(403).send({
-            message: "User not logged in!",
-        });
+        res.status(403).send({ message: "User not logged in!" });
     }
-    const id = req.params.id;
+    const offerId = req.params.id;
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => {
+                if (!docSnap.data().myOffers.includes(offerId)) {
+                    res.status(403).send({
+                        message: "User does not have access to this offer",
+                    });
+                }
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                myOffers: FieldValue.arrayRemove(offerId),
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        await db
+            .collection("offers")
+            .doc(offerId)
+            .delete()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 export default router;
