@@ -36,24 +36,20 @@ router.get("/:id", async (req, res) => {
             .get()
             .then((docSnap) => {
                 if (docSnap.exists) {
-                    const {
-                        firstName,
-                        lastName,
-                        yearOfStudy,
-                        phoneNumber,
-                        birthDate,
-                        gender,
-                        photoURL,
-                        age,
-                    } = docSnap.data();
+                    const userData = docSnap.data();
                     res.send({
-                        firstName: firstName,
-                        lastName: lastName,
-                        yearOfStudy: yearOfStudy,
-                        phoneNumber: phoneNumber,
-                        age: birthDate ? calculateAge(birthDate) : age,
-                        gender: gender,
-                        photoURL: photoURL,
+                        userId: req.params.id,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        yearOfStudy: userData.yearOfStudy,
+                        phoneNumber: userData.phoneNumber,
+                        age: userData.birthDate
+                            ? calculateAge(userData.birthDate.toDate())
+                            : userData.age,
+                        gender: userData.gender,
+                        photoURL: userData.photoURL,
+                        description: userData.description,
+                        interests: userData.interests,
                     });
                 } else {
                     res.status(404).send({ message: "User not found!" });

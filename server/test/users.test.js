@@ -18,6 +18,56 @@ const testUserData = {
     interests: [],
 };
 
+describe("GET /api/users/:id", () => {
+    test("should return 403 status if not authorized", async () => {
+        const response = await request(app).get(
+            "/api/users/" + auth.currentUser.uid
+        );
+        expect(response.statusCode).toBe(403);
+    });
+
+    test("should return 404 status if user not found", async () => {
+        const response = await request(app)
+            .get("/api/users/" + "123")
+            .set("Authorization", "Bearer " + idToken);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("should return 200 status if user posted", async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+
+        const response = await request(app)
+            .get("/api/users/" + auth.currentUser.uid)
+            .set("Authorization", "Bearer " + idToken);
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("should respond with user data", async () => {
+        const response = await request(app)
+            .get("/api/users/" + auth.currentUser.uid)
+            .set("Authorization", "Bearer " + idToken)
+            .set("Accept", "application/json");
+        expect(response.headers["content-type"]).toEqual(
+            expect.stringContaining("json")
+        );
+        expect(response.body).toEqual({
+            userId: auth.currentUser.uid,
+            firstName: testUserData.firstName,
+            lastName: testUserData.lastName,
+            yearOfStudy: testUserData.yearOfStudy,
+            phoneNumber: testUserData.phoneNumber,
+            age: calculateAge(testUserData.birthDate),
+            gender: testUserData.gender,
+            photoURL: testUserData.photoURL,
+            description: testUserData.description,
+            interests: testUserData.interests,
+        });
+    });
+});
+
 describe("GET /api/users", () => {
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).get("/api/users");
