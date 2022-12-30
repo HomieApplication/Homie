@@ -5,19 +5,60 @@ import {
     Text,
     View,
     TextInput,
-    useState,
+    Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchableDropdown from "react-native-searchable-dropdown";
-import SignInBtn from "../components/signIn/SignInBtn";
+import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import SignInBtn from "../components/signIn/SignInBtn";
+import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
 
 const AddOfferScreen = ({ navigation }) => {
     const [localType, onChangeLocalType] = React.useState("");
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
+    // Tu tablica
+    const [image, setImage] = React.useState({});
+
+    // Te dwie funkcje lepiej dać do osobnego pliku, ale nie wiem gdzie, getStorage() do config
+    const pickImageAsync = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setImage({
+                uri: result.uri,
+                downloadUrl: await uploadImage(result.uri),
+            });
+        } else {
+            displayAlertBox(
+                "Please, try again",
+                "You did not select any image"
+            );
+        }
+    };
+
+    const uploadImage = async (uri) => {
+        const storage = getStorage();
+        const response = await fetch(uri);
+        const imageBlob = await response.blob();
+        const imageRef = ref(
+            storage,
+            `images/${auth.currentUser.uid}/${uri.substring(
+                uri.lastIndexOf("/") + 1
+            )}`
+        );
+        const metadata = { contentType: "image/jpeg" };
+        await uploadBytes(imageRef, imageBlob, metadata).then((snapshot) => {
+            console.log("Uploaded an image!");
+        });
+        return await getDownloadURL(imageRef);
+    };
 
     const sendData = () => {
         axios
@@ -55,6 +96,25 @@ const AddOfferScreen = ({ navigation }) => {
                 onChangeText={onChangeLocalization}
                 value={localization}
                 placeholder="Localization (city for now...)"
+            />
+
+            {/* to do zmiany - inny przycisk może i zapis obrazków w tablicy i wyświetlanie wszystkich dodanych obrazków */}
+            <SignInBtn
+                style={styles.button}
+                title="Add image"
+                onPress={() => {
+                    pickImageAsync().catch((error) => {
+                        displayAlertBox(
+                            "Please, try again later",
+                            error.message
+                        );
+                    });
+                }}
+            ></SignInBtn>
+            {/* Jeśli są zdjęcia */}
+            <Image
+                source={{ uri: image.downloadUrl }}
+                style={{ width: 200, height: 200 }}
             />
 
             <SignInBtn
