@@ -6,6 +6,7 @@ import {
     View,
     TextInput,
     Image,
+    ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -15,15 +16,14 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import SignInBtn from "../components/signIn/SignInBtn";
 import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
+const storage = getStorage();
 
 const AddOfferScreen = ({ navigation }) => {
     const [localType, onChangeLocalType] = React.useState("");
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
-    // Tu tablica
-    const [image, setImage] = React.useState({});
+    const [images, setImages] = React.useState([]);
 
-    // Te dwie funkcje lepiej dać do osobnego pliku, ale nie wiem gdzie, getStorage() do config
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -31,10 +31,7 @@ const AddOfferScreen = ({ navigation }) => {
         });
 
         if (!result.cancelled) {
-            setImage({
-                uri: result.uri,
-                downloadUrl: await uploadImage(result.uri),
-            });
+            setImages([result.uri, ...images]);
         } else {
             displayAlertBox(
                 "Please, try again",
@@ -44,7 +41,6 @@ const AddOfferScreen = ({ navigation }) => {
     };
 
     const uploadImage = async (uri) => {
-        const storage = getStorage();
         const response = await fetch(uri);
         const imageBlob = await response.blob();
         const imageRef = ref(
@@ -53,19 +49,21 @@ const AddOfferScreen = ({ navigation }) => {
                 uri.lastIndexOf("/") + 1
             )}`
         );
-        const metadata = { contentType: "image/jpeg" };
-        await uploadBytes(imageRef, imageBlob, metadata).then((snapshot) => {
-            console.log("Uploaded an image!");
-        });
-        return await getDownloadURL(imageRef);
+        await uploadBytes(imageRef, imageBlob);
+        return getDownloadURL(imageRef);
     };
 
-    const sendData = () => {
+    const sendData = async () => {
+        const urls = await Promise.all(
+            images.map((image) => uploadImage(image))
+        );
+
         axios
             .post(`/api/offers`, {
                 localType: localType,
                 description: description,
                 localization: localization,
+                photoURLArray: urls,
             })
             .then(() => {
                 displayAlertBox("Offer successfully published!");
@@ -98,7 +96,7 @@ const AddOfferScreen = ({ navigation }) => {
                 placeholder="Localization (city for now...)"
             />
 
-            {/* to do zmiany - inny przycisk może i zapis obrazków w tablicy i wyświetlanie wszystkich dodanych obrazków */}
+            {/* inny przycisk może */}
             <SignInBtn
                 style={styles.button}
                 title="Add image"
@@ -111,18 +109,28 @@ const AddOfferScreen = ({ navigation }) => {
                     });
                 }}
             ></SignInBtn>
-            {/* Jeśli są zdjęcia */}
-            <Image
-                source={{ uri: image.downloadUrl }}
-                style={{ width: 200, height: 200 }}
-            />
-
+            <View style={{ flexDirection: "row" }}>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {/* Brzydko zrobiłem trzeba to trochę zmienić..., dodać usuwanie zdjęć */}
+                    {images.map((image) => (
+                        <Image
+                            key={image}
+                            source={{ uri: image }}
+                            style={{ width: 150, height: 150 }}
+                        />
+                    ))}
+                </ScrollView>
+            </View>
             <SignInBtn
                 style={styles.button}
                 title="Create offer"
                 onPress={() => {
                     try {
                         sendData();
+                        // może jakiś loading screen
                     } catch (error) {
                         displayAlertBox(
                             "Please, try again later",
