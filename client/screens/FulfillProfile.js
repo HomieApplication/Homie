@@ -11,14 +11,12 @@ import {
     DatePicker,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchableDropdown from "react-native-searchable-dropdown";
 import SignInBtn from "../components/signIn/SignInBtn";
-// import {DatePicker} from "react-native-date-picker";
-import RNSearchablePicker from "react-native-searchable-picker";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-import { register } from "../components/auth";
+import RNMultiSelect, {
+    IMultiSelectDataTypes,
+  } from "@freakycoder/react-native-multiple-select";
 
 
 
@@ -26,17 +24,11 @@ const FulfillProfile = ({ navigation, route }) => {
     const {id} = route.params
 
     const [university, onChangeUniversity] = React.useState("");
-
-    const [password, onChangePassword] = React.useState("");
-    const [firstName, onChangeFirstName] = React.useState();
-    const [secondName, onChangeSecondName] = React.useState();
-    const [yearOfStudy, onChangeyearOfStudy] = React.useState();
-    const [dateOfBorn, onChangedateOfBorn] = React.useState();
     const [selected, setSelected] = React.useState();
-
     const [datePicker, setDatePicker] = React.useState(false);
  
     const [date, setDate] = React.useState(new Date());
+
 
     function showDatePicker() {
         setDatePicker(true);
@@ -46,12 +38,18 @@ const FulfillProfile = ({ navigation, route }) => {
         setDate(value);
         setDatePicker(false);
       };
+      const staticData = [
+        { id: 0, value: "Sport", isChecked: false, },
+        { id: 1, value: "Computers", isChecked: false, },
+        { id: 2, value: "Cooking", isChecked: false, },
+        { id: 3, value: "Art", isChecked: false, },
+        { id: 4, value: "Literature", isChecked: false, },
+        { id: 5, value: "Journey", isChecked: false, },
+        { id: 6, value: "Music", isChecked: false, },
+        { id: 7, value: "Video games", isChecked: false, },
+        { id: 8, value: "other...", isChecked: false, },
+      ];
 
-    const options = [
-        { value: "chocolate", label: "Chocolate" },
-        { value: "strawberry", label: "Strawberry" },
-        { value: "vanilla", label: "Vanilla" }
-      ]
 
     const univerities = [
     { value: "agh", label: "Akademia Górniczo Hutnicza" },
@@ -65,8 +63,8 @@ const FulfillProfile = ({ navigation, route }) => {
     ]
 
     React.useEffect(() => {
-        console.log(university);
-      }, [university]);
+        console.log(selected);
+      }, [selected]);
       
 
     return (
@@ -81,11 +79,13 @@ const FulfillProfile = ({ navigation, route }) => {
              />
 
             <Text style={styles.dataText}>Hobby:</Text>
-            <RNPickerSelect
-                style={pickerSelectStyles}
-                onValueChange={(value) => console.log(value)}
-                items={options}
-             />
+            <RNMultiSelect
+                // disableAbsolute
+                data={staticData}
+                onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                menuBarContainerStyle={styles.hobbyBox}
+                buttonContainerStyle={styles.hobbyBox}
+            />
 
             <Text style={styles.dataText}>Date of born:</Text>
             <TextInput 
@@ -119,21 +119,21 @@ const FulfillProfile = ({ navigation, route }) => {
             <SignInBtn
                 style={styles.button}
                 title="Confirm"
-                onPress={() => 
-                    
-                    {
-                        displayAlertBox("NO WAY TO GET OUT! :{D");
-                    // try {
-                    //     register(login, password, {
-                    //         firstName: firstName,
-                    //         lastName: secondName,
-                    //         yearOfStudy: yearOfStudy,
-                    //     });
-                    // } catch (error) {
-                    //     displayAlertBox("Failed to register", error.message);
-                    // }
-                    // // navigation.push('Main')
-                }}
+                // onPress={() =>       
+                //     {
+                //     // try {
+                //     //     register(login, password, {
+                //     //         firstName: firstName,
+                //     //         lastName: secondName,
+                //     //         yearOfStudy: yearOfStudy,
+                //     //     });
+                //     // } catch (error) {
+                //     //     displayAlertBox("Failed to register", error.message);
+                //     // }
+                //     // // navigation.push('Main')
+                // }}
+                // onPress = { displayAlertBox("NO WAY TO GET OUT! :{D") }
+
             ></SignInBtn>
         </SafeAreaView>
     );
@@ -202,6 +202,30 @@ const styles = StyleSheet.create({
         height: 260,
         display: 'flex',
       },
+    hobbyBox: {
+        left:"2%",
+        width: "96%",
+        padding: "5%",
+        margin: 0,
+        borderColor: "grey",
+        borderWidth: 0.5,
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3, //?? does anyone knows what that for?
+    },
+    hobbyText: {
+        fontSize: 15,
+        marginVertical: 7,
+        color: "black",
+    },
 });
 
 
