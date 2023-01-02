@@ -50,11 +50,11 @@ const AddOfferScreen = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.containerMain}>
             { loading ? 
             <LoadingAnimation/> :
 
-            <View>
+            <View style={styles.container}>
                 <Text style={styles.h2}>Post new offer</Text>
                 <TextInput
                     style={styles.textboxes}
@@ -99,8 +99,14 @@ const AddOfferScreen = ({ navigation }) => {
 export default AddOfferScreen;
 
 const styles = StyleSheet.create({
+    containerMain:{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     container: {
         flex: 1,
+        width:'100%',
         alignItems: "center",
         justifyContent: "center",
     },
