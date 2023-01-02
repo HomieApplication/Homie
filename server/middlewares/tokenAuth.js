@@ -9,13 +9,11 @@ export async function decodeIdToken(req, res, next) {
             next();
         } catch (error) {
             res.status(403).send({
-                cause: "Authorization Error",
                 message: error.message,
             });
         }
     } else {
         res.status(403).send({
-            cause: "Authorization Error",
             message: "Invalid token",
         });
     }

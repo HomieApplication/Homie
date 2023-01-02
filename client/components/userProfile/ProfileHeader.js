@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
   },
   img:{
     position: 'absolute',
-    top: size/1.9,
-    right: size*1.9,
+    top: Dimensions.get('window').height*0.09,
+    right: Dimensions.get('window').width*0.6,
     width: size,
     height: size,
     borderRadius: size/2

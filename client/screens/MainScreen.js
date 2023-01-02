@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     Button,
+    Dimensions,
     FlatList,
     ScrollView,
     StyleSheet,
@@ -111,6 +112,13 @@ const MainScreen = ({ navigation }) => {
 
             <ScrollView style={styles.scroll}>
                 {offersData.map((offer, i) => {
+
+                    const push = () => {
+                        console.log(offer.offerId)
+                        navigation.push("Offer", {offer: offer})
+                    }
+
+                    console.log(offer)
                     return (
                         <Card
                             key={i}
@@ -121,6 +129,8 @@ const MainScreen = ({ navigation }) => {
                             localType={offer.localType}
                             localization={offer.localization}
                             imgUrl={require("../assets/defaultImg.png")}
+                            idOffer={offer.offerId}
+                            onPress={push}
                         />
                     );
                 })}
@@ -144,6 +154,7 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "column",
         alignContent: "center",
-        marginLeft: 15,
+
+        marginLeft: Dimensions.get('window').width*0.1,
     },
 });

@@ -15,6 +15,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
 import FulfillProfile from "./screens/FulfillProfile";
+import OfferScreen from "./screens/OfferScreen";
 
 import { isLoggedIn, logout, login, register } from "./components/auth";
 import { auth, SERVER_URL } from "./components/firebase/config";
@@ -28,7 +29,7 @@ import { auth, SERVER_URL } from "./components/firebase/config";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-LogBox.ignoreAllLogs();
+//LogBox.ignoreAllLogs();
 
 axios.interceptors.request.use(
     async (config) => {
@@ -137,6 +138,7 @@ export default function App() {
                                 name="EditProfile"
                                 component={FulfillProfile}
                             />
+
                         </Stack.Group>
                     )}
                 </Stack.Navigator>
