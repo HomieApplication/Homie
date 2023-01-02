@@ -27,7 +27,7 @@ const FulfillProfile = ({ navigation, route }) => {
     const [selected, setSelected] = React.useState();
     const [datePicker, setDatePicker] = React.useState(false);
  
-    const [date, setDate] = React.useState(new Date());
+    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
 
 
     function showDatePicker() {
@@ -35,7 +35,7 @@ const FulfillProfile = ({ navigation, route }) => {
       };
 
       function onDateSelected(event, value) {
-        setDate(value);
+        setDateOfBirth(value);
         setDatePicker(false);
       };
       const staticData = [
@@ -87,16 +87,16 @@ const FulfillProfile = ({ navigation, route }) => {
                 buttonContainerStyle={styles.hobbyBox}
             />
 
-            <Text style={styles.dataText}>Date of born:</Text>
+            <Text style={styles.dataText}>Date of birth:</Text>
             <TextInput 
                 style={styles.textboxes}
                 onChange={showDatePicker}>
-                {date.toDateString()}
+                {dateOfBirth.toDateString()}
             </TextInput>
 
             {datePicker && (
             <DateTimePicker
-                value={date}
+                value={dateOfBirth}
                 mode={'date'}
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 is24Hour={true}
