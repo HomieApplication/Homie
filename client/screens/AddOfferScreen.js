@@ -19,14 +19,25 @@ import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
 const storage = getStorage();
 
+function LoadingAnimation() {
+    return (
+        <View style={styles.indicatorWrapper}>
+            <ActivityIndicator
+                size="large"
+                color="#114B5F"
+                style={styles.indicator}
+            />
+            <Text style={styles.indicatorText}>Adding offer...</Text>
+        </View>
+    );
+}
+
 const AddOfferScreen = ({ navigation }) => {
     const [localType, onChangeLocalType] = React.useState("");
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
     const [images, setImages] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
-
-    
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -165,6 +176,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        width: "100%",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -209,5 +221,19 @@ const styles = StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
+    },
+    itemText: {
+        color: "#fff",
+        fontSize: 24,
+    },
+    indicatorWrapper: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    indicator: {},
+    indicatorText: {
+        fontSize: 18,
+        marginTop: 12,
     },
 });
