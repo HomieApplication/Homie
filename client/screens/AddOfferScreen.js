@@ -26,6 +26,8 @@ const AddOfferScreen = ({ navigation }) => {
     const [images, setImages] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
 
+    
+
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -117,21 +119,6 @@ const AddOfferScreen = ({ navigation }) => {
                             });
                         }}
                     ></SignInBtn>
-                    <SignInBtn
-                        style={styles.button}
-                        title="Create offer"
-                        onPress={() => {
-                            setLoading(true);
-                            try {
-                                sendData();
-                            } catch (error) {
-                                displayAlertBox(
-                                    "Please, try again later",
-                                    error.message
-                                );
-                            }
-                        }}
-                    ></SignInBtn>
                     <View style={{ flexDirection: "row" }}>
                         <ScrollView
                             horizontal={true}
@@ -147,6 +134,21 @@ const AddOfferScreen = ({ navigation }) => {
                             ))}
                         </ScrollView>
                     </View>
+                    <SignInBtn
+                        style={styles.button}
+                        title="Create offer"
+                        onPress={() => {
+                            setLoading(true);
+                            try {
+                                sendData();
+                            } catch (error) {
+                                displayAlertBox(
+                                    "Please, try again later",
+                                    error.message
+                                );
+                            }
+                        }}
+                    ></SignInBtn>
                 </View>
             )}
         </SafeAreaView>
