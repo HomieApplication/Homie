@@ -156,6 +156,11 @@ const AddOfferScreen = ({ navigation }) => {
 export default AddOfferScreen;
 
 const styles = StyleSheet.create({
+    containerMain: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     container: {
         flex: 1,
         alignItems: "center",
