@@ -7,6 +7,7 @@ import {
     TextInput,
     Image,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -23,6 +24,7 @@ const AddOfferScreen = ({ navigation }) => {
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
     const [images, setImages] = React.useState([]);
+    const [loading, setLoading] = React.useState(false);
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,10 +68,12 @@ const AddOfferScreen = ({ navigation }) => {
                 photoURLArray: urls,
             })
             .then(() => {
+                setLoading(false);
                 displayAlertBox("Offer successfully published!");
                 navigation.push("Main");
             })
             .catch((error) => {
+                setLoading(false);
                 displayAlertBox("Please, try again later", error.message);
             });
     };
@@ -109,6 +113,21 @@ const AddOfferScreen = ({ navigation }) => {
                     });
                 }}
             ></SignInBtn>
+            <SignInBtn
+                style={styles.button}
+                title="Create offer"
+                onPress={() => {
+                    setLoading(true);
+                    try {
+                        sendData();
+                    } catch (error) {
+                        displayAlertBox(
+                            "Please, try again later",
+                            error.message
+                        );
+                    }
+                }}
+            ></SignInBtn>
             <View style={{ flexDirection: "row" }}>
                 <ScrollView
                     horizontal={true}
@@ -124,21 +143,6 @@ const AddOfferScreen = ({ navigation }) => {
                     ))}
                 </ScrollView>
             </View>
-            <SignInBtn
-                style={styles.button}
-                title="Create offer"
-                onPress={() => {
-                    try {
-                        sendData();
-                        // może jakiś loading screen
-                    } catch (error) {
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                    }
-                }}
-            ></SignInBtn>
         </SafeAreaView>
     );
 };
