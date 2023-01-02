@@ -79,70 +79,76 @@ const AddOfferScreen = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.h2}>Post new offer</Text>
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeLocalType}
-                value={localType}
-                placeholder="Local type (dormitory/flat)"
-            />
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeDescription}
-                value={description}
-                placeholder="Description"
-            />
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeLocalization}
-                value={localization}
-                placeholder="Localization (city for now...)"
-            />
+        <SafeAreaView style={styles.containerMain}>
+            {loading ? (
+                <LoadingAnimation />
+            ) : (
+                <View style={styles.container}>
+                    <Text style={styles.h2}>Post new offer</Text>
+                    <TextInput
+                        style={styles.textboxes}
+                        onChangeText={onChangeLocalType}
+                        value={localType}
+                        placeholder="Local type (dormitory/flat)"
+                    />
+                    <TextInput
+                        style={styles.textboxes}
+                        onChangeText={onChangeDescription}
+                        value={description}
+                        placeholder="Description"
+                    />
+                    <TextInput
+                        style={styles.textboxes}
+                        onChangeText={onChangeLocalization}
+                        value={localization}
+                        placeholder="Localization (city for now...)"
+                    />
 
-            {/* inny przycisk może */}
-            <SignInBtn
-                style={styles.button}
-                title="Add image"
-                onPress={() => {
-                    pickImageAsync().catch((error) => {
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                    });
-                }}
-            ></SignInBtn>
-            <SignInBtn
-                style={styles.button}
-                title="Create offer"
-                onPress={() => {
-                    setLoading(true);
-                    try {
-                        sendData();
-                    } catch (error) {
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                    }
-                }}
-            ></SignInBtn>
-            <View style={{ flexDirection: "row" }}>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    {/* Brzydko zrobiłem trzeba to trochę zmienić..., dodać usuwanie zdjęć */}
-                    {images.map((image) => (
-                        <Image
-                            key={image}
-                            source={{ uri: image }}
-                            style={{ width: 150, height: 150 }}
-                        />
-                    ))}
-                </ScrollView>
-            </View>
+                    {/* inny przycisk może */}
+                    <SignInBtn
+                        style={styles.button}
+                        title="Add image"
+                        onPress={() => {
+                            pickImageAsync().catch((error) => {
+                                displayAlertBox(
+                                    "Please, try again later",
+                                    error.message
+                                );
+                            });
+                        }}
+                    ></SignInBtn>
+                    <SignInBtn
+                        style={styles.button}
+                        title="Create offer"
+                        onPress={() => {
+                            setLoading(true);
+                            try {
+                                sendData();
+                            } catch (error) {
+                                displayAlertBox(
+                                    "Please, try again later",
+                                    error.message
+                                );
+                            }
+                        }}
+                    ></SignInBtn>
+                    <View style={{ flexDirection: "row" }}>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {/* Brzydko zrobiłem trzeba to trochę zmienić..., dodać usuwanie zdjęć */}
+                            {images.map((image) => (
+                                <Image
+                                    key={image}
+                                    source={{ uri: image }}
+                                    style={{ width: 150, height: 150 }}
+                                />
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+            )}
         </SafeAreaView>
     );
 };
