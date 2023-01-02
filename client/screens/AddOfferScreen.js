@@ -6,6 +6,7 @@ import {
     View,
     TextInput,
     useState,
+    ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchableDropdown from "react-native-searchable-dropdown";
@@ -14,10 +15,21 @@ import axios from "axios";
 
 import { displayAlertBox } from "../components/alert";
 
+
+function LoadingAnimation() {
+    return (
+      <View style={styles.indicatorWrapper}>
+        <ActivityIndicator size="large" color="#114B5F" style={styles.indicator}/>
+        <Text style={styles.indicatorText}>Adding offer...</Text>
+      </View>
+    );
+  }
+
 const AddOfferScreen = ({ navigation }) => {
     const [localType, onChangeLocalType] = React.useState("");
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
 
     const sendData = () => {
         axios
@@ -27,50 +39,59 @@ const AddOfferScreen = ({ navigation }) => {
                 localization: localization,
             })
             .then(() => {
+                setLoading(false);
                 displayAlertBox("Offer successfully published!");
                 navigation.push("Main");
             })
             .catch((error) => {
+                setLoading(false);
                 displayAlertBox("Please, try again later", error.message);
             });
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.h2}>Post new offer</Text>
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeLocalType}
-                value={localType}
-                placeholder="Local type (dormitory/flat)"
-            />
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeDescription}
-                value={description}
-                placeholder="Description"
-            />
-            <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeLocalization}
-                value={localization}
-                placeholder="Localization (city for now...)"
-            />
+        <SafeAreaView style={styles.containerMain}>
+            { loading ? 
+            <LoadingAnimation/> :
 
-            <SignInBtn
-                style={styles.button}
-                title="Create offer"
-                onPress={() => {
-                    try {
-                        sendData();
-                    } catch (error) {
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                    }
-                }}
-            ></SignInBtn>
+            <View style={styles.container}>
+                <Text style={styles.h2}>Post new offer</Text>
+                <TextInput
+                    style={styles.textboxes}
+                    onChangeText={onChangeLocalType}
+                    value={localType}
+                    placeholder="Local type (dormitory/flat)"
+                />
+                <TextInput
+                    style={styles.textboxes}
+                    onChangeText={onChangeDescription}
+                    value={description}
+                    placeholder="Description"
+                />
+                <TextInput
+                    style={styles.textboxes}
+                    onChangeText={onChangeLocalization}
+                    value={localization}
+                    placeholder="Localization (city for now...)"
+                />
+
+                <SignInBtn
+                    style={styles.button}
+                    title="Create offer"
+                    onPress={() => {
+                        setLoading(true);
+                        try {
+                            sendData();
+                        } catch (error) {
+                            displayAlertBox(
+                                "Please, try again later",
+                                error.message
+                            );
+                        }
+                    }}
+                ></SignInBtn>
+            </View>
+        }
         </SafeAreaView>
     );
 };
@@ -78,8 +99,14 @@ const AddOfferScreen = ({ navigation }) => {
 export default AddOfferScreen;
 
 const styles = StyleSheet.create({
+    containerMain:{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     container: {
         flex: 1,
+        width:'100%',
         alignItems: "center",
         justifyContent: "center",
     },
@@ -124,5 +151,19 @@ const styles = StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
+    },
+    itemText: {
+        color: '#fff',
+        fontSize: 24,
+    },
+    indicatorWrapper: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    indicator: {},
+    indicatorText: {
+        fontSize: 18,
+        marginTop: 12,
     },
 });
