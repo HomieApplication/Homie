@@ -8,6 +8,7 @@ import {
     Image,
     ScrollView,
     ActivityIndicator,
+    Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -33,6 +34,7 @@ function LoadingAnimation() {
 }
 
 const AddOfferScreen = ({ navigation }) => {
+    const [title, onChangeTitle] = React.useState("");
     const [localType, onChangeLocalType] = React.useState("");
     const [description, onChangeDescription] = React.useState("");
     const [localization, onChangeLocalization] = React.useState("");
@@ -75,6 +77,7 @@ const AddOfferScreen = ({ navigation }) => {
 
         axios
             .post(`/api/offers`, {
+                title: title,
                 localType: localType,
                 description: description,
                 localization: localization,
@@ -91,6 +94,10 @@ const AddOfferScreen = ({ navigation }) => {
             });
     };
 
+    const clearImages = () => {
+        setImages([]);
+    };
+
     return (
         <SafeAreaView style={styles.containerMain}>
             {loading ? (
@@ -98,6 +105,12 @@ const AddOfferScreen = ({ navigation }) => {
             ) : (
                 <View style={styles.container}>
                     <Text style={styles.h2}>Post new offer</Text>
+                    <TextInput
+                        style={styles.textboxes}
+                        onChangeText={onChangeTitle}
+                        value={title}
+                        placeholder="Offer title"
+                    />
                     <TextInput
                         style={styles.textboxes}
                         onChangeText={onChangeLocalType}
@@ -117,7 +130,7 @@ const AddOfferScreen = ({ navigation }) => {
                         placeholder="Localization (city for now...)"
                     />
 
-                    {/* inny przycisk może */}
+                    {/* inny przycisk może... */}
                     <SignInBtn
                         style={styles.button}
                         title="Add image"
@@ -135,7 +148,7 @@ const AddOfferScreen = ({ navigation }) => {
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                         >
-                            {/* Brzydko zrobiłem trzeba to trochę zmienić..., dodać usuwanie zdjęć */}
+                            {/* Można to ładniej zrobić pewnie... */}
                             {images.map((image) => (
                                 <Image
                                     key={image}
@@ -145,6 +158,12 @@ const AddOfferScreen = ({ navigation }) => {
                             ))}
                         </ScrollView>
                     </View>
+                    {/* Tu też na pewno da się ładniej */}
+                    {images.length > 0 && (
+                        <Pressable onPress={clearImages}>
+                            <Text>Clear all images</Text>
+                        </Pressable>
+                    )}
                     <SignInBtn
                         style={styles.button}
                         title="Create offer"
