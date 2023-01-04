@@ -3,10 +3,9 @@ import { initializeApp, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import serviceAccount from "./serviceAccountKey.json" assert { type: "json" };
 
-initializeApp({
+const app = initializeApp({
     credential: cert(serviceAccount),
 });
 
-export const db = getFirestore();
-db.settings({ ignoreUndefinedProperties: true });
-export const auth = getAuth();
+export const db = getFirestore(app);
+export const auth = getAuth(app);
