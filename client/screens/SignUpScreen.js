@@ -1,26 +1,45 @@
-import React from "react";
-import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    useState,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchableDropdown from "react-native-searchable-dropdown";
-import SignInBtn from "../components/signIn/SignInBtn";
 
+import SignInBtn from "../components/signIn/SignInBtn";
+import { displayAlertBox } from "../components/alert";
 import { register } from "../components/auth";
 
 const SignUpScreen = ({ navigation }) => {
-    //jescze nie wiem jak zrobić taką fajną listę nie działa wybieranie
+    const [login, onChangeLogin] = useState("");
+    const [password, onChangePassword] = useState("");
+    const [confirmedPassword, onChangeConfirmedPassword] = useState("");
+    const [firstName, onChangeFirstName] = useState("");
+    const [secondName, onChangeSecondName] = useState("");
+    const [yearOfStudy, onChangeyearOfStudy] = useState("");
+    const [matchingPasswords, setMatchingPasswords] = useState(true);
+    const [correctPassword, setCorrectPassword] = useState(true);
+    const [correctEmail, setCorrectEmail] = useState(true);
 
-    const [login, onChangeLogin] = React.useState("");
-    const [password, onChangePassword] = React.useState("");
-    const [firstName, onChangeFirstName] = React.useState();
-    const [secondName, onChangeSecondName] = React.useState();
-    const [yearOfStudy, onChangeyearOfStudy] = React.useState();
+    useEffect(() => {
+        if (password.length < 6 && password.length > 0) {
+            setCorrectPassword(false);
+        } else {
+            setCorrectPassword(true);
+        }
+    }, [password]);
+
+    useEffect(() => {
+        if (!validateEmail(login) && login.length > 0) {
+            setCorrectEmail(false);
+        } else {
+            setCorrectEmail(true);
+        }
+    }, [login]);
+
+    useEffect(() => {
+        if (password !== confirmedPassword && confirmedPassword.length > 0) {
+            setMatchingPasswords(false);
+        } else {
+            setMatchingPasswords(true);
+        }
+    }, [password, confirmedPassword]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -29,8 +48,11 @@ const SignUpScreen = ({ navigation }) => {
                 style={styles.textboxes}
                 onChangeText={onChangeLogin}
                 value={login}
-                placeholder="Login (Email)"
+                placeholder="Email address"
             />
+            {!correctEmail && (
+                <Text style={{ color: "red" }}>Invalid email!</Text>
+            )}
             <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangePassword}
@@ -38,6 +60,19 @@ const SignUpScreen = ({ navigation }) => {
                 placeholder="Password"
                 secureTextEntry
             />
+            {!correctPassword && (
+                <Text style={{ color: "red" }}>Password too short!</Text>
+            )}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeConfirmedPassword}
+                value={confirmedPassword}
+                placeholder="Confirm password"
+                secureTextEntry
+            />
+            {!matchingPasswords && (
+                <Text style={{ color: "red" }}>Different passwords!</Text>
+            )}
             <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangeFirstName}
@@ -56,25 +91,64 @@ const SignUpScreen = ({ navigation }) => {
                 value={yearOfStudy}
                 placeholder="Year of study"
             />
-
             <SignInBtn
                 style={styles.button}
                 title="Sign up"
                 onPress={() => {
-                    try {
-                        register(login, password, {
-                            firstName: firstName,
-                            lastName: secondName,
-                            yearOfStudy: yearOfStudy,
-                        });
-                    } catch (error) {
-                        displayAlertBox("Failed to register", error.message);
+                    if (!correctEmail || login === "") {
+                        displayAlertBox("Failed to register", "Invalid email!");
+                    } else if (!correctPassword || password === "") {
+                        displayAlertBox(
+                            "Failed to register",
+                            "Password too short!"
+                        );
+                    } else if (!matchingPasswords) {
+                        displayAlertBox(
+                            "Failed to register",
+                            "Different passwords!"
+                        );
+                    } else if (firstName === "") {
+                        displayAlertBox(
+                            "Failed to register",
+                            "First name is empty!"
+                        );
+                    } else if (secondName === "") {
+                        displayAlertBox(
+                            "Failed to register",
+                            "Second name is empty!"
+                        );
+                    } else if (yearOfStudy === "") {
+                        displayAlertBox(
+                            "Failed to register",
+                            "Year of study is empty!"
+                        );
+                    } else {
+                        try {
+                            register(login, password, {
+                                firstName: firstName,
+                                lastName: secondName,
+                                yearOfStudy: yearOfStudy,
+                            });
+                        } catch (error) {
+                            displayAlertBox(
+                                "Failed to register",
+                                error.message
+                            );
+                        }
+                        // navigation.push('Main')
                     }
-                    // navigation.push('Main')
                 }}
             ></SignInBtn>
         </SafeAreaView>
     );
+};
+
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
 };
 
 export default SignUpScreen;
