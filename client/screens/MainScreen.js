@@ -48,22 +48,6 @@ const fetchOffers = async () => {
     return offersWithUser;
 };
 
-// const [image, setImage] = useState(null);
-
-// const pickImage = async () => {
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//         allowsEditing: false,
-//         aspect: [4, 4],
-//         quality: 1,
-//     });
-
-//     console.log(result);
-
-//     if (!result.cancelled){
-//         setImage(result.assets[0].uri);
-//     }
-// }
 
 const MainScreen = ({ navigation }) => {
     const [userData, setUser] = useState({});
@@ -99,8 +83,8 @@ const MainScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ProfileHeader
-                userFirstName={userData.firstName}
-                year={userData.yearOfStudy}
+                user={userData}
+                onPress={()=>{navigation.push("FavsOffers")}}
             />
 
             <ScrollView style={styles.scroll}>
@@ -137,7 +121,7 @@ export default MainScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f2f2f2",
+        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "space-between",
         margin: 0,

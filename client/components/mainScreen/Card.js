@@ -40,17 +40,17 @@ const styles = StyleSheet.create({
     container:{
         width:'90%',
         marginVertical: 15,
-        backgroundColor: '#fff',
+        backgroundColor: '#f1f4f5',
         borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 1,
         },
-        shadowOpacity: 0.22,
+        shadowOpacity: 0.10,
         shadowRadius: 2.22,
     
-        elevation: 2,
+        elevation: 1,
         padding: 10,
     },
     iconContainer:{
@@ -70,15 +70,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     nameText:{
-        color: '#fff',
+        color: '#0a3854',
         fontSize: 20,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'grey',
     },
     description: {
         letterSpacing: 0.25,
-        color:'grey',
+        color:'#0a3854',
     },
     icon:{
       height:35,

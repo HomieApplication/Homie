@@ -18,16 +18,19 @@ const ProfileHeaderFull = (props) => {
   
   return (
     <View style={styles.container}>
-      {/* <View style={styles.headerContainer}>
-        <View style={styles.textContainer}>
-        <Text style={styles.h1}>{userFirstName}</Text>
-          <Text style={styles.text}>Year of study: {year}</Text>
+
+        <View style={styles.imageAndFullName}>
+            <Image style={styles.img} source={require('../../assets/defaultImg.png')}/>
+            <View style={{flex: 1, marginLeft: 10, alignItems: 'flex-start' }}>
+                 <Text style={styles.h1}>{userData.firstName} {userData.lastName}</Text>
+                 <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>
+                 <Text style={styles.text}>Academy: {userData.academy}</Text>
+            </View>
         </View>
-        <Pressable style={styles.icon}>
-          <MaterialCommunityIcons name="star" color={'white'} size={35}/>
-        </Pressable>
-      </View>    
-      <Image style={styles.img} source={img}/> */}
+        <View style={styles.hobbyAndDescription}>
+            <Text style={styles.text}>{userData.description}</Text>
+            <Text style={styles.text}>Hobby: tu zrobie liste ale najpierw ogarnąć wysyłanie hobby</Text>
+        </View>
       
     </View>
   )
@@ -41,9 +44,10 @@ const styles = StyleSheet.create({
     width: '95%',
     backgroundColor: '#114B5F',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingHorizontal: 15,
+    paddingVertical:20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -55,38 +59,38 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 10,
   },
-  headerContainer:{
-    flex:1,
-    flexDirection:'row',
-    width:'100%',
-    justifyContent: 'space-between',
+
+  imageAndFullName:{
+    height:size,
+    backgroundColor: '#114B5F',
+    width: '100%',
+    marginBottom:10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',  
+    alignItems: 'flex-start',
+    paddingHorizontal:5,
+    
   },
-  textContainer:{
-    width:'50%',
-    paddingTop: 10,
+
+  hobbyAndDescription:{
+    width: '90%',
   },
-  textDescription:{
-    color: '#fff',
-    fontSize: 13,
-    paddingTop: 10,
-  },
+
   img:{
-    position: 'absolute',
-    top: Dimensions.get('window').height*0.09,
-    right: Dimensions.get('window').width*0.6,
     width: size,
     height: size,
-    borderRadius: size/2
+    borderRadius: size/10,
+    marginRight: 10,
   },
-  h1:{
-    paddingLeft: size/6,
-    paddingTop: 10,
+  h1: {
     color: '#fff',
-    fontSize: 22,
+    fontSize: 24,
+    marginBottom: 5,
   },
   text: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 14,
   },
   icon:{
     position: 'absolute',

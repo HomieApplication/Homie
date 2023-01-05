@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flex: 0.4,
         //height: 70, //Dimensions.get('window').height/15,
         borderRadius: 10,
-        backgroundColor: 'white',
+        backgroundColor: '#f1f4f5',
         justifyContent: 'center',
         alignItems: 'center',
         color: 'a8a8a8',
@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: 'bold',
       letterSpacing: 0.25,
-      color: 'grey',
+      color: '#114b5f',
     }
 })
