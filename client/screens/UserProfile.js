@@ -8,32 +8,31 @@ import {
     Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Tab from "../components/userProfile/Tab";
 import SignInBtn from "../components/signIn/SignInBtn";
-import * as ImagePicker from "expo-image-picker";
+import ProfileHeaderFull from "../components/userProfile/ProfileHeaderFull";
 import axios from "axios";
 
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { displayAlertBox } from "../components/alert";
 
+
 const Tabs = [
     {
         id: "1",
         title: "Favourite offers",
+        routeName: "FavsOffers"
     },
     {
         id: "2",
         title: "My offers",
+        routeName: "MyOffers"
     },
     {
         id: "3",
-        title: "Setting",
-    },
-    {
-        id: "4",
-        title: "Regulamin",
+        title: "Edit profile",
+        routeName: ""
     },
 ];
 
@@ -54,38 +53,14 @@ const UserProfile = ({ navigation }) => {
             });
     }, []);
 
-    // const [image, setImage] = useState(null);
-
-    // const pickImage = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing: true,
-    //         aspect: [4, 4],
-    //         quality: 1,
-    //     }).catch((error) => console.log(error));
-
-    //     console.log(result);
-
-    //     if (!result.cancelled){
-    //         setImage(result.uri);
-    //         console.log(result.uri);
-    //     }
-    // }
-
     return (
         <SafeAreaView style={styles.container}>
-            <ProfileHeader
-                userFirstName={userData.firstName}
-                year={userData.yearOfStudy}
+            <ProfileHeaderFull
+                user={userData}
             />
             {Tabs.map((item) => {
-                return <Tab key={item.id} title={item.title} />;
+                return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>;
             })}
-            {/* <SignInBtn 
-                title="Pick profile image" 
-                style={styles.btn}
-                onPress={pickImage} 
-            /> */}
             <SignInBtn
                 title="Log out"
                 style={styles.btn}
