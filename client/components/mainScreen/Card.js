@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, Pressable, Image, Dimensions } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
@@ -15,7 +16,7 @@ export default function Card(props) {
   return (
     <View style={styles.container}>
         <Pressable style={styles.iconStar}>
-          <MaterialCommunityIcons name="star-outline" color={'black'} size={35}/> 
+          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35}/> 
         </Pressable>
         <View style={styles.upperHalf}>
             <Image style={styles.img} source={imgUrl}/>
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     container:{
         width:'90%',
         marginVertical: 15,
-        backgroundColor: '#f1f4f5',
+        backgroundColor: COLORS.card,
         borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     nameText:{
-        color: '#0a3854',
+        color: COLORS.textCard,
         fontSize: 20,
         fontWeight: 'bold',
         letterSpacing: 0.25,

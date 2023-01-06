@@ -16,6 +16,7 @@ import axios from "axios";
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { displayAlertBox } from "../components/alert";
+import COLORS from "../components/assets";
 
 
 const Tabs = [
@@ -84,7 +85,7 @@ const styles = new StyleSheet.create({
         flex: 1,
         width: "100%",
         marginTop: StatusBar.currentHeight || 0,
-        backgroundColor: "#fff",
+        backgroundColor: COLORS.background,
         alignItems: "center",
         justifyContent: "space-between",
     },
@@ -107,6 +108,6 @@ const styles = new StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
-        backgroundColor: "#1a936f",
+        backgroundColor: COLORS.button,
     },
 });

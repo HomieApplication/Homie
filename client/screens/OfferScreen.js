@@ -5,6 +5,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import axios from 'axios'
 import { async } from '@firebase/util';
 
+import COLORS from '../components/assets';
 
 const fetchUser = async (o) => {
     const userData = await axios
@@ -46,7 +47,8 @@ const OfferScreen = ({route, navigation}) => {
     //obok fajnie by było wyświetlać odległości do kluczowych miejsc np kebab
 
     return (
-        <View style={styles.container}>
+        <View style={{flex:1, width:'100%', backgroundColor: COLORS.background, justifyContent:'flex-start'}}>        
+            <View style={styles.card}>
             <View style={styles.contentContainer}>
                 <View style={styles.headerContainer}>
                     <Image
@@ -60,7 +62,7 @@ const OfferScreen = ({route, navigation}) => {
                         {/* <Text style={styles.text}>{userData.description}</Text> */}
                     </View>
                     <Pressable style={styles.icon}>
-                         <MaterialCommunityIcons name="star" color={'#ffb703'} size={35}/>
+                         <MaterialCommunityIcons name="star" color={COLORS.star} size={35}/>
                      </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
@@ -83,22 +85,23 @@ const OfferScreen = ({route, navigation}) => {
                 </View>
             </View>
         </View>
+        </View>
+
     )
 }
 
 export default OfferScreen
 
 const styles = StyleSheet.create({
-    container:{
+    card:{
         width: '100%',
         height: '90%',
         marginBottom:20,
-        backgroundColor: 'white',
+        marginTop:10,
         justifyContent: 'center',
         alignItems: 'center',
-        color: 'a8a8a8',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        borderRadius: 20,
+        backgroundColor: COLORS.background,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
@@ -111,12 +114,12 @@ const styles = StyleSheet.create({
     },
     contentContainer:{
         justifyContent: 'center',
+        backgroundColor: COLORS.card,
         alignItems: 'center',
-        color: 'a8a8a8',
         width:'100%',
         flex:3,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        marginTop:30,
+        borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
     text:{
       fontSize: 15,
       letterSpacing: 0.25,
-      color: 'grey',
+      color: COLORS.textCard,
     },
                                       
     img:{
@@ -144,14 +147,12 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingLeft: 20,
         flexDirection: 'row',
-        //backgroundColor: 'blue',
         alignItems: 'flex-end',
         justifyContent: 'flex-start',
         flex:1,
     },
     headerText:{
         flex: 1,
-        //backgroundColor: 'red',
     },
     icon:{
         position: 'absolute',
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: "#114B5F",
+        color: COLORS.textCard,
     },
 
     galleryContainer:{
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderWidth: 1,
         borderRadius: 5,
-        borderColor:'#114B5F',
+        borderColor:'black',
     },
 
     //map

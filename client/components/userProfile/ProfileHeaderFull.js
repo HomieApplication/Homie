@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-native'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React, { useEffect, useState } from 'react'
+import COLORS from '../assets.js'
 
 const size = 120;
 
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 2,
     width: '95%',
-    backgroundColor: '#114B5F',
+    backgroundColor: COLORS.primary1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     borderRadius: 10,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 
   imageAndFullName:{
     height:size,
-    backgroundColor: '#114B5F',
+    backgroundColor: COLORS.primary1,
     width: '100%',
     marginBottom:10,
     borderRadius: 10,
@@ -84,12 +85,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   h1: {
-    color: '#fff',
+    color: COLORS.textProfile,
     fontSize: 24,
     marginBottom: 5,
   },
   text: {
-    color: '#fff',
+    color: COLORS.textProfile,
     fontSize: 14,
   },
   icon:{

@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet, Text, View , TouchableOpacity} from 'react-native'
 import React from 'react'
+import COLORS from '../assets'
 
 const Tab = (props) => {
     const {title, onPress} = props
@@ -18,16 +19,15 @@ const styles = StyleSheet.create({
         flex: 0.4,
         //height: 70, //Dimensions.get('window').height/15,
         borderRadius: 10,
-        backgroundColor: '#f1f4f5',
+        backgroundColor: COLORS.card,
         justifyContent: 'center',
         alignItems: 'center',
-        color: 'a8a8a8',
         marginBottom: 10,
     },
     text:{
       fontSize: 20,
       fontWeight: 'bold',
       letterSpacing: 0.25,
-      color: '#114b5f',
+      color: COLORS.textCard,
     }
 })
