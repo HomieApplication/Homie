@@ -16,7 +16,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import SignInBtn from "../components/signIn/SignInBtn";
 import axios from "axios";
-import Map from "../components/AddOfferScreen/Map";
 
 import { displayAlertBox } from "../components/alert";
 
