@@ -217,18 +217,18 @@ function Markers() {
             onChangeLocalization(e.nativeEvent.coordinate);
             onChangeDormitory("DS16 Itaka");
           }}
-        /> 
+        />  
         <Marker
-          coordinate={{ latitude : 50.069093008559555, longitude : 19.902174001935283   }}
+          coordinate={{ latitude : 50.06908944917313, longitude : 19.902272932620487   }}
           pinColor = 'black'
           title = 'DS17 Arkadia'
           onPress={(e) => {
             onChangeLocalization(e.nativeEvent.coordinate);
             onChangeDormitory("DS17 Arkadia");
           }}
-        /> 
+        />  
         <Marker
-          coordinate={{ latitude : 50.06906546276473, longitude : 19.902216917277883  }}
+          coordinate={{ latitude : 50.06954129586869, longitude : 19.902069605444794  }}
           pinColor = 'black'
           title = 'DS18 Odyseja'
           onPress={(e) => {
