@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+// import { RNPickerSelect } from "react-native-picker-select";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { displayAlertBox } from "../components/alert";
@@ -12,10 +13,19 @@ const SignUpScreen = ({ navigation }) => {
     const [confirmedPassword, onChangeConfirmedPassword] = useState("");
     const [firstName, onChangeFirstName] = useState("");
     const [secondName, onChangeSecondName] = useState("");
-    const [yearOfStudy, onChangeyearOfStudy] = useState("");
+    const [yearOfStudy, onChangeYearOfStudy] = useState("");
     const [matchingPasswords, setMatchingPasswords] = useState(true);
     const [correctPassword, setCorrectPassword] = useState(true);
     const [correctEmail, setCorrectEmail] = useState(true);
+
+    // const years = [
+    //     { label: "1st year", value: "1st" },
+    //     { label: "2nd year", value: "2nd" },
+    //     { label: "3rd year", value: "3rd" },
+    //     { label: "4th year", value: "4th" },
+    //     { label: "5th year", value: "5th" },
+    //     { label: ">5th year", value: ">5th" },
+    // ];
 
     useEffect(() => {
         if (password.length < 6 && password.length > 0) {
@@ -87,10 +97,16 @@ const SignUpScreen = ({ navigation }) => {
             />
             <TextInput
                 style={styles.textboxes}
-                onChangeText={onChangeyearOfStudy}
+                onChangeText={onChangeYearOfStudy}
                 value={yearOfStudy}
                 placeholder="Year of study"
             />
+            {/* <RNPickerSelect
+                style={styles.textboxes}
+                onValueChange={onChangeYearOfStudy}
+                items={years}
+                placeholder="Year of study"
+            /> */}
             <SignInBtn
                 style={styles.button}
                 title="Sign up"
