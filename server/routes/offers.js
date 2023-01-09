@@ -19,7 +19,7 @@ const router = express.Router();
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -62,7 +62,7 @@ router.get("/", async (req, res) => {
  * @param {express.Response} res
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization - for now: later array [lat, lng]
+ * @param {string} req.body.localization [latitude, longitude]
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -72,7 +72,7 @@ router.get("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -83,39 +83,41 @@ router.post("/", async (req, res) => {
         res.status(403).send({ message: "User not logged in!" });
     }
 
-    // TODO: Add validation, localization to geopoint
+    // TODO: Add validation
     const docData = {
         userId: user.uid,
-        localType: req.body.localType,
-        description: req.body.description,
-        localization: req.body.localization,
+        ...req.body,
         photoURLArray: req.body.photoURLArray || [],
-        title: req.body.title || "",
         creationDate: new Date(),
     };
 
     try {
         const offersRef = db.collection("offers");
-        const docSnap = await offersRef
+        const docRef = await offersRef
             .add(docData)
             .catch((error) => res.status(500).send({ message: error.message }));
 
         await offersRef
-            .doc(docSnap.id)
-            .update({ offerId: docSnap.id })
+            .doc(docRef.id)
+            .update({ offerId: docRef.id })
             .catch((error) => res.status(500).send({ message: error.message }));
 
         await db
             .collection("users")
             .doc(user.uid)
             .update({
-                myOffers: FieldValue.arrayUnion(docSnap.id),
+                myOffers: FieldValue.arrayUnion(docRef.id),
             })
             .catch((error) => res.status(500).send({ message: error.message }));
 
+        const docSnap = await offersRef
+            .doc(docRef.id)
+            .get()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
         res.send({
-            ...docData,
-            offerId: docSnap.id,
+            ...docSnap.data(),
+            creationDate: docSnap.data().creationDate?.toDate(),
         });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -138,7 +140,7 @@ router.post("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -179,7 +181,7 @@ router.get("/:id", async (req, res) => {
  * @param {string} req.params.id
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization - for now: later array [lat, lng]
+ * @param {string} req.body.localization [latitude, longitude]
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -189,7 +191,7 @@ router.get("/:id", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate

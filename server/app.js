@@ -8,7 +8,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "*", // temp
+        origin: "*",
         methods: ["GET", "PUT", "POST", "DELETE"],
     })
 );
