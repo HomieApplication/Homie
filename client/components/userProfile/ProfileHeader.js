@@ -2,11 +2,12 @@ import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-nati
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React, {useState, useEffect} from 'react'
 import COLORS from '../assets.js'
+import SignInBtn from '../signIn/SignInBtn.js';
 
 const size = 120;
 
 const ProfileHeader = (props) => {
-  const { user, onPress } = props;
+  const { user, onPress, onPressEdit } = props;
   const [userData, setUserData] = useState([]);
 
   useEffect(()=>{
@@ -23,7 +24,13 @@ const ProfileHeader = (props) => {
         <Text style={styles.h1}>Hi, {userData.firstName}!</Text>
         <View style={styles.textContainer}>
           <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>
-          <Text style={styles.textDescription}>You can edit your profile in UserProfile screen! Tap right icon at the Tab bar.</Text>
+          <Text style={styles.textDescription}>{userData.description}</Text>
+          <SignInBtn
+            style={styles.button}
+            title="Edit Profile"
+            onPress={onPressEdit}
+          >
+          </SignInBtn>
         </View>
         <Pressable style={styles.icon}>
           <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={onPress}/>
@@ -46,6 +53,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 10,
     paddingVertical: 10,
+    paddingBottom:20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -66,6 +74,7 @@ const styles = StyleSheet.create({
   textContainer:{
     width:'50%',
     paddingTop: 10,
+    justifyContent: 'space-between',
   },
   textDescription:{
     color: COLORS.textProfile,
@@ -95,4 +104,14 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.8,
     top: size*0.75,
   },
+  button: {
+    alignItems: "flex-start",
+    justifyContent: 'center',
+    width: "50%",
+    paddingVertical: 2,
+    marginTop: 2,
+    borderRadius: 5,
+
+    backgroundColor: "transparent",
+},
 })

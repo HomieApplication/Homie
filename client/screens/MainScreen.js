@@ -93,6 +93,7 @@ const MainScreen = ({ navigation }) => {
                 <ProfileHeader
                     user={userData}
                     onPress={()=>{navigation.push("FavsOffers")}}
+                    onPressEdit={()=>{navigation.push("EditProfile")}}
                 />
 
                 <ScrollView style={styles.scroll}>

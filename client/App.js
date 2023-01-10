@@ -17,6 +17,7 @@ import AddOfferScreen from "./screens/AddOfferScreen";
 import OfferScreen from "./screens/OfferScreen";
 import FavsOffers from "./screens/FavsOffersScreen";
 import MyOffers from "./screens/MyOffersScreen";
+import FulfillProfile from "./screens/FulfillProfile";
 
 import { isLoggedIn, logout, login, register } from "./components/auth";
 import { auth, SERVER_URL } from "./components/firebase/config";
@@ -147,6 +148,10 @@ export default function App() {
                             <Stack.Screen
                                 name="MyOffers"
                                 component={MyOffers}
+                            />
+                            <Stack.Screen
+                                name="EditProfile"
+                                component={FulfillProfile}
                             />
                         </Stack.Group>
                     )}

@@ -33,7 +33,7 @@ const Tabs = [
     {
         id: "3",
         title: "Edit profile",
-        routeName: ""
+        routeName: "EditProfile"
     },
 ];
 
