@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   icon:{
     position: 'absolute',
     left: Dimensions.get('window').width * 0.8,
-    top: size*0.75,
+    top: size*0.65,
   },
   button: {
     alignItems: "flex-start",

@@ -34,6 +34,7 @@ const FulfillProfile = () => {
                 setUser(data);
                 console.log(data);
             })
+            .then(() => setDescription(userData.description))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
@@ -41,6 +42,8 @@ const FulfillProfile = () => {
     }, []);
 
     const [university, onChangeUniversity] = React.useState("");
+    const [description, setDescription] = React.useState("");
+
     const [selected, setSelected] = React.useState();
     const [datePicker, setDatePicker] = React.useState(false);
  
@@ -104,9 +107,9 @@ const FulfillProfile = () => {
             <Text style={styles.dataText}>Description:</Text>
             <TextInput
               style={styles.textboxes}
-              onChangeText={onChangeUniversity}
-              value={university}
-              placeholder={userData.description}
+              onChangeText={(value) => {setDescription(value)}}
+              value={description}
+              placeholder={description}
           />
 
             
@@ -132,7 +135,7 @@ const FulfillProfile = () => {
             <View style={{ marginBottom: 20, paddingVertical: 12, paddingHorizontal: 32, width: 240, borderRadius: 50,}}>
                 <Button 
                     title="Show Date Picker"
-                    color={COLORS.button}
+                    color={COLORS.primary1}
                     onPress={showDatePicker} />
             </View>
             )}
