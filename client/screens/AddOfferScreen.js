@@ -43,6 +43,7 @@ function LoadingAnimation() {
 }
 
 const AddOfferScreen = ({ navigation }) => {
+  const [title, onChangeTitle] = React.useState("");
   const [localType, onChangeLocalType] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [localization, onChangeLocalization] = React.useState("");
@@ -129,11 +130,18 @@ const AddOfferScreen = ({ navigation }) => {
         <View style={styles.container}>
           <Text style={styles.h2}>Post new offer</Text>
           <TextInput
+              style={styles.textboxes}
+              onChangeText={onChangeTitle}
+              value={title}
+              placeholder="Offer title"
+          />
+          {/* W końcu robimy tylko akademiki? */}
+          {/* <TextInput
             style={styles.textboxes}
             onChangeText={onChangeLocalType}
             value={localType}
             placeholder="Local type (dormitory/flat)"
-          />
+          /> */}
           <TextInput
             style={styles.textboxes}
             onChangeText={onChangeDescription}
@@ -177,6 +185,7 @@ const AddOfferScreen = ({ navigation }) => {
                       image={mapMarker}
                       identifier={marker.identifier}
                       onPress={ e => setLocalization( e.nativeEvent.id, toString(e.nativeEvent.coordinate))}
+                      key={marker.identifier}
                     />
                   ))}
                   <MapView.Marker image={beutifulCastle} coordinate={{ latitude: 50.066, longitude: 19.9140}}></MapView.Marker>
