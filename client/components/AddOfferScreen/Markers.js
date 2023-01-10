@@ -17,9 +17,9 @@ export const markers = [
   },
   {
     title: 'DS2 Babilon',
-    coordinates: {
-      latitude : 50.06945669606302 , 
-      longitude : 19.905645376062772
+    coordinates: { 
+      latitude : 50.06946358245705,
+      longitude : 19.905194764965465
     },
     identifier: 'DS2 Babilon',
   },
