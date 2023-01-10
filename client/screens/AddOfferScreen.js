@@ -250,7 +250,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    indicator: {},
     indicatorText: {
         fontSize: 18,
         marginTop: 12,

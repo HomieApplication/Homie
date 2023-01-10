@@ -16,6 +16,8 @@ import axios from "axios";
 
 import { displayAlertBox } from "../components/alert";
 import { logout } from "../components/auth";
+import LoadingAnimation from "../components/LoadingAnimation";
+import COLORS from "../components/assets";
 
 const fetchOffers = async () => {
     const offers = await axios
@@ -52,6 +54,7 @@ const fetchOffers = async () => {
 const MainScreen = ({ navigation }) => {
     const [userData, setUser] = useState({});
     const [offersData, setOffersData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios
@@ -73,6 +76,7 @@ const MainScreen = ({ navigation }) => {
             .then((offers) => {
                 setOffersData(offers);
             })
+            .then(() => setLoading(false))
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
@@ -81,37 +85,43 @@ const MainScreen = ({ navigation }) => {
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ProfileHeader
-                user={userData}
-                onPress={()=>{navigation.push("FavsOffers")}}
-            />
+        <SafeAreaView style={styles.containerMain}>
+            {loading ? (
+                <LoadingAnimation text="Loading please wait" />
+            ) : (
+            <SafeAreaView style={styles.container}>
+                <ProfileHeader
+                    user={userData}
+                    onPress={()=>{navigation.push("FavsOffers")}}
+                />
 
-            <ScrollView style={styles.scroll}>
-                {offersData.map((offer, i) => {
+                <ScrollView style={styles.scroll}>
+                    {offersData.map((offer, i) => {
 
-                    const push = () => {
-                        console.log(offer.offerId)
-                        navigation.push("Offer", {offer: offer})
-                    }
+                        const push = () => {
+                            console.log(offer.offerId)
+                            navigation.push("Offer", {offer: offer})
+                        }
 
-                    console.log(offer)
-                    return (
-                        <Card
-                            key={i}
-                            userFirstName={offer.firstName}
-                            userLastName={offer.lastName}
-                            description={offer.description}
-                            year={offer.yearOfStudy}
-                            localType={offer.localType}
-                            localization={offer.localization}
-                            imgUrl={require("../assets/defaultImg.png")}
-                            idOffer={offer.offerId}
-                            onPress={push}
-                        />
-                    );
-                })}
-            </ScrollView>
+                        console.log(offer)
+                        return (
+                            <Card
+                                key={i}
+                                userFirstName={offer.firstName}
+                                userLastName={offer.lastName}
+                                description={offer.description}
+                                year={offer.yearOfStudy}
+                                localType={offer.localType}
+                                localization={offer.localization}
+                                imgUrl={require("../assets/defaultImg.png")}
+                                idOffer={offer.offerId}
+                                onPress={push}
+                            />
+                        );
+                    })}
+                </ScrollView>
+            </SafeAreaView>
+            )}
         </SafeAreaView>
     );
 };
@@ -121,10 +131,13 @@ export default MainScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: COLORS.background,
         alignItems: "center",
-        justifyContent: "space-between",
-        margin: 0,
+        justifyContent: "flex-start",
+    },
+    containerMain: {
+        flex: 1,
+        backgroundColor: COLORS.background,
     },
     scroll: {
         flex: 1,

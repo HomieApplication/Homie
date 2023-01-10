@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
 
   imageAndFullName:{
     height:size,
-    backgroundColor: COLORS.primary1,
     width: '100%',
     marginBottom:10,
     borderRadius: 10,

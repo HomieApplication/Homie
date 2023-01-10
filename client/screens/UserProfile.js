@@ -17,7 +17,7 @@ import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { displayAlertBox } from "../components/alert";
 import COLORS from "../components/assets";
-
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const Tabs = [
     {
@@ -40,14 +40,17 @@ const Tabs = [
 const UserProfile = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         axios
             .get(`/api/users/${userId}`)
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                // console.log(data);
+                console.log(data);
             })
+            .then(() => setLoading(false))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
@@ -55,25 +58,33 @@ const UserProfile = ({ navigation }) => {
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ProfileHeaderFull
-                user={userData}
-            />
-            {Tabs.map((item) => {
-                return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>;
-            })}
-            <SignInBtn
-                title="Log out"
-                style={styles.btn}
-                onPress={() => {
-                    try {
-                        logout();
-                    } catch (error) {
-                        displayAlertBox("Failed to sign out", error.message);
-                    }
-                    // navigation.push("SignIn");
-                }}
-            />
+        <SafeAreaView style={styles.containerMain}>
+            {loading ? (
+                <LoadingAnimation text="Loading please wait" />
+            ) :(
+                <View style={styles.container}>
+                    <ProfileHeaderFull
+                                    user={userData}
+                                />
+                                {Tabs.map((item) => {
+                                    return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>;
+                                })}
+                                <SignInBtn
+                                    title="Log out"
+                                    style={styles.btn}
+                                    onPress={() => {
+                                        try {
+                                            logout();
+                                        } catch (error) {
+                                            displayAlertBox("Failed to sign out", error.message);
+                                        }
+                                        // navigation.push("SignIn");
+                                    }}
+                                />
+                </View>
+            )}
+
+            
         </SafeAreaView>
     );
 };
@@ -81,11 +92,14 @@ const UserProfile = ({ navigation }) => {
 export default UserProfile;
 
 const styles = new StyleSheet.create({
+    containerMain: {
+        flex: 1,
+        paddingTop: 50,
+        backgroundColor: COLORS.background,
+    },
     container: {
         flex: 1,
         width: "100%",
-        marginTop: StatusBar.currentHeight || 0,
-        backgroundColor: COLORS.background,
         alignItems: "center",
         justifyContent: "space-between",
     },
