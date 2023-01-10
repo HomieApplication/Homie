@@ -20,7 +20,7 @@ import axios from "axios";
 import { displayAlertBox } from "../components/alert";
 
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
-import mapMarker from "../assets/map_icon.png";
+import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png ładniej wygląda
 import beutifulCastle from "../assets/beautiful_castle.png";
 import {markers} from "../components/AddOfferScreen/Markers"
 
@@ -245,16 +245,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "95%",
+    height: "100%",
   },
   modalView: {
     width: "100%",
-    height: "92%",
+    height: "100%",
     position: "absolute",
     justifyContent: "center",
     bottom: 0,
-    paddingTop: 20,
-    marginTop: 20,
     backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
