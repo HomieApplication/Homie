@@ -1,32 +1,28 @@
-import React, { useEffect, useState } from "react";
 import {
-    Button,
-    Dimensions,
-    FlatList,
-    ScrollView,
-    StyleSheet,
     Text,
     View,
+    StyleSheet,
+    FlatList,
+    SafeAreaView,
+    StatusBar,
+    Button,
+    ScrollView,
+    Dimensions,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ProfileHeader from "../components/userProfile/ProfileHeader";
-import Card from "../components/mainScreen/Card";
-import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-import { displayAlertBox } from "../components/alert";
-import { logout } from "../components/auth";
+import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
+import Card from "../components/mainScreen/Card";
 
 const fetchOffers = async () => {
     const offers = await axios
-        .get("/api/offers")
+        .get("/api/users/favs")
         .then((res) => res.data)
         .catch((error) => {
             console.log(error);
             displayAlertBox("Please, try again later", error.message);
-            // logout();
         });
 
     const offersWithUser = await Promise.all(
@@ -37,66 +33,47 @@ const fetchOffers = async () => {
                 .catch((error) => {
                     console.log(error);
                     displayAlertBox("Please, try again later", error.message);
-                    // logout();
                 });
             return { ...userData, ...offer };
         })
     ).catch((error) => {
         console.log(error);
         displayAlertBox("Please, try again later", error.message);
-        // logout();
     });
 
     return offersWithUser;
 };
 
+const FavsOffers = () => {
 
-const MainScreen = ({ navigation }) => {
-    const [userData, setUser] = useState({});
-    const [offersData, setOffersData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        axios
-            .get("/api/users")
-            .then((res) => res.data)
-            .then((data) => {
-                setUser(data);
-                // console.log(data);
-            })
-            .catch((error) => {
-                console.log("Connection error: " + error.message);
-                displayAlertBox("Please, try again later", error.message);
-                // logout();
-            });
-    }, []);
+    const userId = getAuth().currentUser.uid;
+    const [favOffers, setfavOffers] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
-                setOffersData(offers);
+                setfavOffers(offers);
             })
             .then(() => setLoading(false))
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
-                // logout();
             });
     }, []);
 
-    return (
-        <SafeAreaView style={styles.containerMain}>
-            {loading ? (
-                <LoadingAnimation text="Loading please wait" />
-            ) : (
-            <SafeAreaView style={styles.container}>
-                <ProfileHeader
-                    user={userData}
-                    onPress={()=>{navigation.push("FavsOffers")}}
-                />
 
-                <ScrollView style={styles.scroll}>
-                    {offersData.map((offer, i) => {
+    return(
+        <SafeAreaView style={styles.container}>
+            {loading ? (
+                <LoadingAnimation text="Loading"/>
+            ) : (
+                <SafeAreaView style={styles.containerMain}>
+                    <View style={styles.header}> 
+                        <Text style={styles.h1}>My Favourite Offers</Text>
+                    </View>
+                    <ScrollView style={styles.scroll}>
+                    {favOffers.map((offer, i) => {
 
                         const push = () => {
                             console.log(offer.offerId)
@@ -118,26 +95,41 @@ const MainScreen = ({ navigation }) => {
                                 onPress={push}
                             />
                         );
-                    })}
-                </ScrollView>
-            </SafeAreaView>
+                        })}
+
+                    </ScrollView>
+                </SafeAreaView>
             )}
         </SafeAreaView>
-    );
-};
-
-export default MainScreen;
+    )
+}
+export default FavsOffers
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.background,
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
+        backgroundColor: COLORS.background,
     },
     containerMain: {
+        marginTop: 50,
         flex: 1,
-        backgroundColor: COLORS.background,
+        width: '100%',
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+    },
+    header: {
+        width: '100%',
+        flex: 0.15,
+        backgroundColor: COLORS.primary1,
+        alignItems: "center",
+        justifyContent: "center",
+
+    },
+    h1: {
+        color: COLORS.textProfile,
+        fontSize: 24,
     },
     scroll: {
         flex: 1,
@@ -147,4 +139,4 @@ const styles = StyleSheet.create({
 
         marginLeft: Dimensions.get('window').width*0.1,
     },
-});
+})

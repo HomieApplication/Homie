@@ -8,96 +8,83 @@ import {
     Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Tab from "../components/userProfile/Tab";
 import SignInBtn from "../components/signIn/SignInBtn";
-import * as ImagePicker from "expo-image-picker";
+import ProfileHeaderFull from "../components/userProfile/ProfileHeaderFull";
 import axios from "axios";
 
 import { logout } from "../components/auth";
 import { getAuth } from "@firebase/auth";
 import { displayAlertBox } from "../components/alert";
+import COLORS from "../components/assets";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const Tabs = [
     {
         id: "1",
         title: "Favourite offers",
+        routeName: "FavsOffers"
     },
     {
         id: "2",
         title: "My offers",
+        routeName: "MyOffers"
     },
     {
         id: "3",
-        title: "Setting",
-    },
-    {
-        id: "4",
-        title: "Regulamin",
+        title: "Edit profile",
+        routeName: ""
     },
 ];
 
 const UserProfile = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         axios
             .get(`/api/users/${userId}`)
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                // console.log(data);
+                console.log(data);
             })
+            .then(() => setLoading(false))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
             });
     }, []);
 
-    // const [image, setImage] = useState(null);
-
-    // const pickImage = async () => {
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing: true,
-    //         aspect: [4, 4],
-    //         quality: 1,
-    //     }).catch((error) => console.log(error));
-
-    //     console.log(result);
-
-    //     if (!result.cancelled){
-    //         setImage(result.uri);
-    //         console.log(result.uri);
-    //     }
-    // }
-
     return (
-        <SafeAreaView style={styles.container}>
-            <ProfileHeader
-                userFirstName={userData.firstName}
-                year={userData.yearOfStudy}
-            />
-            {Tabs.map((item) => {
-                return <Tab key={item.id} title={item.title} />;
-            })}
-            {/* <SignInBtn 
-                title="Pick profile image" 
-                style={styles.btn}
-                onPress={pickImage} 
-            /> */}
-            <SignInBtn
-                title="Log out"
-                style={styles.btn}
-                onPress={() => {
-                    try {
-                        logout();
-                    } catch (error) {
-                        displayAlertBox("Failed to sign out", error.message);
-                    }
-                    // navigation.push("SignIn");
-                }}
-            />
+        <SafeAreaView style={styles.containerMain}>
+            {loading ? (
+                <LoadingAnimation text="Loading please wait" />
+            ) :(
+                <View style={styles.container}>
+                    <ProfileHeaderFull
+                                    user={userData}
+                                />
+                                {Tabs.map((item) => {
+                                    return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>;
+                                })}
+                                <SignInBtn
+                                    title="Log out"
+                                    style={styles.btn}
+                                    onPress={() => {
+                                        try {
+                                            logout();
+                                        } catch (error) {
+                                            displayAlertBox("Failed to sign out", error.message);
+                                        }
+                                        // navigation.push("SignIn");
+                                    }}
+                                />
+                </View>
+            )}
+
+            
         </SafeAreaView>
     );
 };
@@ -105,11 +92,14 @@ const UserProfile = ({ navigation }) => {
 export default UserProfile;
 
 const styles = new StyleSheet.create({
+    containerMain: {
+        flex: 1,
+        paddingTop: 50,
+        backgroundColor: COLORS.background,
+    },
     container: {
         flex: 1,
         width: "100%",
-        marginTop: StatusBar.currentHeight || 0,
-        backgroundColor: "#f2f2f2",
         alignItems: "center",
         justifyContent: "space-between",
     },
@@ -132,6 +122,6 @@ const styles = new StyleSheet.create({
         shadowRadius: 2.22,
 
         elevation: 3,
-        backgroundColor: "#1a936f",
+        backgroundColor: COLORS.button,
     },
 });

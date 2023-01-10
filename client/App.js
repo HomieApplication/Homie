@@ -15,9 +15,12 @@ import SignUpScreen from "./screens/SignUpScreen";
 import UserProfile from "./screens/UserProfile";
 import AddOfferScreen from "./screens/AddOfferScreen";
 import OfferScreen from "./screens/OfferScreen";
+import FavsOffers from "./screens/FavsOffersScreen";
+import MyOffers from "./screens/MyOffersScreen";
 
 import { isLoggedIn, logout, login, register } from "./components/auth";
 import { auth, SERVER_URL } from "./components/firebase/config";
+
 
 // App.js jest jak main - tutaj ma być mało kodu
 // głównie nawigacja - react-navigation
@@ -136,6 +139,14 @@ export default function App() {
                             <Stack.Screen
                                 name="Offer"
                                 component={OfferScreen}
+                            />
+                            <Stack.Screen
+                                name="FavsOffers"
+                                component={FavsOffers}
+                            />
+                            <Stack.Screen
+                                name="MyOffers"
+                                component={MyOffers}
                             />
                         </Stack.Group>
                     )}

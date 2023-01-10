@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-native'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import COLORS from '../assets.js'
 
 const size = 120;
 
 const ProfileHeader = (props) => {
-  const { userFirstName, year, img } = props;
+  const { user, onPress } = props;
+  const [userData, setUserData] = useState([]);
+
+  useEffect(()=>{
+    setUserData(user)
+  },[])
   
   ProfileHeader.defaultProps = {
     img: require('../../assets/defaultImg.png'),
@@ -14,16 +20,16 @@ const ProfileHeader = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.h1}>Hi, {userFirstName}!</Text>
+        <Text style={styles.h1}>Hi, {userData.firstName}!</Text>
         <View style={styles.textContainer}>
-          <Text style={styles.text}>Year of study: {year}</Text>
+          <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>
           <Text style={styles.textDescription}>You can edit your profile in UserProfile screen! Tap right icon at the Tab bar.</Text>
         </View>
         <Pressable style={styles.icon}>
-          <MaterialCommunityIcons name="star" color={'white'} size={35}/>
+          <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={onPress}/>
         </Pressable>
       </View>    
-      <Image style={styles.img} source={img}/>
+      <Image style={styles.img} source={require('../../assets/defaultImg.png')}/>
       
     </View>
   )
@@ -35,7 +41,7 @@ const styles = StyleSheet.create({
   container:{
     height: '20%',
     width: '95%',
-    backgroundColor: '#114B5F',
+    backgroundColor: COLORS.primary1,
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 10,
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   textDescription:{
-    color: '#fff',
+    color: COLORS.textProfile,
     fontSize: 13,
     paddingTop: 10,
   },
@@ -77,11 +83,11 @@ const styles = StyleSheet.create({
   h1:{
     paddingLeft: size/6,
     paddingTop: 10,
-    color: '#fff',
+    color: COLORS.textProfile,
     fontSize: 22,
   },
   text: {
-    color: '#fff',
+    color: COLORS.textProfile,
     fontSize: 20,
   },
   icon:{
