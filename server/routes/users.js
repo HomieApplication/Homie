@@ -1,5 +1,7 @@
 import express from "express";
 import { db } from "../firebase/config.js";
+import { FieldValue } from "firebase-admin/firestore";
+import { async } from "@firebase/util";
 
 const router = express.Router();
 
@@ -22,6 +24,7 @@ const router = express.Router();
  * @property {number} age
  * @property {number} gender
  * @property {string} photoURL
+ * @property {string} university
  */
 router.get("/:id", async (req, res) => {
     const user = req["currentUser"];
@@ -50,6 +53,7 @@ router.get("/:id", async (req, res) => {
                         photoURL: userData.photoURL,
                         description: userData.description,
                         interests: userData.interests,
+                        university: userData.university,
                     });
                 } else {
                     res.status(404).send({ message: "User not found!" });
@@ -86,6 +90,7 @@ router.get("/:id", async (req, res) => {
  * @property {Array<string>} myOffers
  * @property {Array<string>} favs
  * @property {Array<string>} interests
+ * @property {string} university
  */
 router.get("/", async (req, res) => {
     const user = req["currentUser"];
@@ -132,6 +137,7 @@ router.get("/", async (req, res) => {
  * @param {string} req.body.photoURL
  * @param {string} req.body.description
  * @param {Array<string>} req.body.interests
+ * @param {string} req.body.university
  *
  * @returns {UserData}
  * @typedef {Object} UserData
@@ -149,6 +155,7 @@ router.get("/", async (req, res) => {
  * @property {Array<string>} myOffers
  * @property {Array<string>} favs
  * @property {Array<string>} interests
+ * @property {string} university
  */
 router.post("/", async (req, res) => {
     const user = req["currentUser"];
@@ -158,17 +165,11 @@ router.post("/", async (req, res) => {
 
     // TODO: Add validation
     const userData = {
+        ...req.body,
         userId: user.uid,
-        firstName: req.body.firstName || "",
-        lastName: req.body.lastName || "",
         birthDate: req.body.birthDate
             ? new Date(req.body.birthDate)
-            : new Date(2000, 1, 1),
-        gender: req.body.gender || "Unknown",
-        yearOfStudy: req.body.yearOfStudy || "Not a student",
-        photoURL: req.body.photoURL || "No photo",
-        phoneNumber: req.body.phoneNumber || "No phone number",
-        description: req.body.description || "No description",
+            : undefined,
         myOffers: [],
         favs: [],
         interests: req.body.interests || [],
@@ -207,6 +208,7 @@ router.post("/", async (req, res) => {
  * @param {string} req.body.photoURL
  * @param {string} req.body.description
  * @param {Array<string>} req.body.interests
+ * @param {string} req.body.university
  *
  * @returns {UserData}
  * @typedef {Object} UserData
@@ -224,6 +226,7 @@ router.post("/", async (req, res) => {
  * @property {Array<string>} myOffers
  * @property {Array<string>} favs
  * @property {Array<string>} interests
+ * @property {string} university
  */
 router.put("/", async (req, res) => {
     const user = req["currentUser"];
@@ -305,18 +308,52 @@ router.delete("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {string} localization [latitute, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
  */
-router.get("/favs", (req, res) => {
+router.get("/favs", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({ message: "User not logged in!" });
     }
 
-    res.status(501).send("Not implemented");
+    try {
+        const favs = await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => docSnap.data())
+            .then((userData) => userData.favs)
+            .catch((error) => {
+                res.status(500).send({ message: error.message });
+            });
+
+        if (!favs) {
+            res.status(404).send({ message: "User not found!" });
+        }
+
+        await Promise.all(
+            favs.map((offerId) =>
+                db
+                    .collection("offers")
+                    .doc(offerId)
+                    .get()
+                    .then((docSnap) => docSnap.data())
+                    .then((offerData) => ({
+                        ...offerData,
+                        offerId,
+                        creationDate: offerData.creationDate?.toDate(),
+                    }))
+                    .catch((error) => {
+                        res.status(500).send({ message: error.message });
+                    })
+            )
+        ).then((favsData) => res.send(favsData));
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 /**
@@ -335,18 +372,49 @@ router.get("/favs", (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
  */
-router.post("/favs", (req, res) => {
+router.post("/favs", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({ message: "User not logged in!" });
     }
 
-    res.status(501).send("Not implemented");
+    try {
+        await db
+            .collection("users")
+            .doc(user.uid)
+            .update({
+                favs: FieldValue.arrayUnion(req.body.offerId),
+            })
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        const userSnapshot = await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .catch((error) => res.status(500).send({ message: error.message }));
+
+        let favsData = [];
+        for (const offerId of userSnapshot.data().favs) {
+            const offerSnapshot = await db
+                .collection("offers")
+                .doc(offerId)
+                .get()
+                .catch((error) =>
+                    res.status(500).send({ message: error.message })
+                );
+            const offerData = offerSnapshot.data();
+            favsData = [...favsData, offerData];
+        }
+
+        res.send(favsData);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 /**
@@ -364,8 +432,16 @@ router.delete("/favs", (req, res) => {
     if (!user) {
         res.status(403).send({ message: "User not logged in!" });
     }
-
-    res.status(501).send("Not implemented");
+    try {
+        db.collection("users")
+            .update({
+                favs: FieldValue.arrayRemove(req.body.offerId),
+            })
+            .then(() => res.sendStatus(200))
+            .catch((error) => res.status(500).send({ message: error.message }));
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 /**
@@ -384,18 +460,48 @@ router.delete("/favs", (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization - for now: later array [lat, lng]
+ * @property {Array<number} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
  */
-router.get("/my-offers", (req, res) => {
+router.get("/my-offers", async (req, res) => {
     const user = req["currentUser"];
     if (!user) {
         res.status(403).send({ message: "User not logged in!" });
     }
 
-    res.status(501).send("Not implemented");
+    try {
+        const offers = await db
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((docSnap) => docSnap.data())
+            .then((userData) => userData.myOffers);
+
+        if (!offers) {
+            res.status(404).send({ message: "User not found!" });
+        }
+
+        await Promise.all(
+            offers.map((offerId) =>
+                db
+                    .collection("offers")
+                    .get()
+                    .then((docSnap) => docSnap.data())
+                    .then((offerData) => ({
+                        ...offerData,
+                        offerId,
+                        creationDate: offerData.creationDate?.toDate(),
+                    }))
+                    .catch((error) => {
+                        res.status(500).send({ message: error.message });
+                    })
+            )
+        ).then((offerData) => res.send(offerData));
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 });
 
 /**
