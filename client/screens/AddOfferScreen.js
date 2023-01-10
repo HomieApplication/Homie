@@ -11,18 +11,23 @@ import {
   Modal,
   Pressable,
   Image,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchableDropdown from "react-native-searchable-dropdown";
-import SignInBtn from "../components/signIn/SignInBtn";
+import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import SignInBtn from "../components/signIn/SignInBtn";
+import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
 
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
 import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png ładniej wygląda
 import beutifulCastle from "../assets/beautiful_castle.png";
 import {markers} from "../components/AddOfferScreen/Markers"
+
+const storage = getStorage();
 
 function LoadingAnimation() {
   return (
@@ -44,23 +49,30 @@ const AddOfferScreen = ({ navigation }) => {
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [dormitory, onChangeDormitory] = React.useState("");
+  const [images, setImages] = React.useState([]);
+  
+  const sendData = async () => {
+      const urls = await Promise.all(
+          images.map((image) => uploadImage(image))
+      );
 
-  const sendData = () => {
-    axios
-      .post(`/api/offers`, {
-        localType: localType,
-        description: description,
-        localization: localization,
-      })
-      .then(() => {
-        setLoading(false);
-        displayAlertBox("Offer successfully published!");
-        navigation.push("Main");
-      })
-      .catch((error) => {
-        setLoading(false);
-        displayAlertBox("Please, try again later", error.message);
-      });
+      axios
+          .post(`/api/offers`, {
+              title: title,
+              localType: localType,
+              description: description,
+              localization: localization,
+              photoURLArray: urls,
+          })
+          .then(() => {
+              setLoading(false);
+              displayAlertBox("Offer successfully published!");
+              navigation.push("Main");
+          })
+          .catch((error) => {
+              setLoading(false);
+              displayAlertBox("Please, try again later", error.message);
+          });
   };
 
   const domitoryChoiceHandler = () => {
@@ -75,7 +87,39 @@ const AddOfferScreen = ({ navigation }) => {
     onChangeLocalization(local);
     console.log(dorm);
   }
+  
+  const pickImageAsync = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+      });
 
+      if (!result.cancelled) {
+          setImages([result.uri, ...images]);
+      } else {
+          displayAlertBox(
+              "Please, try again",
+              "You did not select any image"
+          );
+      }
+  };
+
+  const uploadImage = async (uri) => {
+      const response = await fetch(uri);
+      const imageBlob = await response.blob();
+      const imageRef = ref(
+          storage,
+          `images/${auth.currentUser.uid}/${uri.substring(
+              uri.lastIndexOf("/") + 1
+          )}`
+      );
+      await uploadBytes(imageRef, imageBlob);
+      return getDownloadURL(imageRef);
+  };
+
+  const clearImages = () => {
+      setImages([]);
+  };
 
   return (
     <SafeAreaView style={styles.containerMain}>
@@ -153,16 +197,48 @@ const AddOfferScreen = ({ navigation }) => {
               <Text style={styles.itemText}>Choose a location</Text>
             </Pressable>
           </View>
+          {/* inny przycisk może... */}
+          <SignInBtn
+              style={styles.button}
+              title="Add image"
+              onPress={() => {
+                  pickImageAsync().catch((error) => {
+                      displayAlertBox(
+                          "Please, try again later",
+                          error.message
+                      );
+                  });
+              }}
+          ></SignInBtn>
+          <View style={{ flexDirection: "row" }}>
+              <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+              >
+                  {/* Można to ładniej zrobić pewnie... */}
+                  {images.map((image) => (
+                      <Image
+                          key={image}
+                          source={{ uri: image }}
+                          style={{ width: 150, height: 150 }}
+                      />
+                  ))}
+              </ScrollView>
+          </View>
+          {/* Tu też na pewno da się ładniej */}
+          {images.length > 0 && (
+              <Pressable onPress={clearImages}>
+                  <Text>Clear all images</Text>
+              </Pressable>
+          )}
           <SignInBtn
             style={styles.button}
             title="Create offer"
             onPress={() => {
               setLoading(true);
-              try {
-                sendData();
-              } catch (error) {
-                displayAlertBox("Please, try again later", error.message);
-              }
+               sendData().catch(error =>
+                displayAlertBox("Please, try again later", error.message)
+              )
             }}
           ></SignInBtn>
         </View>
@@ -204,7 +280,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-
     elevation: 3,
     backgroundColor: "#1a936f",
   },
@@ -224,7 +299,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
-
     elevation: 3,
   },
   itemText: {
