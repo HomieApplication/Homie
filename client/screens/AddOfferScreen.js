@@ -25,22 +25,23 @@ import { displayAlertBox } from "../components/alert";
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
 import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png ładniej wygląda
 import beutifulCastle from "../assets/beautiful_castle.png";
-import {markers} from "../components/AddOfferScreen/Markers"
+import {markers} from "../components/AddOfferScreen/Markers";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const storage = getStorage();
 
-function LoadingAnimation() {
-  return (
-    <View style={styles.indicatorWrapper}>
-      <ActivityIndicator
-        size="large"
-        color="#114B5F"
-        style={styles.indicator}
-      />
-      <Text style={styles.indicatorText}>Adding offer...</Text>
-    </View>
-  );
-}
+// function LoadingAnimation() {
+//   return (
+//     <View style={styles.indicatorWrapper}>
+//       <ActivityIndicator
+//         size="large"
+//         color="#114B5F"
+//         style={styles.indicator}
+//       />
+//       <Text style={styles.indicatorText}>Adding offer...</Text>
+//     </View>
+//   );
+// }
 
 const AddOfferScreen = ({ navigation }) => {
   const [title, onChangeTitle] = React.useState("");
@@ -125,7 +126,7 @@ const AddOfferScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.containerMain}>
       {loading ? (
-        <LoadingAnimation />
+        <LoadingAnimation text="Adding offer"/>
       ) : (
         <View style={styles.container}>
           <Text style={styles.h2}>Post new offer</Text>

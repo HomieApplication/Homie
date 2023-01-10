@@ -66,10 +66,10 @@ const OfferScreen = ({route, navigation}) => {
                      </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
-                    <Text style={styles.textTitle}>TU BĘDZIE TYTUŁ OGŁOSZENIA</Text>
-                    <Text style={styles.text}>{offer.description} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+                    <Text style={styles.textTitle}>{offerData.title}</Text>
+                    <Text style={styles.text}>{offer.description}</Text>
                     <View style={styles.galleryContainer}>
-                        <View style={styles.galleryImg}><Text>GALERIA</Text></View>
+                      <View style={styles.galleryImg}><Text>GALERIA</Text></View>
                     </View>
                 </View>
             </View>
