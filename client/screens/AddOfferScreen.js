@@ -19,8 +19,9 @@ import axios from "axios";
 
 import { displayAlertBox } from "../components/alert";
 
-import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
-import marker from "../assets/icons8-marker.png";
+import MapView, { PROVIDER_GOOGLE, Marker, Callout} from "react-native-maps";
+import mapMarker from "../assets/map_icon.png";
+import beutifulCastle from "../assets/beautiful_castle.png";
 
 function LoadingAnimation() {
   return (
@@ -41,7 +42,7 @@ const AddOfferScreen = ({ navigation }) => {
   const [localization, onChangeLocalization] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [domitory, onChangeDormitory] = React.useState("");
+  const [dormitory, onChangeDormitory] = React.useState("");
 
   const sendData = () => {
     axios
@@ -61,195 +62,178 @@ const AddOfferScreen = ({ navigation }) => {
       });
   };
 
-function Markers() { 
-
-    return (
-      <View>
-        <Marker
-          coordinate={{ latitude : 50.065868409336915 , longitude : 19.915877276798597   }}
-          pinColor = 'black'
-          title = 'I DS Alfa'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("I DS Alfa");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06909454120224 , longitude : 19.904426686576333   }}
-          pinColor = 'black'
-          title = 'DS1 Olimp'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS1 Olimp");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06945669606302 , longitude : 19.905645376062772   }}
-          pinColor = 'black'
-          title = 'DS2 Babilon'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS2 Babilon");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06971744764018 , longitude : 19.903386380497768   }}
-          pinColor = 'black'
-          title = 'DS3 Akropol'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS3 Akropol");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.069460793917536 , longitude : 19.9059155884422   }}
-          pinColor = 'black'
-          title = 'DS4 Filutek'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS4 Filutek");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06905674103451 , longitude : 19.90610522467604  }}
-          pinColor = 'black'
-          title = 'DS5 Strumyk'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS5 Strumyk");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06855879085213, longitude : 19.905613674949148   }}
-          pinColor = 'black'
-          title = 'DS6 Bratek'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS6 Bratek");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06817409779714, longitude : 19.905322959606522   }}
-          pinColor = 'black'
-          title = 'DS7 Zaścianek'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS7 Zaścianek");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06772443916539, longitude : 19.905325603784718  }}
-          pinColor = 'black'
-          title = 'DS8 Stokrotka'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS8 Stokrotka");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06919964379084 , longitude : 19.90736705166221   }}
-          pinColor = 'black'
-          title = 'DS9 Omega'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS9 Omega");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.06886565521682, longitude : 19.907048174949157  }}
-          pinColor = 'black'
-          title = 'DS10 Hajduczek'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS10 Hajduczek");
-          }}
-        />
-        <Marker 
-          coordinate={{ latitude : 50.06838423746026, longitude : 19.907120007483826   }}
-          pinColor = 'black'
-          title = 'DS11 Bonus'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS11 Bonus");
-          }}
-        /> 
-        <Marker
-          coordinate={{ latitude : 50.068034058082404, longitude : 19.90635435960652   }}
-          pinColor = 'black'
-          title = 'DS12 Promyk'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS12 Promyk");
-          }}
-        /> 
-        <Marker
-          coordinate={{ latitude : 50.06748794624835, longitude : 19.906444676798568  }}
-          pinColor = 'black'
-          title = 'DS13 Straszny Dwór'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS13 Straszny Dwór");
-          }}
-        />
-        <Marker
-          coordinate={{ latitude : 50.067863618615206, longitude : 19.90730764611346   }}
-          pinColor = 'black'
-          title = 'DS14 Kapitol'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS14 Kapitol");
-          }}
-        /> 
-        <Marker
-          coordinate={{ latitude : 50.06825607072731, longitude : 19.902025292141232   }}
-          pinColor = 'black'
-          title = 'DS15 Maraton'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS15 Maraton");
-          }}
-        /> 
-        <Marker
-          coordinate={{ latitude : 50.06872718264994, longitude : 19.902064476798696   }}
-          pinColor = 'black'
-          title = 'DS16 Itaka'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS16 Itaka");
-          }}
-        />  
-        <Marker
-          coordinate={{ latitude : 50.06908944917313, longitude : 19.902272932620487   }}
-          pinColor = 'black'
-          title = 'DS17 Arkadia'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS17 Arkadia");
-          }}
-        />  
-        <Marker
-          coordinate={{ latitude : 50.06954129586869, longitude : 19.902069605444794  }}
-          pinColor = 'black'
-          title = 'DS18 Odyseja'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS18 Odyseja");
-          }}
-        /> 
-        <Marker
-          coordinate={{ latitude : 50.06996436069946, longitude : 19.90235311727785   }}
-          pinColor = 'black'
-          title = 'DS19 Apollo'
-          onPress={(e) => {
-            onChangeLocalization(e.nativeEvent.coordinate);
-            onChangeDormitory("DS19 Apollo");
-          }}
-        />
-      </View>
-
-
-      );
+  const domitoryChoiceHandler = () => {
+    displayAlertBox("You chose:", dormitory);
+    if(dormitory == 'DS14 Kapitol')
+    {
+      console.log("JEEEEEEEEJ");
     }
+  }
+  const setLocalization = (dorm, local) => {
+    onChangeDormitory(dorm);
+    onChangeLocalization(local);
+    console.log(dorm);
+  }
+    const markers = [{
+      title: 'I DS Alfa',
+      coordinates: {
+        latitude : 50.065868409336915 ,
+        longitude : 19.915877276798597
+      },
+      identifier: 'I DS Alfa',
+    },
+    {
+      title: 'DS1 Olimp',
+      coordinates: {
+        latitude : 50.06909454120224 , 
+        longitude : 19.904426686576333,
+      },
+      identifier: 'DS1 Olimp',
+    },
+    {
+      title: 'DS2 Babilon',
+      coordinates: {
+        latitude : 50.06945669606302 , 
+        longitude : 19.905645376062772
+      },
+      identifier: 'DS2 Babilon',
+    },
+    {
+      title: 'DS3 Akropol',
+      coordinates: {
+        latitude : 50.06971744764018 , 
+        longitude : 19.903386380497768
+      },
+      identifier: 'DS3 Akropol',
+    },
+    {
+      title: 'DS4 Filutek',
+      coordinates: {
+        latitude : 50.069460793917536 , 
+        longitude : 19.9059155884422
+      },
+      identifier: 'DS4 Filutek',
+    },
+    {
+      title: 'DS5 Strumyk',
+      coordinates: {
+        latitude : 50.06905674103451 , 
+        longitude : 19.90610522467604
+      },
+      identifier: 'DS5 Strumyk',
+    },
+    {
+      title: 'DS6 Bratek',
+      coordinates: {
+        latitude : 50.06855879085213, 
+        longitude : 19.905613674949148
+      },
+      identifier: 'DS6 Bratek',
+    },
+    {
+      title: 'DS7 Zaścianek',
+      coordinates: {
+        latitude : 50.06817409779714, 
+        longitude : 19.905322959606522 
+      },
+      identifier: 'DS7 Zaścianek',
+    },
+    {
+      title: 'DS8 Stokrotka',
+      coordinates: {
+        latitude : 50.06772443916539, 
+        longitude : 19.905325603784718
+      },
+      identifier: 'DS8 Stokrotka',
+    },
+    {
+      title: 'DS9 Omega',
+      coordinates: {
+        latitude : 50.06919964379084 , 
+        longitude : 19.90736705166221
+      },
+      identifier: 'DS9 Omega',
+    },
+    {
+      title: 'DS10 Hajduczek',
+      coordinates: {
+        latitude : 50.06886565521682, 
+        longitude : 19.907048174949157
+      },
+      identifier: 'DS10 Hajduczek',
+    },
+    {
+      title: 'DS11 Bonus',
+      coordinates: {
+        latitude : 50.06838423746026, 
+        longitude : 19.907120007483826
+      },
+      identifier: 'DS11 Bonus',
+    },
+    {
+      title: 'DS12 Promyk',
+      coordinates: {
+        latitude : 50.068034058082404, 
+        longitude : 19.90635435960652
+      },
+      identifier: 'DS12 Promyk',
+    },
+    {
+      title: 'DS13 Straszny Dwór',
+      coordinates: {
+        latitude : 50.06748794624835, 
+        longitude : 19.906444676798568
+      },
+      identifier: 'DS13 Straszny Dwór',
+    },
+    {
+      title: 'DS14 Kapitol',
+      coordinates: {
+        latitude : 50.067863618615206, 
+        longitude : 19.90730764611346
+      },
+      identifier: 'DS14 Kapitol',
+    },
+    {
+      title: 'DS15 Maraton',
+      coordinates: {
+        latitude : 50.06825607072731, 
+        longitude : 19.902025292141232
+      },
+      identifier: 'DS15 Maraton',
+    },
+    {
+      title: 'DS16 Itaka',
+      coordinates: {
+        latitude : 50.06872718264994, 
+        longitude : 19.902064476798696
+      },
+      identifier: 'DS16 Itaka',
+    },
+    {
+      title: 'DS17 Arkadia',
+      coordinates: {
+        latitude : 50.06908944917313, 
+        longitude : 19.902272932620487
+      },
+      identifier: 'DS17 Arkadia',
+    },
+    {
+      title: 'DS18 Odyseja',
+      coordinates: {
+        latitude : 50.06954129586869, 
+        longitude : 19.902069605444794
+      },
+      identifier: 'DS18 Odyseja',
+    },
+    {
+      title: 'DS19 Apollo',
+      coordinates: {
+        latitude : 50.06996436069946, 
+        longitude : 19.90235311727785
+      },
+      identifier: 'DS19 Apollo',
+    },]
 
 
   return (
@@ -273,8 +257,8 @@ function Markers() {
           />
           <TextInput
             style={styles.textboxes}
-            // onChangeText={onChangeDescription}
-            value={domitory}
+            // onChangeText={displayAlertBox("You chose: ", dormitory)}
+            value={dormitory}
             placeholder="Dormitory"
           />
           {/*}
@@ -299,21 +283,31 @@ function Markers() {
                 <MapView
                     style={styles.map}
                     showsUserLocation={true}
-                    // provider={PROVIDER_GOOGLE}
+                    provider={PROVIDER_GOOGLE}
                     loadingEnabled
                     showsCompass = {true}
                     initialRegion={{
-                        latitude: 50.06761513042561,
-                        longitude: 19.90871608490642,
-                        latitudeDelta: 0.0122,
-                        longitudeDelta: 0.00421,
+                        latitude: 50.066, 
+                        longitude: 19.91,
+                        latitudeDelta: 0.001,
+                        longitudeDelta: 0.015,
                       }}
                 >
-                  <Markers></Markers>
+                  {markers.map(marker => (
+                    <MapView.Marker 
+                      coordinate={marker.coordinates}
+                      title={marker.title}
+                      image={mapMarker}
+                      identifier={marker.identifier}
+                      onPress={ e => setLocalization( e.nativeEvent.id, toString(e.nativeEvent.coordinate))}
+                    />
+                  ))}
+                  <MapView.Marker image={beutifulCastle} coordinate={{ latitude: 50.066, longitude: 19.9140}}></MapView.Marker>
                 </MapView>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}
+                  }
                 >
                   <Text style={styles.itemText}>Done</Text>
                 </Pressable>
