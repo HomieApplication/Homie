@@ -44,7 +44,7 @@ function LoadingAnimation() {
 
 const AddOfferScreen = ({ navigation }) => {
   const [title, onChangeTitle] = React.useState("");
-  const [localType, onChangeLocalType] = React.useState("");
+  // const [localType, onChangeLocalType] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [localization, onChangeLocalization] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -60,7 +60,7 @@ const AddOfferScreen = ({ navigation }) => {
       axios
           .post(`/api/offers`, {
               title: title,
-              localType: localType,
+              // localType: localType,
               description: description,
               localization: localization,
               photoURLArray: urls,
@@ -135,7 +135,6 @@ const AddOfferScreen = ({ navigation }) => {
               value={title}
               placeholder="Offer title"
           />
-          {/* W końcu robimy tylko akademiki? */}
           {/* <TextInput
             style={styles.textboxes}
             onChangeText={onChangeLocalType}
