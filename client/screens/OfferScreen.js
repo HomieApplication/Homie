@@ -1,6 +1,8 @@
 import { Dimensions, StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
+import mapMarker from "../assets/icons8-marker.png";
 
 import axios from 'axios'
 import { async } from '@firebase/util';
@@ -30,6 +32,38 @@ const OfferScreen = ({route, navigation}) => {
         setOfferData(offer)
     },[])
 
+    const Mapka = () => {
+        if(typeof offerData.localization !== "undefined" && offerData.localization !== "")
+        {
+            return <MapView
+            style={styles.map}
+            showsUserLocation={true}
+            provider={PROVIDER_GOOGLE}
+            loadingEnabled
+            showsCompass = {true}
+            initialRegion={{
+                latitude: offerData.localization.latitude, 
+                longitude: offerData.localization.longitude,
+                latitudeDelta: 0.002,
+                longitudeDelta: 0.0015,
+              }}
+        >
+          <MapView.Marker image={mapMarker} coordinate={offerData.localization}></MapView.Marker>
+        </MapView>
+        }
+        else
+        {
+            return <View style={styles.map}>
+                <Text style={styles.mapErrorText}>
+                    Unfurtunetly localization have not been seted yet 
+                </Text>
+                <Image
+                    source={require("../assets/sad_earth.jpg")}
+                    style={styles.earth}>
+                </Image>
+            </View>
+        }   
+    }
     
     useEffect(() => {
         fetchUser(offer)
@@ -75,7 +109,7 @@ const OfferScreen = ({route, navigation}) => {
             </View>
             <View style={styles.mapContainer}>
                 <View style={styles.map}>
-                    <Text>MAPA</Text>
+                    <Mapka />
                 </View>
                 <View style={styles.mapText}>
                     <Text>Tu zrobić fajną listę</Text>
@@ -213,5 +247,21 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
+    },
+    mapErrorText: {
+        textAlign: 'center', // <-- the magic
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginTop: 0,
+        width: 200,
+      },
+    earth:{
+        position:'absolute',
+        resizeMode: "cover",
+        height: 100,
+        width: 150,
+        left:"10%",
+        top:"25%",
+        zIndex:-1,
     },
 })
