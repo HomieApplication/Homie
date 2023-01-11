@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HomieProject",
-    "slug": "HomieProject",
+    "slug": "homie",
     "description": "App for finding your future roommates.",
     "version": "1.0.0",
     "orientation": "portrait",

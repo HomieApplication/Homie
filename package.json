@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "expo": "^47.0.13",
+    "expo-modules-autolinking": "^1.0.2",
     "react-native": "^0.70.6",
     "wd": "^1.14.0"
   }

@@ -18,6 +18,6 @@ beforeAll(async () => {
 });
 
 test("Test Accessibilty Id", async () => {
-  expect(await driver.hasElementByAccessibilityId("email")).toBe(true);
+  expect(await driver.hasElementByAccessibilityId("login")).toBe(true);
   expect(await driver.hasElementByAccessibilityId("password")).toBe(true);
 });

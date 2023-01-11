@@ -1,6 +1,6 @@
 {
   "build": {
-    "preview": {
+    "testing": {
       "ios": {
         "simulator": true
       }
