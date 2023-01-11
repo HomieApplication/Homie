@@ -10,6 +10,7 @@ npm-debug.*
 *.orig.*
 web-build/
 client/components/firebase/config*
+client/firebase/config*
 *key.json
 *Key.json
 settings.json
