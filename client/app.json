@@ -2,6 +2,7 @@
   "expo": {
     "name": "HomieProject",
     "slug": "HomieProject",
+    "description": "App for finding your future roommates.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,9 +19,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.homie.homieproject",
+      "buildNumber": "1.0.0",
+      "supportsTablet": false
     },
     "android": {
+      "package": "com.homie.homieproject",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +32,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5de89ef7-955d-4a5b-b1c8-73d232866c66"
+      }
     }
   }
 }
