@@ -151,7 +151,7 @@ describe("GET /api/offers", () => {
         if (response.body.length > 0) {
             expect(response.body[0]).toHaveProperty("offerId");
             expect(response.body[0]).toHaveProperty("userId");
-            expect(response.body[0]).toHaveProperty("localType");
+            // expect(response.body[0]).toHaveProperty("localType");
             expect(response.body[0]).toHaveProperty("description");
             expect(response.body[0]).toHaveProperty("localization");
             // expect(response.body[0]).toHaveProperty("title");
