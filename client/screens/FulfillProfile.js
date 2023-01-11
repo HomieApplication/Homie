@@ -1,14 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    View,
-    TextInput,
-    Button,
-    ScrollView,
-    DatePicker,
-} from "react-native";
+import { Dimensions,StyleSheet,Text,View, TextInput,Button, ScrollView, Image, DatePicker,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignInBtn from "../components/signIn/SignInBtn";
 import RNPickerSelect from "react-native-picker-select";
@@ -18,11 +9,16 @@ import RNMultiSelect, {
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { getAuth } from "@firebase/auth";
+import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import COLORS from "../components/assets";
+import { async } from "@firebase/util";
+import { displayAlertBox } from "../components/alert";
 
+const storage = getStorage();
 
-const FulfillProfile = () => {
+const FulfillProfile = ({navigation}) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
 
@@ -41,15 +37,47 @@ const FulfillProfile = () => {
             });
     }, []);
 
+    const [loading, setLoading] = React.useState(false);
     const [university, onChangeUniversity] = React.useState("");
     const [description, setDescription] = React.useState("");
-
+    const [image, setImage] = React.useState(userData.photoURL);
     const [selected, setSelected] = React.useState();
     const [datePicker, setDatePicker] = React.useState(false);
  
     const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
 
-    
+    const pickImageAsync = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if(!result.cancelled){
+            setImage(result.uri);
+        }else{
+            displayAlertBox(
+                "Please, try again",
+                "You did not select any image"
+            );
+        }
+        console.log(image);
+    }
+
+    const uploadImage = async (uri) => {
+        const response = await fetch(uri);
+        const imageBlob = await response.blob();
+        const imageRef = ref(
+            storage,
+            `images/${userId}/${uri.substring(
+                uri.lastIndexOf("/") + 1
+            )}`
+      );
+      await uploadBytes(imageRef, imageBlob);
+      return getDownloadURL(imageRef);
+    }
+
+
+
     function showDatePicker() {
         setDatePicker(true);
       };
@@ -82,13 +110,30 @@ const FulfillProfile = () => {
 
     ]
 
-    React.useEffect(() => {
-        console.log(selected);
-      }, []);
-      
+    const updateUserData = async () => {
+        
+        const uri = await uploadImage(image);
+        axios
+            .put(`/api/users`, {
+                university: university,
+                photoURL: uri,
+                description: description,
+                birthDate: dateOfBirth
+            })
+            .then(() => {
+                setLoading(false);
+                displayAlertBox("Profile was successfully updated!");
+                navigation.push("Main");
+            })
+            .catch((error) => {
+                setLoading(false);
+                displayAlertBox("Please, try again later", error.message);
+            });
+    }
 
     return(
-        <SafeAreaView style={styles.container}>
+        <ScrollView>
+        <View style={styles.container}>
             <Text style={styles.h2}>Complete your profile</Text>
 
             <Text style={styles.dataText}>University:</Text>
@@ -148,28 +193,35 @@ const FulfillProfile = () => {
                 menuBarContainerStyle={styles.hobbyBox}
                 buttonContainerStyle={styles.hobbyBox}
             />
+            <Text style={styles.dataText}>Select new profile picture:</Text>
+            <View style={styles.imgContainer}>
+                <Image style={styles.img} source={{ uri: image }}/>
+            </View>
+            <SignInBtn
+              style={styles.button2}
+              title="Add image"
+              onPress={() => {
+                  pickImageAsync().catch((error) => {
+                      displayAlertBox(
+                          "Please, try again later",
+                          error.message
+                      );
+                  });
+              }}
+          > </SignInBtn>
 
             <SignInBtn
                 style={styles.button}
                 title="Save Changes"
-                // onPress={() =>       
-                //     {
-                //     // try {
-                //     //     register(login, password, {
-                //     //         firstName: firstName,
-                //     //         lastName: secondName,
-                //     //         yearOfStudy: yearOfStudy,
-                //     //     });
-                //     // } catch (error) {
-                //     //     displayAlertBox("Failed to register", error.message);
-                //     // }
-                //     // // navigation.push('Main')
-                // }}
-                // onPress = { displayAlertBox("NO WAY TO GET OUT! :{D") }
-
+                onPress={() => {
+                    setLoading(true);
+                     updateUserData().catch(error =>
+                      displayAlertBox("Please, try again later", error.message)
+                    )
+                  }}
             ></SignInBtn>
-
-        </SafeAreaView>
+            </View>
+        </ScrollView>
     )
 
 }
@@ -179,6 +231,7 @@ export default FulfillProfile;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingTop: 50,
         alignItems: "center", 
         justifyContent: "center",
         backgroundColor: COLORS.background,
@@ -211,6 +264,16 @@ const styles = StyleSheet.create({
 
         elevation: 3,
         backgroundColor: "#1a936f",
+    },
+    button2: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        width: 180,
+        borderRadius: 4,
+        marginVertical: 10,
+        backgroundColor: COLORS.primary1,
     },
     textboxes: {
         width: "90%",
@@ -251,6 +314,17 @@ const styles = StyleSheet.create({
         marginVertical: 7,
         color: "black",
     },
+    imgContainer:{
+        marginVertical:5,
+        height: 200,
+        width:200,
+        borderColor: COLORS.primary1,
+        borderWidth: 0.5,
+    },
+    img:{
+        height: '100%',
+        width: '100%',
+    }
 });
 
 

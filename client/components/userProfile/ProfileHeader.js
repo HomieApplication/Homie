@@ -36,7 +36,7 @@ const ProfileHeader = (props) => {
           <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={onPress}/>
         </Pressable>
       </View>    
-      <Image style={styles.img} source={require('../../assets/defaultImg.png')}/>
+      <Image style={styles.img} source={{uri: userData.photoURL}}/>
       
     </View>
   )

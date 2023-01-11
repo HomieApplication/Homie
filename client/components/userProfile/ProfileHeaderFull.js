@@ -21,7 +21,7 @@ const ProfileHeaderFull = (props) => {
     <View style={styles.container}>
 
         <View style={styles.imageAndFullName}>
-            <Image style={styles.img} source={require('../../assets/defaultImg.png')}/>
+            <Image style={styles.img} source={{uri: userData.photoURL}}/>
             <View style={{flex: 1, marginLeft: 10, alignItems: 'flex-start' }}>
                  <Text style={styles.h1}>{userData.firstName} {userData.lastName}</Text>
                  <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>

@@ -113,7 +113,7 @@ const MainScreen = ({ navigation }) => {
                                 description={offer.description}
                                 year={offer.yearOfStudy}
                                 localType={offer.localType}
-                                localization={offer.localization}
+                               // localization={offer.localization}
                                 imgUrl={require("../assets/defaultImg.png")}
                                 idOffer={offer.offerId}
                                 onPress={push}
@@ -138,6 +138,8 @@ const styles = StyleSheet.create({
     },
     containerMain: {
         flex: 1,
+        margin: 0,
+        width:'100%',
         backgroundColor: COLORS.background,
     },
     scroll: {
