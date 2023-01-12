@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Dimensions,StyleSheet,Text,View, TextInput,Button, ScrollView, Image, DatePicker,} from "react-native";
+import { Dimensions,StyleSheet,Text,View, TextInput,Button, ScrollView, Image, DatePicker, FlatList,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignInBtn from "../components/signIn/SignInBtn";
 import RNPickerSelect from "react-native-picker-select";
@@ -20,8 +20,6 @@ import LoadingAnimation from "../components/LoadingAnimation";
 const storage = getStorage();
 
 const FulfillProfile = ({navigation}) => {
-    const userId = getAuth().currentUser.uid;
-    const [userData, setUser] = useState({});
 
     useEffect(() => {
         axios
@@ -29,7 +27,7 @@ const FulfillProfile = ({navigation}) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                console.log(userData);
             })
             .then(() => setDescription(userData.description))
             .then(() => onChangeUniversity(userData.university))
@@ -41,14 +39,17 @@ const FulfillProfile = ({navigation}) => {
             });
     }, []);
 
+    const userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
     const [loading, setLoading] = React.useState(true);
     const [university, onChangeUniversity] = React.useState(userData.university);
     const [description, setDescription] = React.useState(userData.description);
     const [image, setImage] = React.useState(userData.photoURL);
     const [selected, setSelected] = React.useState();
     const [datePicker, setDatePicker] = React.useState(false);
- 
     const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+
+
 
     const updateUserData = async () => {
         
@@ -58,7 +59,7 @@ const FulfillProfile = ({navigation}) => {
                 university: university,
                 photoURL: uri,
                 description: description,
-                birthDate: dateOfBirth
+                birthDate: dateOfBirth,
             })
             .then(() => {
                 setLoading(false);
@@ -138,102 +139,111 @@ const FulfillProfile = ({navigation}) => {
 
 
     return(
-        <ScrollView>
-            {loading ? (
-                    <LoadingAnimation text="Updating profile"/>
-                ) :(
-            <View style={styles.container}>
-                <Text style={styles.h2}>Complete your profile</Text>
+        <View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center', backgroundColor: COLORS.background}}>
+        {loading ? (
+            <LoadingAnimation text="Updating profile"/>
+             ) :(
+            <FlatList
+                ListHeaderComponent={
+                <View style={styles.container}>
+                    <Text style={styles.h2}>Complete your profile</Text>
 
-                <Text style={styles.dataText}>University:</Text>
-                {/* <RNPickerSelect
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => onChangeUniversity(value)}
-                    items={univerities}
-                /> */}
-                <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeUniversity}
-                value={university}
-                placeholder={university}
-            />
-
-                <Text style={styles.dataText}>Description:</Text>
-                <TextInput
-                style={styles.textboxes}
-                onChangeText={(value) => {setDescription(value)}}
-                value={description}
-                placeholder={description}
-            />
-
-                
-                <Text style={styles.dataText}>Date of birth:</Text>
-                <TextInput 
+                    <Text style={styles.dataText}>University:</Text>
+                    {/* <RNPickerSelect
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => onChangeUniversity(value)}
+                        items={univerities}
+                    /> */}
+                    <TextInput
                     style={styles.textboxes}
-                    onChange={showDatePicker}>
-                    {dateOfBirth.toDateString()}
-                </TextInput>
+                    onChangeText={onChangeUniversity}
+                    value={university}
+                    placeholder={university}
+                    />
 
-                {datePicker && (
-                <DateTimePicker
-                    value={dateOfBirth}
-                    mode={'date'}
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    is24Hour={true}
-                    onChange={onDateSelected}
-                    style={styles.datePicker}
-                />
-                )}
+                    <Text style={styles.dataText}>Description:</Text>
+                    <TextInput
+                    style={styles.textboxes}
+                    onChangeText={(value) => {setDescription(value)}}
+                    value={description}
+                    placeholder={description}
+                    />
 
-                {!datePicker && (
-                <View style={{ marginBottom: 20, paddingVertical: 12, paddingHorizontal: 32, width: 240, borderRadius: 50,}}>
-                    <Button 
-                        title="Show Date Picker"
-                        color={COLORS.primary1}
-                        onPress={showDatePicker} />
+
+                    <Text style={styles.dataText}>Date of birth:</Text>
+                    <TextInput 
+                        style={styles.textboxes}
+                        onChange={showDatePicker}>
+                        {dateOfBirth.toDateString()}
+                    </TextInput>
+
+                    {datePicker && (
+                    <DateTimePicker
+                        value={dateOfBirth}
+                        mode={'date'}
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        is24Hour={true}
+                        onChange={onDateSelected}
+                        style={styles.datePicker}
+                    />
+                    )}
+
+                    {!datePicker && (
+                    <View style={{ marginBottom: 20, paddingVertical: 12, paddingHorizontal: 32, width: 240, borderRadius: 50,}}>
+                        <Button 
+                            title="Show Date Picker"
+                            color={COLORS.primary1}
+                            onPress={showDatePicker} />
+                    </View>
+                    )}
                 </View>
-                )}
-                
-                <Text style={styles.dataText}>Hobby:</Text>
-                <RNMultiSelect
-                    // disableAbsolute
-                    data={staticData}
-                    onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
-                    menuBarContainerStyle={styles.hobbyBox}
-                    buttonContainerStyle={styles.hobbyBox}
-                />
-                <Text style={styles.dataText}>Select new profile picture:</Text>
-                <View style={styles.imgContainer}>
-                    <Image style={styles.img} source={{ uri: image }}/>
-                </View>
-                <SignInBtn
-                style={styles.button2}
-                title="Add image"
-                onPress={() => {
-                    pickImageAsync().catch((error) => {
-                        displayAlertBox(
-                            "Please, try again later",
-                            error.message
-                        );
-                    });
-                }}
-            > </SignInBtn>
-
-                <SignInBtn
-                    style={styles.button}
-                    title="Save Changes"
+            }
+            
+            ListFooterComponent={
+                <View style={styles.containerHobby}>
+                    <Text style={styles.dataText}>Select new profile picture:</Text>
+                    <View style={styles.imgContainer}>
+                        <Image style={styles.img} source={{ uri: image }}/>
+                    </View>
+                    <SignInBtn
+                    style={styles.button2}
+                    title="Select image"
                     onPress={() => {
-                        setLoading(true);
-                        updateUserData().catch(error =>
-                        displayAlertBox("Please, try again later", error.message)
-                        )
+                        pickImageAsync().catch((error) => {
+                            displayAlertBox(
+                                "Please, try again later",
+                                error.message
+                            );
+                        });
                     }}
-                ></SignInBtn>
-            </View>
-                )
+                > </SignInBtn>
+                 <Text style={styles.dataText}>Hobby:</Text>
+                    <RNMultiSelect
+                        disableAbsolute
+                        data={staticData}
+                        onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                        menuBarContainerStyle={styles.hobbyBox}
+                        buttonContainerStyle={styles.hobbyBox}
+                    />
+
+                    <SignInBtn
+                        style={styles.button}
+                        title="Save Changes"
+                        onPress={() => {
+                            setLoading(true);
+                            updateUserData().catch(error =>
+                            displayAlertBox("Please, try again later", error.message)
+                            )
+                            setLoading(false);
+                        }}
+                    ></SignInBtn>
+                </View>
+
             }
         
-        </ScrollView>
+        />
+        )}
+        </View>
     )
 
 }
@@ -244,6 +254,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
+        alignItems: "center", 
+        justifyContent: "center",
+        backgroundColor: COLORS.background,
+    },
+    containerHobby: {
+        flex: 1,
         alignItems: "center", 
         justifyContent: "center",
         backgroundColor: COLORS.background,
@@ -265,17 +281,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         width: 180,
         borderRadius: 4,
-        marginVertical: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-
-        elevation: 3,
         backgroundColor: "#1a936f",
+        marginTop: 120,
+        marginBottom: 20,
     },
     button2: {
         alignItems: "center",
@@ -314,8 +322,8 @@ const styles = StyleSheet.create({
         display: 'flex',
       },
     hobbyBox: {
-        left:"2%",
-        width: "95%",
+        //left:"2%",
+        width: "100%",
         padding: "5%",
         margin: 0,
         borderRadius: 10,

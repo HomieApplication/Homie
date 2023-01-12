@@ -104,7 +104,7 @@ const MainScreen = ({ navigation }) => {
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        console.log(offer)
+                        //console.log(offer)
                         return (
                             <Card
                                 key={i}
