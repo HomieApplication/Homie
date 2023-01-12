@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
-import { Dimensions,StyleSheet,Text,View, TextInput,Button, ScrollView, Image, DatePicker, FlatList,} from "react-native";
+import { Dimensions,StyleSheet,Text,View, TextInput,Button, Pressable, Image, DatePicker, FlatList,} from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignInBtn from "../components/signIn/SignInBtn";
 import RNPickerSelect from "react-native-picker-select";
@@ -146,6 +147,9 @@ const FulfillProfile = ({navigation}) => {
             <FlatList
                 ListHeaderComponent={
                 <View style={styles.container}>
+                    <Pressable style={styles.goBack}>
+                        <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
+                    </Pressable>
                     <Text style={styles.h2}>Complete your profile</Text>
 
                     <Text style={styles.dataText}>University:</Text>
@@ -344,6 +348,11 @@ const styles = StyleSheet.create({
     img:{
         height: '100%',
         width: '100%',
+    },
+    goBack:{
+        position: 'absolute',
+        left: 10,
+        top: 30,
     }
 });
 
