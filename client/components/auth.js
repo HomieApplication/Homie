@@ -38,10 +38,7 @@ export function login(email, password) {
       if (error.code == "auth/invalid-email") {
         displayAlertBox("Failed to sign in", "Invalid email");
       } else if (error.code == "auth/user-not-found") {
-        displayAlertBox(
-          "Failed to sign in",
-          "Your emial/password combination didn't match. Please try again"
-        );
+        displayAlertBox("Failed to sign in", "Incorrect login or password");
       } else if (error.code == "auth/internal-error") {
         displayAlertBox(
           "Failed to sign in",

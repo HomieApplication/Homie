@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
 import {
-    Button,
-    Dimensions,
-    FlatList,
-    ScrollView,
-    StyleSheet,
     Text,
     View,
+    StyleSheet,
+    FlatList,
+    SafeAreaView,
+    StatusBar,
+    Button,
+    ScrollView,
+    Dimensions,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ProfileHeader from "../components/userProfile/ProfileHeader";
-import Card from "../components/mainScreen/Card";
-import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-import { displayAlertBox } from "../components/alert";
-import { logout } from "../components/auth";
+import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
+import Card from "../components/mainScreen/Card";
+import { displayAlertBox } from "../components/alert";
+
 
 const fetchOffers = async () => {
     const offers = await axios
-        .get("/api/offers")
+        .get("/api/users/my-offers")
         .then((res) => res.data)
         .catch((error) => {
             console.log(error);
             displayAlertBox("Please, try again later", error.message);
-            // logout();
         });
 
     const offersWithUser = await Promise.all(
@@ -34,77 +32,57 @@ const fetchOffers = async () => {
             const userData = await axios
                 .get(`/api/users/${offer.userId}`)
                 .then((res) => res.data)
+                .then(() => console.log(offer))
                 .catch((error) => {
                     console.log(error);
                     displayAlertBox("Please, try again later", error.message);
-                    // logout();
                 });
             return { ...userData, ...offer };
         })
     ).catch((error) => {
         console.log(error);
         displayAlertBox("Please, try again later", error.message);
-        // logout();
     });
 
     return offersWithUser;
 };
 
+const MyOffers = () => {
 
-const MainScreen = ({ navigation }) => {
-    const [userData, setUser] = useState({});
-    const [offersData, setOffersData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        axios
-            .get("/api/users")
-            .then((res) => res.data)
-            .then((data) => {
-                setUser(data);
-                // console.log(data);
-            })
-            .catch((error) => {
-                console.log("Connection error: " + error.message);
-                displayAlertBox("Please, try again later", error.message);
-                // logout();
-            });
-    }, []);
+    const userId = getAuth().currentUser.uid;
+    const [myOffers, setmyOffers] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
-                setOffersData(offers);
+                setmyOffers(offers);
             })
             .then(() => setLoading(false))
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
-                // logout();
             });
     }, []);
 
-    return (
-        <SafeAreaView style={styles.containerMain}>
-            {loading ? (
-                <LoadingAnimation text="Loading please wait" />
-            ) : (
-            <SafeAreaView style={styles.container}>
-                <ProfileHeader
-                    user={userData}
-                    onPress={()=>{navigation.push("FavsOffers")}}
-                    onPressEdit={()=>{navigation.push("EditProfile")}}
-                />
 
-                <ScrollView style={styles.scroll}>
-                    {offersData.map((offer, i) => {
+    return(
+        <SafeAreaView style={styles.container}>
+            {loading ? (
+                <LoadingAnimation text="Loading"/>
+            ) : (
+                <SafeAreaView style={styles.containerMain}>
+                    <View style={styles.header}> 
+                        <Text style={styles.h1}>My Offers</Text>
+                    </View>
+                    <ScrollView style={styles.scroll}>
+                    {myOffers.map((offer, i) => {
 
                         const push = () => {
-                            console.log(offer.offerId)
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        //console.log(offer)
+                        console.log(offer)
                         return (
                             <Card
                                 key={i}
@@ -112,35 +90,48 @@ const MainScreen = ({ navigation }) => {
                                 userLastName={offer.lastName}
                                 description={offer.description}
                                 year={offer.yearOfStudy}
+                                localType={offer.localType}
+                                //localization={offer.localization}
                                 imgUrl={offer.photoURL}
-                                title={offer.title}
-                                localization={offer.localization.map}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
                         );
-                    })}
-                </ScrollView>
-            </SafeAreaView>
+                        })}
+
+                    </ScrollView>
+                </SafeAreaView>
             )}
         </SafeAreaView>
-    );
-};
-
-export default MainScreen;
+    )
+}
+export default MyOffers
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.background,
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
+        backgroundColor: COLORS.background,
     },
     containerMain: {
+        marginTop: 50,
         flex: 1,
-        margin: 0,
-        width:'100%',
-        backgroundColor: COLORS.background,
+        width: '100%',
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
+    },
+    header: {
+        width: '100%',
+        flex: 0.15,
+        backgroundColor: COLORS.primary1,
+        alignItems: "center",
+        justifyContent: "center",
+
+    },
+    h1: {
+        color: COLORS.textProfile,
+        fontSize: 24,
     },
     scroll: {
         flex: 1,
@@ -150,4 +141,4 @@ const styles = StyleSheet.create({
 
         marginLeft: Dimensions.get('window').width*0.1,
     },
-});
+})

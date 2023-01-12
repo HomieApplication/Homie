@@ -2,10 +2,11 @@ import React from 'react';
 import { Text, View, StyleSheet, Pressable, Image, Dimensions } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, localType, localization, idOffer, navigation } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, localization, idOffer, navigation } = props;
 
   Card.defaultProps = {
     imgUrl: require('../../assets/defaultImg.png')
@@ -15,16 +16,17 @@ export default function Card(props) {
   return (
     <View style={styles.container}>
         <Pressable style={styles.iconStar}>
-          <MaterialCommunityIcons name="star-outline" color={'black'} size={35}/> 
+          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35}/> 
         </Pressable>
         <View style={styles.upperHalf}>
-            <Image style={styles.img} source={imgUrl}/>
+            <Image style={styles.img} source={{uri: imgUrl}}/>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
-                <Text style={styles.description}>{localType}, {localization}, {year} year</Text>
+                <Text style={styles.description}>{year} year</Text>
             </View>
         </View>
         <View>
+            <Text style={styles.nameText}>{title}</Text>
             <Text style={styles.description}>{description}</Text>
         </View>
         <View style={styles.iconContainer}>
@@ -40,17 +42,17 @@ const styles = StyleSheet.create({
     container:{
         width:'90%',
         marginVertical: 15,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.card,
         borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
           height: 1,
         },
-        shadowOpacity: 0.22,
+        shadowOpacity: 0.10,
         shadowRadius: 2.22,
     
-        elevation: 2,
+        elevation: 1,
         padding: 10,
     },
     iconContainer:{
@@ -70,15 +72,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     nameText:{
-        color: '#fff',
+        color: COLORS.textCard,
         fontSize: 20,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'grey',
     },
     description: {
         letterSpacing: 0.25,
-        color:'grey',
+        color:'#0a3854',
     },
     icon:{
       height:35,
