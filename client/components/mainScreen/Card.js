@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Text, View, StyleSheet, Pressable, Image, Dimensions } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -6,7 +6,8 @@ import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, localization, idOffer, navigation } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, navigation } = props;
+  const [isFav, setIsFav] = useState(false)
 
   Card.defaultProps = {
     imgUrl: require('../../assets/defaultImg.png')
@@ -16,13 +17,19 @@ export default function Card(props) {
   return (
     <View style={styles.container}>
         <Pressable style={styles.iconStar}>
-          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35}/> 
+          {isFav ? (
+            <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+          ) :(
+            <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+          )
+          }
+          
         </Pressable>
         <View style={styles.upperHalf}>
             <Image style={styles.img} source={{uri: imgUrl}}/>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
-                <Text style={styles.description}>{year} year</Text>
+                <Text style={styles.description}>{university} {year} year</Text>
             </View>
         </View>
         <View>

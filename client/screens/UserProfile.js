@@ -30,11 +30,6 @@ const Tabs = [
         title: "My offers",
         routeName: "MyOffers"
     },
-    {
-        id: "3",
-        title: "Edit profile",
-        routeName: "EditProfile"
-    },
 ];
 
 const UserProfile = ({ navigation }) => {
