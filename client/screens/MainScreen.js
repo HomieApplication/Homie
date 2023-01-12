@@ -150,4 +150,5 @@ const styles = StyleSheet.create({
 
         marginLeft: Dimensions.get('window').width*0.1,
     },
+
 });

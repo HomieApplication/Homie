@@ -113,8 +113,6 @@ const OfferScreen = ({route, navigation}) => {
             console.log("fetchUser")
     }, [])
 
-    //w miejscu map tzreba wstawić mape googla z pineską na lkalizacje danego akademika/mieszkania
-    //obok fajnie by było wyświetlać odległości do kluczowych miejsc np kebab
 
     return (
         <View style={{flex:1, width:'100%', backgroundColor: COLORS.background, justifyContent:'flex-start'}}>        
@@ -129,11 +127,10 @@ const OfferScreen = ({route, navigation}) => {
                         <Text style={styles.textTitle}>{userData.firstName} {userData.lastName}</Text>
                         <Text style={styles.text}>year of study: {userData.yearOfStudy}</Text>
                         <Text style={styles.text}>{userData.description}</Text>
-                        {/* <Text style={styles.text}>{userData.description}</Text> */}
                     </View>
-                    <Pressable style={styles.icon}>
-                         <MaterialCommunityIcons name="star" color={COLORS.star} size={35}/>
-                     </Pressable>
+                    <Pressable style={styles.goBack}>
+                        <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
+                    </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.textTitle}>{offerData.title}</Text>
@@ -303,4 +300,10 @@ const styles = StyleSheet.create({
         top:"25%",
         zIndex:-1,
     },
+
+    goBack:{
+        position: 'absolute',
+        left: 20,
+        top: 10,
+    }
 })

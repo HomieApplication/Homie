@@ -26,7 +26,9 @@ export default function Card(props) {
           
         </Pressable>
         <View style={styles.upperHalf}>
-            <Image style={styles.img} source={{uri: imgUrl}}/>
+          <View style={styles.imgContainer}>
+            <Image resizeMode={"cover"} style={styles.img} source={{uri: imgUrl}}/>
+          </View>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
                 <Text style={styles.description}>{university} {year} year</Text>
@@ -68,12 +70,21 @@ const styles = StyleSheet.create({
       padding:0,
       margin:0,
     },
+    imgContainer:{
+      width: size,
+      height: size,
+      marginRight: 10,
+      marginBottom: 10,
+      
+    },
     img:{
-        width: size,
-        height: size,
+        borderWidth: 0.5,
+        width: '100%',
+        height: '100%',
         borderRadius: 10,
-        marginRight: 10,
-        marginBottom: 10,
+        borderColor: COLORS.primary1,
+        borderRadius: 10,
+        overflow: 'hidden'
       },
     upperHalf:{
         flexDirection: 'row',

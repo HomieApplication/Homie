@@ -27,31 +27,17 @@ const fetchOffers = async () => {
             displayAlertBox("Please, try again later", error.message);
         });
 
-    const offersWithUser = await Promise.all(
-        offers.map(async (offer) => {
-            const userData = await axios
-                .get(`/api/users/${offer.userId}`)
-                .then((res) => res.data)
-                .then(() => console.log(offer))
-                .catch((error) => {
-                    console.log(error);
-                    displayAlertBox("Please, try again later", error.message);
-                });
-            return { ...userData, ...offer };
-        })
-    ).catch((error) => {
-        console.log(error);
-        displayAlertBox("Please, try again later", error.message);
-    });
-
-    return offersWithUser;
+    return offers;
 };
 
 const MyOffers = () => {
 
     const userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
     const [myOffers, setmyOffers] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
@@ -65,6 +51,20 @@ const MyOffers = () => {
             });
     }, []);
 
+    useEffect(() => {
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
+            .then((data) => {
+                setUser(data);
+                // console.log(data);
+            })
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                displayAlertBox("Please, try again later", error.message);
+                // logout();
+            });
+    }, []);
 
     return(
         <SafeAreaView style={styles.container}>
@@ -86,13 +86,12 @@ const MyOffers = () => {
                         return (
                             <Card
                                 key={i}
-                                userFirstName={offer.firstName}
-                                userLastName={offer.lastName}
+                                userFirstName={userData.firstName}
+                                userLastName={userData.lastName}
                                 description={offer.description}
-                                year={offer.yearOfStudy}
-                                localType={offer.localType}
-                                //localization={offer.localization}
-                                imgUrl={offer.photoURL}
+                                year={userData.yearOfStudy}
+                                title={offer.title}
+                                imgUrl={userData.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
