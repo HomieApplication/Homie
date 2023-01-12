@@ -8,8 +8,10 @@ import {
     Button,
     ScrollView,
     Dimensions,
+    Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -74,6 +76,9 @@ const MyOffers = ({navigation}) => {
             ) : (
                 <SafeAreaView style={styles.containerMain}>
                     <View style={styles.header}> 
+                        <Pressable style={styles.goBack}>
+                            <MaterialCommunityIcons name="arrow-left" color={COLORS.background} size={35} onPress={navigation.goBack}/>
+                        </Pressable>
                         <Text style={styles.h1}>My Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
@@ -142,5 +147,10 @@ const styles = StyleSheet.create({
         alignContent: "center",
 
         marginLeft: 10,
+    },
+    goBack:{
+        position: 'absolute',
+        left: 20,
+        top: 10,
     },
 })
