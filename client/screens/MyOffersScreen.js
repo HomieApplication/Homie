@@ -30,7 +30,7 @@ const fetchOffers = async () => {
     return offers;
 };
 
-const MyOffers = () => {
+const MyOffers = ({navigation}) => {
 
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
@@ -77,7 +77,8 @@ const MyOffers = () => {
                         <Text style={styles.h1}>My Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
-                    {/* {myOffers.map((offer, i) => {
+                    <View style={styles.scroll}>
+                    {myOffers.map((offer, i) => {
 
                         const push = () => {
                             navigation.push("Offer", {offer: offer})
@@ -95,10 +96,11 @@ const MyOffers = () => {
                                 imgUrl={userData.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
+                                isMine={true}
                             />
                         );
-                        })} */}
-
+                        })}
+                    </View>
                     </ScrollView>
                 </SafeAreaView>
             )}
@@ -139,6 +141,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignContent: "center",
 
-        marginLeft: Dimensions.get('window').width*0.1,
+        marginLeft: 10,
     },
 })

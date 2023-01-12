@@ -6,25 +6,24 @@ import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, navigation } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine } = props;
   const [isFav, setIsFav] = useState(false)
 
-  Card.defaultProps = {
-    imgUrl: require('../../assets/defaultImg.png')
-  }
 
-  //trzeba będzie zrobić system favs - zmiana ikonki na 'star' i color też trzeba zmienic po kliknięciu 
   return (
     <View style={styles.container}>
+      {!isMine ? (
         <Pressable style={styles.iconStar}>
-          {isFav ? (
-            <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
-          ) :(
-            <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
-          )
-          }
-          
-        </Pressable>
+        {isFav ? (
+          <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+        ) :(
+          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+        )
+        }
+        
+      </Pressable>
+      ): (null)}
+        
         <View style={styles.upperHalf}>
           <View style={styles.imgContainer}>
             <Image resizeMode={"cover"} style={styles.img} source={{uri: imgUrl}}/>
