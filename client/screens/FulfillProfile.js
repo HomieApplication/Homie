@@ -22,6 +22,17 @@ const storage = getStorage();
 
 const FulfillProfile = ({navigation}) => {
 
+    const userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
+    const [loading, setLoading] = React.useState(true);
+    const [university, onChangeUniversity] = React.useState(userData.university);
+    const [description, setDescription] = React.useState(userData.description);
+    const [image, setImage] = React.useState(userData.photoURL);
+    const [selected, setSelected] = React.useState([]);
+    const [datePicker, setDatePicker] = React.useState(false);
+    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+    const [selectedHobby, setHobby] = React.useState([]);
+
     useEffect(() => {
         axios
             .get(`/api/users/${userId}`)
@@ -40,27 +51,32 @@ const FulfillProfile = ({navigation}) => {
             });
     }, []);
 
-    const userId = getAuth().currentUser.uid;
-    const [userData, setUser] = useState({});
-    const [loading, setLoading] = React.useState(true);
-    const [university, onChangeUniversity] = React.useState(userData.university);
-    const [description, setDescription] = React.useState(userData.description);
-    const [image, setImage] = React.useState(userData.photoURL);
-    const [selected, setSelected] = React.useState();
-    const [datePicker, setDatePicker] = React.useState(false);
-    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+
+    const getSelectedHobbies = () => {
+        var hobbies = []
+        selected.forEach(e => {
+            console.log(e.value)
+            hobbies.push(e.value)
+        })
+        return hobbies
+    }
 
 
 
     const updateUserData = async () => {
         
         const uri = await uploadImage(image);
+        
+        const hobbies = getSelectedHobbies();
+        console.log("hobbies: ",hobbies);
+
         axios
             .put(`/api/users`, {
                 university: university,
                 photoURL: uri,
                 description: description,
                 birthDate: dateOfBirth,
+                interests: hobbies,
             })
             .then(() => {
                 setLoading(false);
@@ -225,7 +241,7 @@ const FulfillProfile = ({navigation}) => {
                     <RNMultiSelect
                         disableAbsolute
                         data={staticData}
-                        onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                        onSelect={(selectedItems) => setSelected(selectedItems)}
                         menuBarContainerStyle={styles.hobbyBox}
                         buttonContainerStyle={styles.hobbyBox}
                     />
@@ -235,6 +251,7 @@ const FulfillProfile = ({navigation}) => {
                         title="Save Changes"
                         onPress={() => {
                             setLoading(true);
+                            console.log(selected)
                             updateUserData().catch(error =>
                             displayAlertBox("Please, try again later", error.message)
                             )
@@ -384,6 +401,6 @@ const pickerSelectStyles = StyleSheet.create({
         borderColor: 'purple',
         borderRadius: 8,
         color: 'black',
-        paddingRight: 30 // to ensure the text is never behind the icon
+        paddingRight: 30 
     }
 });
