@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
 import mapMarker from "../assets/icons8-marker.png";
+import { constPlaces } from '../components/OfferScreen/ConstMarkers';
 
 import axios from 'axios'
 import { async } from '@firebase/util';
@@ -64,6 +65,43 @@ const OfferScreen = ({route, navigation}) => {
             </View>
         }   
     }
+
+    const FancyList = () =>{
+        if(typeof offerData.localization !== "undefined" && offerData.localization !== ""){
+            return <View>
+                    {constPlaces.map(marker => (
+                        <Text 
+                        >{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km{"\n"}</Text>
+                    ))}
+            </View>
+        }
+        else return <View>
+                    {constPlaces.map(marker => (
+                        <Text 
+                        >{marker.title}: who knows?...{"\n"}</Text>
+                    ))}
+        </View>
+    }
+
+    function distanceFromCoordinates(loc1, loc2) {
+        var lat1 = loc1.latitude;
+        var lon1 = loc1.longitude;
+        var lat2 = loc2.latitude;
+        var lon2 = loc2.longitude;
+        const R = 6371e3; // metres
+        const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+        const φ2 = lat2 * Math.PI/180;
+        const Δφ = (lat2-lat1) * Math.PI/180;
+        const Δλ = (lon2-lon1) * Math.PI/180;
+
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        const d = R * c; // in metres
+        return (d/1000).toPrecision(2);
+    }
     
     useEffect(() => {
         fetchUser(offer)
@@ -112,10 +150,7 @@ const OfferScreen = ({route, navigation}) => {
                     <Mapka />
                 </View>
                 <View style={styles.mapText}>
-                    <Text>Tu zrobić fajną listę</Text>
-                    <Text>- Biedronka: 7min</Text>
-                    <Text>- Kebab: 5min</Text>
-                    <Text>- Miasteczko: 5min</Text>
+                    <FancyList></FancyList>
                 </View>
             </View>
         </View>
