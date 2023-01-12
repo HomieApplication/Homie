@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-nati
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import React, { useEffect, useState } from 'react'
 import COLORS from '../assets.js'
+import Hobby from './Hobby.js';
 
 const size = 120;
 
@@ -12,10 +13,6 @@ const ProfileHeaderFull = (props) => {
   useEffect(()=>{
     setUserData(user)
   },[])
-  
-  ProfileHeaderFull.defaultProps = {
-    img: require('../../assets/defaultImg.png'),
-  }
   
   return (
     <View style={styles.container}>
@@ -30,7 +27,18 @@ const ProfileHeaderFull = (props) => {
         </View>
         <View style={styles.hobbyAndDescription}>
             <Text style={styles.text}>{userData.description}</Text>
-            <Text style={styles.text}>Hobby: tu zrobie liste ale najpierw ogarnąć wysyłanie hobby</Text>
+            <Text style={[styles.h1,{marginTop: 10}]}>My interests:</Text>
+            {typeof userData.interests !== 'undefined' ? (
+              <View style={styles.list}>
+                {userData.interests.map(hobby => {
+                  return(
+                    <Hobby key={hobby} name={hobby}/>
+                  )
+                })}
+              </View>
+            ): (
+                null
+            )}
         </View>
       
     </View>
@@ -81,7 +89,7 @@ const styles = StyleSheet.create({
     width: size,
     height: size,
     borderRadius: size/10,
-    marginRight: 10,
+    marginLeft: 10,
   },
   h1: {
     color: COLORS.textProfile,
@@ -97,4 +105,11 @@ const styles = StyleSheet.create({
     left: Dimensions.get('window').width * 0.8,
     top: size*0.75,
   },
+  list:{
+    padding:5,
+    paddingLeft: 20,
+    borderWidth:1,
+    borderColor: COLORS.background,
+    borderRadius: 10,
+  }
 })

@@ -17,8 +17,9 @@ const styles = StyleSheet.create({
     container:{
         width: '95%',
         flex: 0.4,
-        //height: 70, //Dimensions.get('window').height/15,
         borderRadius: 10,
+        borderColor:COLORS.primary1,
+        borderWidth: 0.5,
         backgroundColor: COLORS.card,
         justifyContent: 'center',
         alignItems: 'center',
