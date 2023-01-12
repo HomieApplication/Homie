@@ -215,7 +215,7 @@ router.get("/my-offers", async (req, res) => {
                         res.status(500).send({ message: error.message });
                     })
             )
-        ).then((offerData) => res.send(offerData));
+        ).then((offersData) => res.send(offersData));
     } catch (error) {
         res.status(500).send({ message: error.message });
     }

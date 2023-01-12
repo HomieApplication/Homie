@@ -138,12 +138,14 @@ describe("DELETE /api/users/favs", () => {
             .get("/api/users/")
             .set("Authorization", "Bearer " + idToken);
         expect(getResponse.body.favs).not.toContain(testOfferId2);
-
-        await request(app)
-            .delete("/api/offers/" + testOfferId1)
-            .set("Authorization", "Bearer " + idToken);
-        await request(app)
-            .delete("/api/offers/" + testOfferId2)
-            .set("Authorization", "Bearer " + idToken);
     });
+});
+
+afterAll(async () => {
+    await request(app)
+        .delete("/api/offers/" + testOfferId1)
+        .set("Authorization", "Bearer " + idToken);
+    await request(app)
+        .delete("/api/offers/" + testOfferId2)
+        .set("Authorization", "Bearer " + idToken);
 });
