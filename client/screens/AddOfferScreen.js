@@ -57,7 +57,10 @@ const AddOfferScreen = ({ navigation }) => {
   const sendData = async () => {
       const urls = await Promise.all(
           images.map((image) => uploadImage(image))
-      );
+      ).catch((error) => {
+          setLoading(false);
+          displayAlertBox("Please, try again later", error.message);
+      });
 
       axios
           .post(`/api/offers`, {
@@ -95,6 +98,9 @@ const AddOfferScreen = ({ navigation }) => {
       let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
           quality: 1,
+      }).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
       });
 
       if (!result.cancelled) {
@@ -108,15 +114,24 @@ const AddOfferScreen = ({ navigation }) => {
   };
 
   const uploadImage = async (uri) => {
-      const response = await fetch(uri);
-      const imageBlob = await response.blob();
+      const response = await fetch(uri).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
+      const imageBlob = await response.blob().catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
       const imageRef = ref(
           storage,
           `images/${auth.currentUser.uid}/${uri.substring(
               uri.lastIndexOf("/") + 1
           )}`
       );
-      await uploadBytes(imageRef, imageBlob);
+      await uploadBytes(imageRef, imageBlob).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
       return getDownloadURL(imageRef);
   };
 
@@ -216,11 +231,9 @@ const AddOfferScreen = ({ navigation }) => {
               title="Add image"
               onPress={() => {
                   pickImageAsync().catch((error) => {
-                      displayAlertBox(
-                          "Please, try again later",
-                          error.message
-                      );
-                  });
+                    setLoading(false);
+                    displayAlertBox("Please, try again later", error.message);
+                });
               }}
           ></SignInBtn>
           <View style={{ flexDirection: "row" }}>
@@ -247,10 +260,17 @@ const AddOfferScreen = ({ navigation }) => {
             style={styles.buttonComfirm}
             title="Create offer"
             onPress={() => {
-              setLoading(true);
-               sendData().catch(error =>
-                displayAlertBox("Please, try again later", error.message)
-              )
+              if (title === "") {
+                displayAlertBox("Failed to publish your offer", "Add title!");
+              } else if (description === "") {
+                displayAlertBox("Failed to publish your offer", "Add description!");
+              } else if (localization === "") {
+                displayAlertBox("Failed to publish your offer", "Choose localization!");
+              } else {
+                setLoading(true);
+                sendData().catch(error =>
+                displayAlertBox("Please, try again later", error.message))
+              }
             }}
           ></SignInBtn>
         </View>
