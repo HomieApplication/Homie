@@ -37,7 +37,7 @@ const OfferScreen = ({route, navigation}) => {
         if(typeof offerData.localization !== "undefined" && offerData.localization !== "")
         {
             return <MapView
-            style={styles.map}
+            style={styles.map2}
             showsUserLocation={true}
             provider={PROVIDER_GOOGLE}
             loadingEnabled
@@ -70,17 +70,15 @@ const OfferScreen = ({route, navigation}) => {
         if(typeof offerData.localization !== "undefined" && offerData.localization !== ""){
             return <View>
                     {constPlaces.map(marker => (
-                        <Text 
-                        >{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km{"\n"}</Text>
+                        <Text style={{marginVertical:3}}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
                     ))}
-            </View>
+                    </View>
         }
         else return <View>
                     {constPlaces.map(marker => (
-                        <Text 
-                        >{marker.title}: who knows?...{"\n"}</Text>
+                        <Text style={{marginVertical:3}}>{marker.title}: who knows?...</Text>
                     ))}
-        </View>
+                    </View>
     }
 
     function distanceFromCoordinates(loc1, loc2) {
@@ -270,12 +268,18 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
     },
     map:{
-        borderWidth: 1,
+        //borderWidth: 1,
         borderRadius: 5,
-        borderColor:'#114B5F',
+        //borderColor:'#114B5F',
         flex:4,
         marginHorizontal: 15,
         marginVertical: 10,
+    },
+    map2:{
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor:'#114B5F',
+        flex:1,
     },
     mapText:{
         flex:3,
