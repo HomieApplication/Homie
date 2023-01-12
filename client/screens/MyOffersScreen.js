@@ -43,8 +43,8 @@ const MyOffers = () => {
         fetchOffers()
             .then((offers) => {
                 setmyOffers(offers);
+                console.log(offers);
             })
-            .then(() => setLoading(false))
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
@@ -57,8 +57,9 @@ const MyOffers = () => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                // console.log(data);
+                console.log(data);
             })
+            .then(() => setLoading(false))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
@@ -76,7 +77,7 @@ const MyOffers = () => {
                         <Text style={styles.h1}>My Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
-                    {myOffers.map((offer, i) => {
+                    {/* {myOffers.map((offer, i) => {
 
                         const push = () => {
                             navigation.push("Offer", {offer: offer})
@@ -96,7 +97,7 @@ const MyOffers = () => {
                                 onPress={push}
                             />
                         );
-                        })}
+                        })} */}
 
                     </ScrollView>
                 </SafeAreaView>
