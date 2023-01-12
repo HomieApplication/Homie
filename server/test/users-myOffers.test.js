@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../app.js";
-import { auth } from "../firebase/testconfig.js";
+import { myOffersTestAuth as auth } from "../firebase/testconfig.js";
 
 const idToken = await auth.currentUser.getIdToken();
 
