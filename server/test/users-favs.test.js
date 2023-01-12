@@ -121,11 +121,16 @@ describe("GET /api/users/favs", () => {
         await request(app)
             .delete("/api/offers/" + testOfferId)
             .set("Authorization", "Bearer " + idToken);
+
+        await request(app)
+            .delete("/api/users/favs")
+            .set("Authorization", "Bearer " + idToken)
+            .send({ offerId: testOfferId });
     });
 });
 
 describe("DELETE /api/users/favs", () => {
-    let testOfferId;
+    const testOfferId = "deleteFavsTest";
 
     beforeAll(async () => {
         await request(app)
@@ -133,12 +138,10 @@ describe("DELETE /api/users/favs", () => {
             .set("Authorization", "Bearer " + idToken)
             .send(testUserData);
 
-        const postResponse = await request(app)
-            .post("/api/offers")
+        await request(app)
+            .post("/api/users/favs")
             .set("Authorization", "Bearer " + idToken)
-            .send(testOfferData);
-
-        testOfferId = postResponse.body.offerId;
+            .send({ offerId: testOfferId });
     });
 
     test("should return 403 status if not authorized", async () => {

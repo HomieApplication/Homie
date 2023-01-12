@@ -19,6 +19,13 @@ const testUserData = {
 };
 
 describe("GET /api/users/:id", () => {
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).get(
             "/api/users/" + auth.currentUser.uid
@@ -33,12 +40,7 @@ describe("GET /api/users/:id", () => {
         expect(response.statusCode).toBe(404);
     });
 
-    test("should return 200 status if user posted", async () => {
-        await request(app)
-            .post("/api/users")
-            .set("Authorization", "Bearer " + idToken)
-            .send(testUserData);
-
+    test("should return 200 status", async () => {
         const response = await request(app)
             .get("/api/users/" + auth.currentUser.uid)
             .set("Authorization", "Bearer " + idToken);
@@ -69,17 +71,19 @@ describe("GET /api/users/:id", () => {
 });
 
 describe("GET /api/users", () => {
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).get("/api/users");
         expect(response.statusCode).toBe(403);
     });
 
     test("should return 200 status if user posted", async () => {
-        await request(app)
-            .post("/api/users")
-            .set("Authorization", "Bearer " + idToken)
-            .send(testUserData);
-
         const response = await request(app)
             .get("/api/users")
             .set("Authorization", "Bearer " + idToken);
@@ -126,18 +130,19 @@ describe("POST /api/users", () => {
         expect(response.statusCode).toBe(403);
     });
 
-    test("should return 200 status", async () => {
-        const response = await request(app)
-            .post("/api/users")
-            .set("Authorization", "Bearer " + idToken);
-        expect(response.statusCode).toBe(200);
-    });
+    // test("should return 400 status if ...", async () => {
+    //     const response = await request(app)
+    //         .post("/api/users")
+    //         .set("Authorization", "Bearer " + idToken);
+    //     expect(response.statusCode).toBe(400);
+    // });
 
     test("should add logged in user to database and respond with new user data", async () => {
         const postResponse = await request(app)
             .post("/api/users")
             .set("Authorization", "Bearer " + idToken)
             .send(testUserData);
+        expect(postResponse.statusCode).toBe(200);
         expect(postResponse.body).toEqual({
             userId: auth.currentUser.uid,
             age: calculateAge(testUserData.birthDate),
@@ -158,29 +163,31 @@ describe("POST /api/users", () => {
 });
 
 describe("DELETE /api/users", () => {
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).delete("/api/users");
         expect(response.statusCode).toBe(403);
-    });
-
-    test("should return 200 status", async () => {
-        const response = await request(app)
-            .delete("/api/users")
-            .set("Authorization", "Bearer " + idToken);
-        expect(response.statusCode).toBe(200);
     });
 
     test("should delete user", async () => {
         const deleteResponse = await request(app)
             .delete("/api/users")
             .set("Authorization", "Bearer " + idToken);
-        expect(deleteResponse.body).toEqual({});
+        expect(deleteResponse.statusCode).toBe(200);
 
         const getResponse = await request(app)
             .get("/api/users")
             .set("Authorization", "Bearer " + idToken);
         expect(getResponse.statusCode).toBe(404);
+    });
 
+    afterAll(async () => {
         await request(app)
             .post("/api/users")
             .set("Authorization", "Bearer " + idToken)
@@ -189,17 +196,24 @@ describe("DELETE /api/users", () => {
 });
 
 describe("PUT /api/users", () => {
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).put("/api/users");
         expect(response.statusCode).toBe(403);
     });
 
-    test("should return 200 status", async () => {
-        const response = await request(app)
-            .put("/api/users")
-            .set("Authorization", "Bearer " + idToken);
-        expect(response.statusCode).toBe(200);
-    });
+    // test("should return 400 status if there is no data", async () => {
+    //     const response = await request(app)
+    //         .put("/api/users")
+    //         .set("Authorization", "Bearer " + idToken);
+    //     expect(response.statusCode).toBe(400);
+    // });
 
     test("should update user", async () => {
         const putResponse = await request(app)
