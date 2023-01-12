@@ -111,7 +111,7 @@ const MainScreen = ({ navigation }) => {
                                 userLastName={offer.lastName}
                                 description={offer.description}
                                 year={offer.yearOfStudy}
-                                localType={offer.localType}
+                                title={offer.title}
                                 localization={offer.localization.map}
                                 imgUrl={require("../assets/defaultImg.png")}
                                 idOffer={offer.offerId}

@@ -6,7 +6,7 @@ import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, localType, localization, idOffer, navigation } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, localization, idOffer, navigation } = props;
 
   Card.defaultProps = {
     imgUrl: require('../../assets/defaultImg.png')
@@ -22,10 +22,11 @@ export default function Card(props) {
             <Image style={styles.img} source={imgUrl}/>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
-                <Text style={styles.description}>{localType}, {localization}, {year} year</Text>
+                <Text style={styles.description}>{year} year</Text>
             </View>
         </View>
         <View>
+            <Text style={styles.nameText}>{title}</Text>
             <Text style={styles.description}>{description}</Text>
         </View>
         <View style={styles.iconContainer}>
