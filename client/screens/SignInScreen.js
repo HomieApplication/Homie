@@ -46,6 +46,7 @@ const SignInScreen = ({ navigation }) => {
         <SignInBtn
           style={styles.button}
           title="Confirm"
+          accessibilityLabel="confirm_button"
           onPress={() => {
             try {
               login(email, password);
