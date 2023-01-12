@@ -114,7 +114,7 @@ const MainScreen = ({ navigation }) => {
                                 year={offer.yearOfStudy}
                                 localType={offer.localType}
                                // localization={offer.localization}
-                                imgUrl={require("../assets/defaultImg.png")}
+                                imgUrl={offer.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />

@@ -15,6 +15,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import COLORS from "../components/assets";
 import { async } from "@firebase/util";
 import { displayAlertBox } from "../components/alert";
+import LoadingAnimation from "../components/LoadingAnimation";
 
 const storage = getStorage();
 
@@ -31,20 +32,44 @@ const FulfillProfile = ({navigation}) => {
                 console.log(data);
             })
             .then(() => setDescription(userData.description))
+            .then(() => onChangeUniversity(userData.university))
+            .then(() => setImage(userData.photoURL))
+            .then(() => setLoading(false))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
                 displayAlertBox("Please, try again later", error.message);
             });
     }, []);
 
-    const [loading, setLoading] = React.useState(false);
-    const [university, onChangeUniversity] = React.useState("");
-    const [description, setDescription] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
+    const [university, onChangeUniversity] = React.useState(userData.university);
+    const [description, setDescription] = React.useState(userData.description);
     const [image, setImage] = React.useState(userData.photoURL);
     const [selected, setSelected] = React.useState();
     const [datePicker, setDatePicker] = React.useState(false);
  
     const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+
+    const updateUserData = async () => {
+        
+        const uri = await uploadImage(image);
+        axios
+            .put(`/api/users`, {
+                university: university,
+                photoURL: uri,
+                description: description,
+                birthDate: dateOfBirth
+            })
+            .then(() => {
+                setLoading(false);
+                displayAlertBox("Profile was successfully updated!");
+                navigation.push("Main");
+            })
+            .catch((error) => {
+                setLoading(false);
+                displayAlertBox("Please, try again later", error.message);
+            });
+    }
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -110,117 +135,104 @@ const FulfillProfile = ({navigation}) => {
 
     ]
 
-    const updateUserData = async () => {
-        
-        const uri = await uploadImage(image);
-        axios
-            .put(`/api/users`, {
-                university: university,
-                photoURL: uri,
-                description: description,
-                birthDate: dateOfBirth
-            })
-            .then(() => {
-                setLoading(false);
-                displayAlertBox("Profile was successfully updated!");
-                navigation.push("Main");
-            })
-            .catch((error) => {
-                setLoading(false);
-                displayAlertBox("Please, try again later", error.message);
-            });
-    }
+
 
     return(
         <ScrollView>
-        <View style={styles.container}>
-            <Text style={styles.h2}>Complete your profile</Text>
+            {loading ? (
+                    <LoadingAnimation text="Updating profile"/>
+                ) :(
+            <View style={styles.container}>
+                <Text style={styles.h2}>Complete your profile</Text>
 
-            <Text style={styles.dataText}>University:</Text>
-            {/* <RNPickerSelect
-                style={pickerSelectStyles}
-                onValueChange={(value) => onChangeUniversity(value)}
-                items={univerities}
-            /> */}
-            <TextInput
-              style={styles.textboxes}
-              onChangeText={onChangeUniversity}
-              value={university}
-              placeholder={userData.university}
-          />
-
-            <Text style={styles.dataText}>Description:</Text>
-            <TextInput
-              style={styles.textboxes}
-              onChangeText={(value) => {setDescription(value)}}
-              value={description}
-              placeholder={description}
-          />
-
-            
-            <Text style={styles.dataText}>Date of birth:</Text>
-            <TextInput 
+                <Text style={styles.dataText}>University:</Text>
+                {/* <RNPickerSelect
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => onChangeUniversity(value)}
+                    items={univerities}
+                /> */}
+                <TextInput
                 style={styles.textboxes}
-                onChange={showDatePicker}>
-                {dateOfBirth.toDateString()}
-            </TextInput>
-
-            {datePicker && (
-            <DateTimePicker
-                value={dateOfBirth}
-                mode={'date'}
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                is24Hour={true}
-                onChange={onDateSelected}
-                style={styles.datePicker}
+                onChangeText={onChangeUniversity}
+                value={university}
+                placeholder={university}
             />
-            )}
 
-            {!datePicker && (
-            <View style={{ marginBottom: 20, paddingVertical: 12, paddingHorizontal: 32, width: 240, borderRadius: 50,}}>
-                <Button 
-                    title="Show Date Picker"
-                    color={COLORS.primary1}
-                    onPress={showDatePicker} />
-            </View>
-            )}
-            
-            <Text style={styles.dataText}>Hobby:</Text>
-            <RNMultiSelect
-                // disableAbsolute
-                data={staticData}
-                onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
-                menuBarContainerStyle={styles.hobbyBox}
-                buttonContainerStyle={styles.hobbyBox}
+                <Text style={styles.dataText}>Description:</Text>
+                <TextInput
+                style={styles.textboxes}
+                onChangeText={(value) => {setDescription(value)}}
+                value={description}
+                placeholder={description}
             />
-            <Text style={styles.dataText}>Select new profile picture:</Text>
-            <View style={styles.imgContainer}>
-                <Image style={styles.img} source={{ uri: image }}/>
-            </View>
-            <SignInBtn
-              style={styles.button2}
-              title="Add image"
-              onPress={() => {
-                  pickImageAsync().catch((error) => {
-                      displayAlertBox(
-                          "Please, try again later",
-                          error.message
-                      );
-                  });
-              }}
-          > </SignInBtn>
 
-            <SignInBtn
-                style={styles.button}
-                title="Save Changes"
+                
+                <Text style={styles.dataText}>Date of birth:</Text>
+                <TextInput 
+                    style={styles.textboxes}
+                    onChange={showDatePicker}>
+                    {dateOfBirth.toDateString()}
+                </TextInput>
+
+                {datePicker && (
+                <DateTimePicker
+                    value={dateOfBirth}
+                    mode={'date'}
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    is24Hour={true}
+                    onChange={onDateSelected}
+                    style={styles.datePicker}
+                />
+                )}
+
+                {!datePicker && (
+                <View style={{ marginBottom: 20, paddingVertical: 12, paddingHorizontal: 32, width: 240, borderRadius: 50,}}>
+                    <Button 
+                        title="Show Date Picker"
+                        color={COLORS.primary1}
+                        onPress={showDatePicker} />
+                </View>
+                )}
+                
+                <Text style={styles.dataText}>Hobby:</Text>
+                <RNMultiSelect
+                    // disableAbsolute
+                    data={staticData}
+                    onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                    menuBarContainerStyle={styles.hobbyBox}
+                    buttonContainerStyle={styles.hobbyBox}
+                />
+                <Text style={styles.dataText}>Select new profile picture:</Text>
+                <View style={styles.imgContainer}>
+                    <Image style={styles.img} source={{ uri: image }}/>
+                </View>
+                <SignInBtn
+                style={styles.button2}
+                title="Add image"
                 onPress={() => {
-                    setLoading(true);
-                     updateUserData().catch(error =>
-                      displayAlertBox("Please, try again later", error.message)
-                    )
-                  }}
-            ></SignInBtn>
+                    pickImageAsync().catch((error) => {
+                        displayAlertBox(
+                            "Please, try again later",
+                            error.message
+                        );
+                    });
+                }}
+            > </SignInBtn>
+
+                <SignInBtn
+                    style={styles.button}
+                    title="Save Changes"
+                    onPress={() => {
+                        setLoading(true);
+                        updateUserData().catch(error =>
+                        displayAlertBox("Please, try again later", error.message)
+                        )
+                    }}
+                ></SignInBtn>
             </View>
+                )
+            }
+        
         </ScrollView>
     )
 

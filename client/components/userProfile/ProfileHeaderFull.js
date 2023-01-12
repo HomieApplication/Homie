@@ -25,7 +25,7 @@ const ProfileHeaderFull = (props) => {
             <View style={{flex: 1, marginLeft: 10, alignItems: 'flex-start' }}>
                  <Text style={styles.h1}>{userData.firstName} {userData.lastName}</Text>
                  <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>
-                 <Text style={styles.text}>Academy: {userData.academy}</Text>
+                 <Text style={styles.text}>University: {userData.university}</Text>
             </View>
         </View>
         <View style={styles.hobbyAndDescription}>
