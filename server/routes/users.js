@@ -20,7 +20,7 @@ const router = express.Router();
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -42,10 +42,26 @@ router.get("/favs", async (req, res) => {
 
         if (userSnapshot.exists) {
             const userData = userSnapshot.data();
-            let favs = userData.favs || [];
+            const favs = userData.favs || [];
+
+            let filteredOffers = [];
+            for (const offerId of favs) {
+                const offerExists = await db
+                    .collection("offers")
+                    .doc(offerId)
+                    .get()
+                    .then((docSnap) => docSnap.exists)
+                    .catch((error) => {
+                        res.status(500).send({ message: error.message });
+                    });
+
+                filteredOffers = offerExists
+                    ? [...filteredOffers, offerId]
+                    : filteredOffers;
+            }
 
             await Promise.all(
-                favs.map((offerId) =>
+                filteredOffers.map((offerId) =>
                     db
                         .collection("offers")
                         .doc(offerId)
@@ -85,7 +101,7 @@ router.get("/favs", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -174,7 +190,7 @@ router.delete("/favs", (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -190,20 +206,38 @@ router.get("/my-offers", async (req, res) => {
             .collection("users")
             .doc(user.uid)
             .get()
-            .then((docSnap) => docSnap.data())
-            .then((userData) => userData.myOffers)
+            .then((docSnap) => {
+                if (docSnap.exists) {
+                    return docSnap.data().myOffers;
+                } else {
+                    res.status(404).send({ message: "User not found!" });
+                }
+            })
             .catch((error) => {
                 res.status(500).send({ message: error.message });
             });
 
-        if (!offers) {
-            res.status(404).send({ message: "User not found!" });
+        let filteredOffers = [];
+        for (const offerId of offers) {
+            const offerExists = await db
+                .collection("offers")
+                .doc(offerId)
+                .get()
+                .then((docSnap) => docSnap.exists)
+                .catch((error) => {
+                    res.status(500).send({ message: error.message });
+                });
+
+            filteredOffers = offerExists
+                ? [...filteredOffers, offerId]
+                : filteredOffers;
         }
 
-        await Promise.all(
-            offers.map((offerId) =>
+        Promise.all(
+            filteredOffers.map((offerId) =>
                 db
                     .collection("offers")
+                    .doc(offerId)
                     .get()
                     .then((docSnap) => docSnap.data())
                     .then((offerData) => ({
@@ -215,7 +249,11 @@ router.get("/my-offers", async (req, res) => {
                         res.status(500).send({ message: error.message });
                     })
             )
-        ).then((offersData) => res.send(offersData));
+        )
+            .then((offersData) => res.send(offersData))
+            .catch((error) => {
+                res.status(500).send({ message: error.message });
+            });
     } catch (error) {
         res.status(500).send({ message: error.message });
     }

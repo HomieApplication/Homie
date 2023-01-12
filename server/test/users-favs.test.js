@@ -18,43 +18,29 @@ const testUserData = {
     interests: [],
 };
 
-const testOfferData1 = {
+const testOfferData = {
     title: "test",
     description: "test",
     localization: "test",
 };
 
-const testOfferData2 = {
-    title: "test2",
-    description: "test2",
-    localization: "test2",
-    photoURLArray: ["test2"],
-};
-
-let testOfferId1;
-let testOfferId2;
-
-beforeAll(async () => {
-    await request(app)
-        .post("/api/users")
-        .set("Authorization", "Bearer " + idToken)
-        .send(testUserData);
-
-    const postResponse1 = await request(app)
-        .post("/api/offers")
-        .set("Authorization", "Bearer " + idToken)
-        .send(testOfferData1);
-
-    const postResponse2 = await request(app)
-        .post("/api/offers")
-        .set("Authorization", "Bearer " + idToken)
-        .send(testOfferData2);
-
-    testOfferId1 = postResponse1.body.offerId;
-    testOfferId2 = postResponse2.body.offerId;
-});
-
 describe("POST /api/users/favs", () => {
+    let testOfferId;
+
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+
+        const postResponse = await request(app)
+            .post("/api/offers")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testOfferData);
+
+        testOfferId = postResponse.body.offerId;
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).post("/api/users/favs");
         expect(response.statusCode).toBe(403);
@@ -68,33 +54,53 @@ describe("POST /api/users/favs", () => {
     //     expect(response.statusCode).toBe(400);
     // });
 
-    test("should return 200 status if user posted", async () => {
-        const response = await request(app)
-            .post("/api/users/favs")
-            .set("Authorization", "Bearer " + idToken)
-            .send({ offerId: testOfferId1 });
-        expect(response.statusCode).toBe(200);
-    });
-
     test("should add offer to user's favs and return favs offers' data", async () => {
         const response = await request(app)
             .post("/api/users/favs")
             .set("Authorization", "Bearer " + idToken)
-            .send({ offerId: testOfferId2 });
+            .send({ offerId: testOfferId });
+        expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(
-            expect.arrayContaining([expect.objectContaining(testOfferData2)])
+            expect.arrayContaining([expect.objectContaining(testOfferData)])
         );
 
         const getResponse = await request(app)
             .get("/api/users/")
             .set("Authorization", "Bearer " + idToken);
         expect(getResponse.body.favs).toEqual(
-            expect.arrayContaining([testOfferId2])
+            expect.arrayContaining([testOfferId])
         );
+    });
+
+    afterAll(async () => {
+        await request(app)
+            .delete("/api/offers/" + testOfferId)
+            .set("Authorization", "Bearer " + idToken);
     });
 });
 
 describe("GET /api/users/favs", () => {
+    let testOfferId;
+
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+
+        const postResponse = await request(app)
+            .post("/api/offers")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testOfferData);
+
+        await request(app)
+            .post("/api/users/favs")
+            .set("Authorization", "Bearer " + idToken)
+            .send({ offerId: postResponse.body.offerId });
+
+        testOfferId = postResponse.body.offerId;
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).get("/api/users/favs");
         expect(response.statusCode).toBe(403);
@@ -105,47 +111,51 @@ describe("GET /api/users/favs", () => {
             .get("/api/users/favs")
             .set("Authorization", "Bearer " + idToken);
         expect(response.statusCode).toBe(200);
+        expect(response.body).toBeInstanceOf(Array);
         expect(response.body).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining(testOfferData1),
-                expect.objectContaining(testOfferData2),
-            ])
+            expect.arrayContaining([expect.objectContaining(testOfferData)])
         );
+    });
+
+    afterAll(async () => {
+        await request(app)
+            .delete("/api/offers/" + testOfferId)
+            .set("Authorization", "Bearer " + idToken);
     });
 });
 
 describe("DELETE /api/users/favs", () => {
+    let testOfferId;
+
+    beforeAll(async () => {
+        await request(app)
+            .post("/api/users")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testUserData);
+
+        const postResponse = await request(app)
+            .post("/api/offers")
+            .set("Authorization", "Bearer " + idToken)
+            .send(testOfferData);
+
+        testOfferId = postResponse.body.offerId;
+    });
+
     test("should return 403 status if not authorized", async () => {
         const response = await request(app).delete("/api/users/favs");
         expect(response.statusCode).toBe(403);
     });
 
-    test("should return 200 status", async () => {
-        const response = await request(app)
-            .delete("/api/users/favs")
-            .set("Authorization", "Bearer " + idToken)
-            .send({ offerId: testOfferId1 });
-        expect(response.statusCode).toBe(200);
-    });
-
     test("should remove offer from user's favs", async () => {
-        await request(app)
+        const deleteResponse = await request(app)
             .delete("/api/users/favs")
             .set("Authorization", "Bearer " + idToken)
-            .send({ offerId: testOfferId2 });
+            .send({ offerId: testOfferId });
+        expect(deleteResponse.statusCode).toBe(200);
 
         const getResponse = await request(app)
             .get("/api/users/")
             .set("Authorization", "Bearer " + idToken);
-        expect(getResponse.body.favs).not.toContain(testOfferId2);
+        expect(getResponse.body.favs).not.toContain(testOfferId);
     });
-});
-
-afterAll(async () => {
-    await request(app)
-        .delete("/api/offers/" + testOfferId1)
-        .set("Authorization", "Bearer " + idToken);
-    await request(app)
-        .delete("/api/offers/" + testOfferId2)
-        .set("Authorization", "Bearer " + idToken);
 });

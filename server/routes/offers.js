@@ -19,7 +19,7 @@ const router = express.Router();
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -62,7 +62,7 @@ router.get("/", async (req, res) => {
  * @param {express.Response} res
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization
+ * @param {Array<number>} req.body.localization
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -72,7 +72,7 @@ router.get("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -140,7 +140,7 @@ router.post("/", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
@@ -181,7 +181,7 @@ router.get("/:id", async (req, res) => {
  * @param {string} req.params.id
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization
+ * @param {Array<number>} req.body.localization
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -191,7 +191,7 @@ router.get("/:id", async (req, res) => {
  * @property {string} userId
  * @property {string} localType
  * @property {string} description
- * @property {string} localization
+ * @property {Array<number>} localization [latitude, longitude]
  * @property {Array<string>} photoURLArray
  * @property {string} title
  * @property {Date} creationDate
