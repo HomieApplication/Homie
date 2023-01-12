@@ -93,6 +93,7 @@ const MainScreen = ({ navigation }) => {
                 <ProfileHeader
                     user={userData}
                     onPress={()=>{navigation.push("FavsOffers")}}
+                    onPressEdit={()=>{navigation.push("EditProfile")}}
                 />
 
                 <ScrollView style={styles.scroll}>
@@ -103,7 +104,7 @@ const MainScreen = ({ navigation }) => {
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        console.log(offer)
+                        //console.log(offer)
                         return (
                             <Card
                                 key={i}
@@ -111,9 +112,9 @@ const MainScreen = ({ navigation }) => {
                                 userLastName={offer.lastName}
                                 description={offer.description}
                                 year={offer.yearOfStudy}
+                                imgUrl={offer.photoURL}
                                 title={offer.title}
                                 localization={offer.localization.map}
-                                imgUrl={require("../assets/defaultImg.png")}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
@@ -137,6 +138,8 @@ const styles = StyleSheet.create({
     },
     containerMain: {
         flex: 1,
+        margin: 0,
+        width:'100%',
         backgroundColor: COLORS.background,
     },
     scroll: {

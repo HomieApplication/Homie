@@ -19,7 +19,7 @@ export default function Card(props) {
           <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35}/> 
         </Pressable>
         <View style={styles.upperHalf}>
-            <Image style={styles.img} source={imgUrl}/>
+            <Image style={styles.img} source={{uri: imgUrl}}/>
             <View>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
                 <Text style={styles.description}>{year} year</Text>

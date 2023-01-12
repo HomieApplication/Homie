@@ -27,6 +27,7 @@ import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png
 import beutifulCastle from "../assets/beautiful_castle.png";
 import {markers} from "../components/AddOfferScreen/Markers";
 import LoadingAnimation from "../components/LoadingAnimation";
+import COLORS from "../components/assets";
 
 const storage = getStorage();
 
@@ -190,6 +191,9 @@ const AddOfferScreen = ({ navigation }) => {
                   ))}
                   <MapView.Marker image={beutifulCastle} coordinate={{ latitude: 50.066, longitude: 19.9140}}></MapView.Marker>
                 </MapView>
+                <SignInBtn>
+                  
+                </SignInBtn>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}
@@ -199,14 +203,14 @@ const AddOfferScreen = ({ navigation }) => {
                 </Pressable>
               </View>
             </Modal>
-            <Pressable
-              style={[styles.button, styles.buttonOpen]}
-              onPress={() => setModalVisible(true)}
-            >
-              <Text style={styles.itemText}>Choose a location</Text>
-            </Pressable>
+            <SignInBtn
+              style={styles.button}
+              onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}}
+              title="Choose Dormitory"
+              >
+            </SignInBtn>
           </View>
-          {/* inny przycisk może... */}
+
           <SignInBtn
               style={styles.button}
               title="Add image"
@@ -224,12 +228,11 @@ const AddOfferScreen = ({ navigation }) => {
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
               >
-                  {/* Można to ładniej zrobić pewnie... */}
                   {images.map((image) => (
                       <Image
                           key={image}
                           source={{ uri: image }}
-                          style={{ width: 150, height: 150 }}
+                          style={{ width: 150, height: 150, marginHorizontal: 5}}
                       />
                   ))}
               </ScrollView>
@@ -241,7 +244,7 @@ const AddOfferScreen = ({ navigation }) => {
               </Pressable>
           )}
           <SignInBtn
-            style={styles.button}
+            style={styles.buttonComfirm}
             title="Create offer"
             onPress={() => {
               setLoading(true);
@@ -263,12 +266,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: COLORS.background
   },
   container: {
     flex: 1,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    //backgroundColor: COLORS.background
   },
   h2: {
     fontSize: 30,
@@ -276,6 +281,24 @@ const styles = StyleSheet.create({
     color: "#1A936F",
   },
   button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    marginVertical: 10,
+    width:200,
+    borderRadius: 4,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+    backgroundColor: COLORS.primary1,
+  },
+  buttonComfirm: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,

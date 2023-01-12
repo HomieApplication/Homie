@@ -122,13 +122,13 @@ const OfferScreen = ({route, navigation}) => {
             <View style={styles.contentContainer}>
                 <View style={styles.headerContainer}>
                     <Image
-                        source={require("../assets/defaultImg.png")}
+                        source={{uri: userData.photoURL}}
                         style={styles.img}>
                     </Image>
                     <View style={styles.headerText}>
                         <Text style={styles.textTitle}>{userData.firstName} {userData.lastName}</Text>
                         <Text style={styles.text}>year of study: {userData.yearOfStudy}</Text>
-                        <Text style={styles.text}>Brak opisu</Text>
+                        <Text style={styles.text}>{userData.description}</Text>
                         {/* <Text style={styles.text}>{userData.description}</Text> */}
                     </View>
                     <Pressable style={styles.icon}>

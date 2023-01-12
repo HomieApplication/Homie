@@ -15,6 +15,7 @@ import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 import Card from "../components/mainScreen/Card";
+import { displayAlertBox } from "../components/alert";
 
 const fetchOffers = async () => {
     const offers = await axios
@@ -89,8 +90,8 @@ const FavsOffers = () => {
                                 description={offer.description}
                                 year={offer.yearOfStudy}
                                 localType={offer.localType}
-                                localization={offer.localization}
-                                imgUrl={require("../assets/defaultImg.png")}
+                                //localization={offer.localization}
+                                imgUrl={offer.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
