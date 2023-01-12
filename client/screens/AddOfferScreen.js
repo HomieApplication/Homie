@@ -185,7 +185,7 @@ const AddOfferScreen = ({ navigation }) => {
                       title={marker.title}
                       image={mapMarker}
                       identifier={marker.identifier}
-                      onPress={ e => setLocalization( e.nativeEvent.id, toString(e.nativeEvent.coordinate))}
+                      onPress={ e => setLocalization( e.nativeEvent.id, e.nativeEvent.coordinate)}
                       key={marker.identifier}
                     />
                   ))}

@@ -112,9 +112,9 @@ const MainScreen = ({ navigation }) => {
                                 userLastName={offer.lastName}
                                 description={offer.description}
                                 year={offer.yearOfStudy}
-                                localType={offer.localType}
-                               // localization={offer.localization}
                                 imgUrl={offer.photoURL}
+                                title={offer.title}
+                                localization={offer.localization.map}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
