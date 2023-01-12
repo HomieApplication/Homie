@@ -1,6 +1,9 @@
 import { Dimensions, StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
+import mapMarker from "../assets/icons8-marker.png";
+import { constPlaces } from '../components/OfferScreen/ConstMarkers';
 
 import axios from 'axios'
 import { async } from '@firebase/util';
@@ -30,6 +33,73 @@ const OfferScreen = ({route, navigation}) => {
         setOfferData(offer)
     },[])
 
+    const Mapka = () => {
+        if(typeof offerData.localization !== "undefined" && offerData.localization !== "")
+        {
+            return <MapView
+            style={styles.map2}
+            showsUserLocation={true}
+            provider={PROVIDER_GOOGLE}
+            loadingEnabled
+            showsCompass = {true}
+            initialRegion={{
+                latitude: offerData.localization.latitude, 
+                longitude: offerData.localization.longitude,
+                latitudeDelta: 0.002,
+                longitudeDelta: 0.0015,
+              }}
+        >
+          <MapView.Marker image={mapMarker} coordinate={offerData.localization}></MapView.Marker>
+        </MapView>
+        }
+        else
+        {
+            return <View style={styles.map}>
+                <Text style={styles.mapErrorText}>
+                    Unfurtunetly localization have not been seted yet 
+                </Text>
+                <Image
+                    source={require("../assets/sad_earth.jpg")}
+                    style={styles.earth}>
+                </Image>
+            </View>
+        }   
+    }
+
+    const FancyList = () =>{
+        if(typeof offerData.localization !== "undefined" && offerData.localization !== ""){
+            return <View>
+                    {constPlaces.map(marker => (
+                        <Text style={{marginVertical:3}}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
+                    ))}
+                    </View>
+        }
+        else return <View>
+                    {constPlaces.map(marker => (
+                        <Text style={{marginVertical:3}}>{marker.title}: who knows?...</Text>
+                    ))}
+                    </View>
+    }
+
+    function distanceFromCoordinates(loc1, loc2) {
+        var lat1 = loc1.latitude;
+        var lon1 = loc1.longitude;
+        var lat2 = loc2.latitude;
+        var lon2 = loc2.longitude;
+        const R = 6371e3; // metres
+        const φ1 = lat1 * Math.PI/180; // φ, λ in radians
+        const φ2 = lat2 * Math.PI/180;
+        const Δφ = (lat2-lat1) * Math.PI/180;
+        const Δλ = (lon2-lon1) * Math.PI/180;
+
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        const d = R * c; // in metres
+        return (d/1000).toPrecision(2);
+    }
     
     useEffect(() => {
         fetchUser(offer)
@@ -75,13 +145,10 @@ const OfferScreen = ({route, navigation}) => {
             </View>
             <View style={styles.mapContainer}>
                 <View style={styles.map}>
-                    <Text>MAPA</Text>
+                    <Mapka />
                 </View>
                 <View style={styles.mapText}>
-                    <Text>Tu zrobić fajną listę</Text>
-                    <Text>- Biedronka: 7min</Text>
-                    <Text>- Kebab: 5min</Text>
-                    <Text>- Miasteczko: 5min</Text>
+                    <FancyList></FancyList>
                 </View>
             </View>
         </View>
@@ -201,17 +268,39 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
     },
     map:{
-        borderWidth: 1,
+        //borderWidth: 1,
         borderRadius: 5,
-        borderColor:'#114B5F',
+        //borderColor:'#114B5F',
         flex:4,
         marginHorizontal: 15,
         marginVertical: 10,
+    },
+    map2:{
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor:'#114B5F',
+        flex:1,
     },
     mapText:{
         flex:3,
         marginVertical: 10,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
+    },
+    mapErrorText: {
+        textAlign: 'center', // <-- the magic
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginTop: 0,
+        width: 200,
+      },
+    earth:{
+        position:'absolute',
+        resizeMode: "cover",
+        height: 100,
+        width: 150,
+        left:"10%",
+        top:"25%",
+        zIndex:-1,
     },
 })

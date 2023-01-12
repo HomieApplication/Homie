@@ -112,7 +112,7 @@ const MainScreen = ({ navigation }) => {
                                 description={offer.description}
                                 year={offer.yearOfStudy}
                                 localType={offer.localType}
-                                localization={offer.localization}
+                                localization={offer.localization.map}
                                 imgUrl={require("../assets/defaultImg.png")}
                                 idOffer={offer.offerId}
                                 onPress={push}
