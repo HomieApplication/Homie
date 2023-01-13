@@ -130,18 +130,20 @@ const MainScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        axios
-            .get("/api/users")
-            .then((res) => res.data)
-            .then((data) => {
-                setUser(data);
-                // console.log(data);
-            })
-            .catch((error) => {
-                console.log("Connection error: " + error.message);
-                displayAlertBox("Please, try again later", error.message);
-                // logout();
-            });
+        setTimeout(() => {
+            axios
+                .get("/api/users")
+                .then((res) => res.data)
+                .then((data) => {
+                    setUser(data);
+                    // console.log(data);
+                })
+                .catch((error) => {
+                    console.log("Connection error: " + error.message);
+                    displayAlertBox("Please, try again later", error.message);
+                    logout();
+                });
+        }, 1000);
     }, [reloadSwitch]);
 
     useEffect(() => {
@@ -173,16 +175,16 @@ const MainScreen = ({ navigation }) => {
                         }}
                     />
                     <ScrollView style={styles.scroll}>
-                    <MultipleSelectList
-                        boxStyles={styles.dropdown}
-                        dropdownStyles={styles.dropdown}
-                        setSelected={(val) => setSelectedFilters(val)}
-                        data={filters}
-                        save="value"
-                        label="Filters"
-                        placeholder="Select filters"
-                        search={false}
-                    />
+                        <MultipleSelectList
+                            boxStyles={styles.dropdown}
+                            dropdownStyles={styles.dropdown}
+                            setSelected={(val) => setSelectedFilters(val)}
+                            data={filters}
+                            save="value"
+                            label="Filters"
+                            placeholder="Select filters"
+                            search={false}
+                        />
                         {offersData.length === 0 ? (
                             <Text style={styles.notFoundText}>No offers</Text>
                         ) : (

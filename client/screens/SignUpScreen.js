@@ -102,12 +102,6 @@ const SignUpScreen = ({ navigation }) => {
                 value={secondName}
                 placeholder="Second name"
             />
-            {/* <TextInput
-                style={styles.textboxes}
-                onChangeText={onChangeYearOfStudy}
-                value={yearOfStudy}
-                placeholder="Year of study"
-            /> */}
             <SelectList
                 boxStyles={styles.dropdownBox}
                 dropdownStyles={styles.dropdown}
@@ -116,7 +110,7 @@ const SignUpScreen = ({ navigation }) => {
                 save="value"
                 placeholder="Year of study"
                 search={false}
-                setSelected={(val) => onChangeYearOfStudy(val)}
+                setSelected={onChangeYearOfStudy}
             />
             <SignInBtn
                 style={styles.button}
