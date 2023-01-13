@@ -18,6 +18,24 @@ import { displayAlertBox } from "../components/alert";
 const SignInScreen = ({ navigation }) => {
     const [email, onChangeLogin] = React.useState("");
     const [password, onChangePassword] = React.useState("");
+    const [correctPassword, setCorrectPassword] = useState(true);
+    const [correctEmail, setCorrectEmail] = useState(true);
+
+    useEffect(() => {
+        if (password.length < 6 && password.length > 0) {
+            setCorrectPassword(false);
+        } else {
+            setCorrectPassword(true);
+        }
+    }, [password]);
+
+    useEffect(() => {
+        if (!validateEmail(email) && email.length > 0) {
+            setCorrectEmail(false);
+        } else {
+            setCorrectEmail(true);
+        }
+    }, [email]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -33,8 +51,11 @@ const SignInScreen = ({ navigation }) => {
                     style={styles.textboxes}
                     onChangeText={onChangeLogin}
                     value={email}
-                    placeholder="Login"
+                    placeholder="Email address"
                 />
+                {!correctEmail && (
+                    <Text style={{ color: "red" }}>Invalid email!</Text>
+                )}
                 <TextInput
                     style={styles.textboxes}
                     onChangeText={onChangePassword}
@@ -42,15 +63,33 @@ const SignInScreen = ({ navigation }) => {
                     placeholder="Password"
                     secureTextEntry
                 />
+                {!correctPassword && (
+                    <Text style={{ color: "red" }}>Password too short!</Text>
+                )}
                 <SignInBtn
                     style={styles.button}
                     title="Confirm"
                     onPress={() => {
-                        try {
-                            login(email, password);
-                            // navigation.push("Main");
-                        } catch (error) {
-                            displayAlertBox("Failed to sign in", error.message);
+                        if (!correctEmail || login === "") {
+                            displayAlertBox(
+                                "Failed to sign in",
+                                "Invalid email!"
+                            );
+                        } else if (!correctPassword || password === "") {
+                            displayAlertBox(
+                                "Failed to sign in",
+                                "Password too short!"
+                            );
+                        } else {
+                            try {
+                                login(email, password);
+                                // navigation.push("Main");
+                            } catch (error) {
+                                displayAlertBox(
+                                    "Failed to sign in",
+                                    "Invalid email or password!"
+                                );
+                            }
                         }
                     }}
                 ></SignInBtn>
@@ -77,6 +116,19 @@ const SignInScreen = ({ navigation }) => {
             </View>
         </SafeAreaView>
     );
+};
+
+/**
+ * Checks if the email is valid
+ * @param {string} email
+ * @returns {boolean} true if valid, false otherwise
+ */
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
 };
 
 export default SignInScreen;

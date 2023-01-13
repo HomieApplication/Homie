@@ -164,6 +164,11 @@ const SignUpScreen = ({ navigation }) => {
     );
 };
 
+/**
+ * Checks if the email is valid
+ * @param {string} email 
+ * @returns {boolean} true if valid, false otherwise
+ */
 const validateEmail = (email) => {
     return String(email)
         .toLowerCase()
