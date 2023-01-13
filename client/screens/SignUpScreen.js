@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    Dimensions,
+    ScrollView,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { RNPickerSelect } from "react-native-picker-select";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { displayAlertBox } from "../components/alert";
@@ -19,12 +25,12 @@ const SignUpScreen = ({ navigation }) => {
     const [correctEmail, setCorrectEmail] = useState(true);
 
     // const years = [
-    //     { label: "1st year", value: "1st" },
-    //     { label: "2nd year", value: "2nd" },
-    //     { label: "3rd year", value: "3rd" },
-    //     { label: "4th year", value: "4th" },
-    //     { label: "5th year", value: "5th" },
-    //     { label: ">5th year", value: ">5th" },
+    //     { id: "1", value: "1st" },
+    //     { id: "2", value: "2nd" },
+    //     { id: "3", value: "3rd" },
+    //     { id: "4", value: "4th" },
+    //     { id: "5", value: "5th" },
+    //     { id: ">5", value: ">5th" },
     // ];
 
     useEffect(() => {
@@ -54,6 +60,7 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.h2}>Create Account</Text>
+            {/* <ScrollView style={styles.scroll}> */}
             <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangeLogin}
@@ -95,18 +102,14 @@ const SignUpScreen = ({ navigation }) => {
                 value={secondName}
                 placeholder="Second name"
             />
+            {/* zamiast tego trzeba zrobić żeby rok studiów wybierało się z listy */}
             <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangeYearOfStudy}
                 value={yearOfStudy}
                 placeholder="Year of study"
             />
-            {/* <RNPickerSelect
-                style={styles.textboxes}
-                onValueChange={onChangeYearOfStudy}
-                items={years}
-                placeholder="Year of study"
-            /> */}
+            {/* </ScrollView> */}
             <SignInBtn
                 style={styles.button}
                 title="Sign up"
@@ -145,7 +148,7 @@ const SignUpScreen = ({ navigation }) => {
                                 lastName: secondName,
                                 yearOfStudy: yearOfStudy,
                             });
-                        } catch (error) {
+                        } catch {
                             displayAlertBox(
                                 "Failed to register",
                                 error.message
@@ -170,6 +173,13 @@ const validateEmail = (email) => {
 export default SignUpScreen;
 
 const styles = StyleSheet.create({
+    scroll: {
+        flex: 1,
+        width: "94%",
+        flexDirection: "column",
+        alignContent: "center",
+        marginLeft: Dimensions.get("window").width * 0.05,
+    },
     container: {
         flex: 1,
         alignItems: "center",
@@ -194,7 +204,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-
         elevation: 3,
         backgroundColor: "#1a936f",
     },
@@ -214,7 +223,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-
         elevation: 3,
     },
 });
