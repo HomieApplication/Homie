@@ -7,7 +7,7 @@ const idToken = await auth.currentUser.getIdToken();
 const testOfferData = {
     localType: "test",
     description: "test",
-    localization: "test 1",
+    localization: [1, 1],
     photoURLArray: ["test"],
     title: "test",
 };

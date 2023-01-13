@@ -424,6 +424,9 @@ router.post("/", async (req, res) => {
         birthDate: req.body.birthDate
             ? new Date(req.body.birthDate)
             : undefined,
+        photoURL:
+            req.body.photoURL ||
+            "https://firebasestorage.googleapis.com/v0/b/homie-f055d.appspot.com/o/images%2FdefaultImg.png?alt=media&token=1e477308-7143-499d-9d63-251e5f89e4e5",
         myOffers: [],
         favs: [],
         interests: req.body.interests || [],

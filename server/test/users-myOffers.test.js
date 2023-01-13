@@ -21,7 +21,7 @@ const testUserData = {
 const testOfferData = {
     title: "test",
     description: "test",
-    localization: "test",
+    localization: [1, 1],
 };
 
 describe("GET /api/users/my-offers", () => {
