@@ -8,7 +8,6 @@ import {
     ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import RNMultiSelect from "@freakycoder/react-native-multiple-select";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { displayAlertBox } from "../components/alert";
@@ -25,14 +24,14 @@ const SignUpScreen = ({ navigation }) => {
     const [correctPassword, setCorrectPassword] = useState(true);
     const [correctEmail, setCorrectEmail] = useState(true);
 
-    const years = [
-        { id: "1", value: "1st" },
-        { id: "2", value: "2nd" },
-        { id: "3", value: "3rd" },
-        { id: "4", value: "4th" },
-        { id: "5", value: "5th" },
-        { id: ">5", value: ">5th" },
-    ];
+    // const years = [
+    //     { id: "1", value: "1st" },
+    //     { id: "2", value: "2nd" },
+    //     { id: "3", value: "3rd" },
+    //     { id: "4", value: "4th" },
+    //     { id: "5", value: "5th" },
+    //     { id: ">5", value: ">5th" },
+    // ];
 
     useEffect(() => {
         if (password.length < 6 && password.length > 0) {
@@ -61,59 +60,56 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.h2}>Create Account</Text>
-            <ScrollView style={styles.scroll}>
-                <TextInput
-                    style={styles.textboxes}
-                    onChangeText={onChangeLogin}
-                    value={login}
-                    placeholder="Email address"
-                />
-                {!correctEmail && (
-                    <Text style={{ color: "red" }}>Invalid email!</Text>
-                )}
-                <TextInput
-                    style={styles.textboxes}
-                    onChangeText={onChangePassword}
-                    value={password}
-                    placeholder="Password"
-                    secureTextEntry
-                />
-                {!correctPassword && (
-                    <Text style={{ color: "red" }}>Password too short!</Text>
-                )}
-                <TextInput
-                    style={styles.textboxes}
-                    onChangeText={onChangeConfirmedPassword}
-                    value={confirmedPassword}
-                    placeholder="Confirm password"
-                    secureTextEntry
-                />
-                {!matchingPasswords && (
-                    <Text style={{ color: "red" }}>Different passwords!</Text>
-                )}
-                <TextInput
-                    style={styles.textboxes}
-                    onChangeText={onChangeFirstName}
-                    value={firstName}
-                    placeholder="First name"
-                />
-                <TextInput
-                    style={styles.textboxes}
-                    onChangeText={onChangeSecondName}
-                    value={secondName}
-                    placeholder="Second name"
-                />
-            </ScrollView>
-
-            <RNMultiSelect
-                disableAbsolute
-                data={years}
-                onSelect={onChangeYearOfStudy}
-                menuBarContainerStyle={styles.menuBarContainer}
-                buttonContainerStyle={styles.yearButton}
+            {/* <ScrollView style={styles.scroll}> */}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeLogin}
+                value={login}
+                placeholder="Email address"
+            />
+            {!correctEmail && (
+                <Text style={{ color: "red" }}>Invalid email!</Text>
+            )}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangePassword}
+                value={password}
+                placeholder="Password"
+                secureTextEntry
+            />
+            {!correctPassword && (
+                <Text style={{ color: "red" }}>Password too short!</Text>
+            )}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeConfirmedPassword}
+                value={confirmedPassword}
+                placeholder="Confirm password"
+                secureTextEntry
+            />
+            {!matchingPasswords && (
+                <Text style={{ color: "red" }}>Different passwords!</Text>
+            )}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeFirstName}
+                value={firstName}
+                placeholder="First name"
+            />
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeSecondName}
+                value={secondName}
+                placeholder="Second name"
+            />
+            {/* zamiast tego trzeba zrobić żeby rok studiów wybierało się z listy */}
+            <TextInput
+                style={styles.textboxes}
+                onChangeText={onChangeYearOfStudy}
+                value={yearOfStudy}
                 placeholder="Year of study"
             />
-
+            {/* </ScrollView> */}
             <SignInBtn
                 style={styles.button}
                 title="Sign up"
@@ -189,24 +185,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         color: "#1A936F",
     },
-    menuBarContainer: {
-        height: 155,
-        fontSize: 16,
-        padding: "5%",
-        margin: 8,
-        borderColor: "grey",
-        borderWidth: 0.5,
-        borderRadius: 10,
-        backgroundColor: "#fff",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
-    },
     button: {
         alignItems: "center",
         justifyContent: "center",
@@ -221,27 +199,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-
         elevation: 3,
         backgroundColor: "#1a936f",
-    },
-    yearButton: {
-        fontSize: 15,
-        padding: "5%",
-        margin: 8,
-        // width: "90%",
-        borderColor: "grey",
-        borderWidth: 0.5,
-        borderRadius: 10,
-        backgroundColor: "#fff",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
     },
     textboxes: {
         width: "90%",
@@ -259,7 +218,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-
         elevation: 3,
     },
 });
