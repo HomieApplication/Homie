@@ -142,13 +142,18 @@ const SignUpScreen = ({ navigation }) => {
                             "Year of study is empty!"
                         );
                     } else {
-                        register(login, password, {
-                            firstName: firstName,
-                            lastName: secondName,
-                            yearOfStudy: yearOfStudy,
-                        }).catch(() =>
-                            displayAlertBox("Failed to register", error.message)
-                        );
+                        try {
+                            register(login, password, {
+                                firstName: firstName,
+                                lastName: secondName,
+                                yearOfStudy: yearOfStudy,
+                            });
+                        } catch {
+                            displayAlertBox(
+                                "Failed to register",
+                                error.message
+                            );
+                        }
                         // navigation.push('Main')
                     }
                 }}
