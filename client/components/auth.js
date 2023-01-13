@@ -29,14 +29,11 @@ export function isLoggedIn() {
  */
 export function register(email, password, userData) {
     const auth = getAuth();
-    axios
-        .post("/api/users", userData)
-        .then(() => {
-            createUserWithEmailAndPassword(auth, email, password).catch(
-                (error) => {
-                    displayAlertBox("Failed to register", error.message);
-                }
-            );
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            axios.post("/api/users", userData).catch((error) => {
+                displayAlertBox("Failed to register", error.message);
+            });
         })
         .catch((error) => {
             displayAlertBox("Failed to register", error.message);
