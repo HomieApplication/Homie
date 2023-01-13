@@ -103,7 +103,7 @@ export function resetPassword(email) {
             displayAlertBox("Password reset email sent", email);
         })
         .catch((error) => {
-            displayAlertBox("Failed to reset password", error.message);
+            displayAlertBox("Failed to reset password", "Check your email address");
         });
 }
 

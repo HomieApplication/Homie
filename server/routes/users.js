@@ -426,7 +426,7 @@ router.post("/", async (req, res) => {
             : undefined,
         photoURL:
             req.body.photoURL ||
-            "gs://homie-f055d.appspot.com/images/defaultImg.png",
+            "https://firebasestorage.googleapis.com/v0/b/homie-f055d.appspot.com/o/images%2FdefaultImg.png?alt=media&token=1e477308-7143-499d-9d63-251e5f89e4e5",
         myOffers: [],
         favs: [],
         interests: req.body.interests || [],
