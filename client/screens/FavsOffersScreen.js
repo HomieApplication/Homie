@@ -49,7 +49,7 @@ const FavsOffers = () => {
 
     const userId = getAuth().currentUser.uid;
     const [favOffers, setfavOffers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchOffers()

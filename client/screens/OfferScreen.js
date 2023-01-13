@@ -9,6 +9,7 @@ import axios from 'axios'
 import { async } from '@firebase/util';
 
 import COLORS from '../components/assets';
+import Gallery from '../components/OfferScreen/Gallery';
 
 const fetchUser = async (o) => {
     const userData = await axios
@@ -18,7 +19,7 @@ const fetchUser = async (o) => {
             console.log(error);
         });
 
-    console.log(userData)
+    //console.log(userData)
     return userData
 }
 
@@ -69,14 +70,14 @@ const OfferScreen = ({route, navigation}) => {
     const FancyList = () =>{
         if(typeof offerData.localization !== "undefined" && offerData.localization !== ""){
             return <View>
-                    {constPlaces.map(marker => (
-                        <Text style={{marginVertical:3}}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
+                    {constPlaces.map((marker, i) => (
+                        <Text key={i} style={{marginVertical:3}}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
                     ))}
                     </View>
         }
         else return <View>
-                    {constPlaces.map(marker => (
-                        <Text style={{marginVertical:3}}>{marker.title}: who knows?...</Text>
+                    {constPlaces.map((marker, i) => (
+                        <Text key={i} style={{marginVertical:3}}>{marker.title}: who knows?...</Text>
                     ))}
                     </View>
     }
@@ -110,11 +111,9 @@ const OfferScreen = ({route, navigation}) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             })
-            console.log("fetchUser")
+            //console.log("fetchUser")
     }, [])
 
-    //w miejscu map tzreba wstawić mape googla z pineską na lkalizacje danego akademika/mieszkania
-    //obok fajnie by było wyświetlać odległości do kluczowych miejsc np kebab
 
     return (
         <View style={{flex:1, width:'100%', backgroundColor: COLORS.background, justifyContent:'flex-start'}}>        
@@ -129,17 +128,16 @@ const OfferScreen = ({route, navigation}) => {
                         <Text style={styles.textTitle}>{userData.firstName} {userData.lastName}</Text>
                         <Text style={styles.text}>year of study: {userData.yearOfStudy}</Text>
                         <Text style={styles.text}>{userData.description}</Text>
-                        {/* <Text style={styles.text}>{userData.description}</Text> */}
                     </View>
-                    <Pressable style={styles.icon}>
-                         <MaterialCommunityIcons name="star" color={COLORS.star} size={35}/>
-                     </Pressable>
+                    <Pressable style={styles.goBack}>
+                        <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
+                    </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.textTitle}>{offerData.title}</Text>
                     <Text style={styles.text}>{offer.description}</Text>
                     <View style={styles.galleryContainer}>
-                      <View style={styles.galleryImg}><Text>GALERIA</Text></View>
+                      <Gallery images={offerData.photoURLArray}/>
                     </View>
                 </View>
             </View>
@@ -242,19 +240,11 @@ const styles = StyleSheet.create({
     },
 
     galleryContainer:{
-       // borderWidth: 1,
         width: '100%',
+        paddingVertical: 10,
         flex: 2,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-
-    galleryImg:{
-        height: '90%',
-        aspectRatio: 1,
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor:'black',
     },
 
     //map
@@ -303,4 +293,10 @@ const styles = StyleSheet.create({
         top:"25%",
         zIndex:-1,
     },
+
+    goBack:{
+        position: 'absolute',
+        left: 20,
+        top: 10,
+    }
 })

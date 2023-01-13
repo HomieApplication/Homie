@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
-import { Dimensions,StyleSheet,Text,View, TextInput,Button, ScrollView, Image, DatePicker, FlatList,} from "react-native";
+import { Dimensions,StyleSheet,Text,View, TextInput,Button, Pressable, Image, DatePicker, FlatList,} from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignInBtn from "../components/signIn/SignInBtn";
 import RNPickerSelect from "react-native-picker-select";
@@ -21,6 +22,17 @@ const storage = getStorage();
 
 const FulfillProfile = ({navigation}) => {
 
+    const userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
+    const [loading, setLoading] = React.useState(true);
+    const [university, onChangeUniversity] = React.useState(userData.university);
+    const [description, setDescription] = React.useState(userData.description);
+    const [image, setImage] = React.useState(userData.photoURL);
+    const [selected, setSelected] = React.useState([]);
+    const [datePicker, setDatePicker] = React.useState(false);
+    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+    const [selectedHobby, setHobby] = React.useState([]);
+
     useEffect(() => {
         axios
             .get(`/api/users/${userId}`)
@@ -39,27 +51,32 @@ const FulfillProfile = ({navigation}) => {
             });
     }, []);
 
-    const userId = getAuth().currentUser.uid;
-    const [userData, setUser] = useState({});
-    const [loading, setLoading] = React.useState(true);
-    const [university, onChangeUniversity] = React.useState(userData.university);
-    const [description, setDescription] = React.useState(userData.description);
-    const [image, setImage] = React.useState(userData.photoURL);
-    const [selected, setSelected] = React.useState();
-    const [datePicker, setDatePicker] = React.useState(false);
-    const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+
+    const getSelectedHobbies = () => {
+        var hobbies = []
+        selected.forEach(e => {
+            console.log(e.value)
+            hobbies.push(e.value)
+        })
+        return hobbies
+    }
 
 
 
     const updateUserData = async () => {
         
         const uri = await uploadImage(image);
+        
+        const hobbies = getSelectedHobbies();
+        console.log("hobbies: ",hobbies);
+
         axios
             .put(`/api/users`, {
                 university: university,
                 photoURL: uri,
                 description: description,
                 birthDate: dateOfBirth,
+                interests: hobbies,
             })
             .then(() => {
                 setLoading(false);
@@ -146,6 +163,9 @@ const FulfillProfile = ({navigation}) => {
             <FlatList
                 ListHeaderComponent={
                 <View style={styles.container}>
+                    <Pressable style={styles.goBack}>
+                        <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
+                    </Pressable>
                     <Text style={styles.h2}>Complete your profile</Text>
 
                     <Text style={styles.dataText}>University:</Text>
@@ -221,7 +241,7 @@ const FulfillProfile = ({navigation}) => {
                     <RNMultiSelect
                         disableAbsolute
                         data={staticData}
-                        onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                        onSelect={(selectedItems) => setSelected(selectedItems)}
                         menuBarContainerStyle={styles.hobbyBox}
                         buttonContainerStyle={styles.hobbyBox}
                     />
@@ -231,6 +251,7 @@ const FulfillProfile = ({navigation}) => {
                         title="Save Changes"
                         onPress={() => {
                             setLoading(true);
+                            console.log(selected)
                             updateUserData().catch(error =>
                             displayAlertBox("Please, try again later", error.message)
                             )
@@ -344,6 +365,11 @@ const styles = StyleSheet.create({
     img:{
         height: '100%',
         width: '100%',
+    },
+    goBack:{
+        position: 'absolute',
+        left: 10,
+        top: 30,
     }
 });
 
@@ -375,6 +401,6 @@ const pickerSelectStyles = StyleSheet.create({
         borderColor: 'purple',
         borderRadius: 8,
         color: 'black',
-        paddingRight: 30 // to ensure the text is never behind the icon
+        paddingRight: 30 
     }
 });

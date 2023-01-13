@@ -114,7 +114,7 @@ const MainScreen = ({ navigation }) => {
                                 year={offer.yearOfStudy}
                                 imgUrl={offer.photoURL}
                                 title={offer.title}
-                                localization={offer.localization.map}
+                                university={offer.university}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
@@ -150,4 +150,5 @@ const styles = StyleSheet.create({
 
         marginLeft: Dimensions.get('window').width*0.1,
     },
+
 });
