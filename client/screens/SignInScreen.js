@@ -12,7 +12,8 @@ import {
 import SignInBtn from "../components/signIn/SignInBtn";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { login } from "../components/auth";
+import { login, resetPassword } from "../components/auth";
+import { displayAlertBox } from "../components/alert";
 
 const SignInScreen = ({ navigation }) => {
     const [email, onChangeLogin] = React.useState("");
@@ -66,7 +67,12 @@ const SignInScreen = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <Text style={styles.register}>Forgot password</Text>
+                    <Text
+                        style={styles.register}
+                        onPress={() => resetPassword(email)}
+                    >
+                        Forgot password
+                    </Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
