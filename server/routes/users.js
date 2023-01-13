@@ -424,6 +424,9 @@ router.post("/", async (req, res) => {
         birthDate: req.body.birthDate
             ? new Date(req.body.birthDate)
             : undefined,
+        photoURL:
+            req.body.photoURL ||
+            "gs://homie-f055d.appspot.com/images/defaultImg.png",
         myOffers: [],
         favs: [],
         interests: req.body.interests || [],
