@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-    Button,
-    Dimensions,
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Button,
+  Dimensions,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
@@ -20,134 +20,138 @@ import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 
 const fetchOffers = async () => {
-    const offers = await axios
-        .get("/api/offers")
+  const offers = await axios
+    .get("/api/offers")
+    .then((res) => res.data)
+    .catch((error) => {
+      console.log(error);
+      displayAlertBox("Please, try again later", error.message);
+      // logout();
+    });
+
+  const offersWithUser = await Promise.all(
+    offers.map(async (offer) => {
+      const userData = await axios
+        .get(`/api/users/${offer.userId}`)
         .then((res) => res.data)
         .catch((error) => {
-            console.log(error);
-            displayAlertBox("Please, try again later", error.message);
-            // logout();
+          console.log(error);
+          displayAlertBox("Please, try again later", error.message);
+          // logout();
         });
+      return { ...userData, ...offer };
+    })
+  ).catch((error) => {
+    console.log(error);
+    displayAlertBox("Please, try again later", error.message);
+    // logout();
+  });
 
-    const offersWithUser = await Promise.all(
-        offers.map(async (offer) => {
-            const userData = await axios
-                .get(`/api/users/${offer.userId}`)
-                .then((res) => res.data)
-                .catch((error) => {
-                    console.log(error);
-                    displayAlertBox("Please, try again later", error.message);
-                    // logout();
-                });
-            return { ...userData, ...offer };
-        })
-    ).catch((error) => {
+  return offersWithUser;
+};
+
+const MainScreen = ({ navigation }) => {
+  const [userData, setUser] = useState({});
+  const [offersData, setOffersData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("/api/users")
+      .then((res) => res.data)
+      .then((data) => {
+        setUser(data);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log("Connection error: " + error.message);
+        displayAlertBox("Please, try again later", error.message);
+        // logout();
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchOffers()
+      .then((offers) => {
+        setOffersData(offers);
+      })
+      .then(() => setLoading(false))
+      .catch((error) => {
         console.log(error);
         displayAlertBox("Please, try again later", error.message);
         // logout();
-    });
+      });
+  }, []);
 
-    return offersWithUser;
-};
+  return (
+    <SafeAreaView style={styles.containerMain}>
+      {loading ? (
+        <LoadingAnimation text="Loading please wait" />
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <ProfileHeader
+            user={userData}
+            accessibilityLabel="profile_header"
+            onPress={() => {
+              navigation.push("FavsOffers");
+            }}
+            onPressEdit={() => {
+              navigation.push("EditProfile");
+            }}
+          />
 
+          <ScrollView style={styles.scroll} accessibilityLabel="scroll">
+            {offersData.map((offer, i) => {
+              const push = () => {
+                console.log(offer.offerId);
+                navigation.push("Offer", { offer: offer });
+              };
 
-const MainScreen = ({ navigation }) => {
-    const [userData, setUser] = useState({});
-    const [offersData, setOffersData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        axios
-            .get("/api/users")
-            .then((res) => res.data)
-            .then((data) => {
-                setUser(data);
-                // console.log(data);
-            })
-            .catch((error) => {
-                console.log("Connection error: " + error.message);
-                displayAlertBox("Please, try again later", error.message);
-                // logout();
-            });
-    }, []);
-
-    useEffect(() => {
-        fetchOffers()
-            .then((offers) => {
-                setOffersData(offers);
-            })
-            .then(() => setLoading(false))
-            .catch((error) => {
-                console.log(error);
-                displayAlertBox("Please, try again later", error.message);
-                // logout();
-            });
-    }, []);
-
-    return (
-        <SafeAreaView style={styles.containerMain}>
-            {loading ? (
-                <LoadingAnimation text="Loading please wait" />
-            ) : (
-            <SafeAreaView style={styles.container}>
-                <ProfileHeader
-                    user={userData}
-                    onPress={()=>{navigation.push("FavsOffers")}}
-                    onPressEdit={()=>{navigation.push("EditProfile")}}
+              //console.log(offer)
+              return (
+                <Card
+                  key={i}
+                  userFirstName={offer.firstName}
+                  userLastName={offer.lastName}
+                  description={offer.description}
+                  year={offer.yearOfStudy}
+                  imgUrl={offer.photoURL}
+                  title={offer.title}
+                  localization={offer.localization.map}
+                  idOffer={offer.offerId}
+                  onPress={push}
+                  accessibilityLabel="card"
                 />
-
-                <ScrollView style={styles.scroll}>
-                    {offersData.map((offer, i) => {
-
-                        const push = () => {
-                            console.log(offer.offerId)
-                            navigation.push("Offer", {offer: offer})
-                        }
-
-                        //console.log(offer)
-                        return (
-                            <Card
-                                key={i}
-                                userFirstName={offer.firstName}
-                                userLastName={offer.lastName}
-                                description={offer.description}
-                                year={offer.yearOfStudy}
-                                imgUrl={offer.photoURL}
-                                title={offer.title}
-                                localization={offer.localization.map}
-                                idOffer={offer.offerId}
-                                onPress={push}
-                            />
-                        );
-                    })}
-                </ScrollView>
-            </SafeAreaView>
-            )}
+              );
+            })}
+          </ScrollView>
         </SafeAreaView>
-    );
+      )}
+    </SafeAreaView>
+  );
 };
 
 export default MainScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.background,
-        alignItems: "center",
-        justifyContent: "flex-start",
-    },
-    containerMain: {
-        flex: 1,
-        margin: 0,
-        width:'100%',
-        backgroundColor: COLORS.background,
-    },
-    scroll: {
-        flex: 1,
-        width: "100%",
-        flexDirection: "column",
-        alignContent: "center",
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  containerMain: {
+    flex: 1,
+    margin: 0,
+    width: "100%",
+    backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
+    width: "100%",
+    flexDirection: "column",
+    alignContent: "center",
 
-        marginLeft: Dimensions.get('window').width*0.1,
-    },
+    marginLeft: Dimensions.get("window").width * 0.1,
+  },
 });

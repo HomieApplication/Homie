@@ -18,14 +18,15 @@ beforeAll(async () => {
 });
 
 test("Test Accessibilty Id", async () => {
+  expect(await driver.hasElementByAccessibilityId("nav_button")).toBe(true);
   expect(await driver.hasElementByAccessibilityId("profile_header")).toBe(true);
-  expect(await driver.hasElementByAccessibilityId("scroll")).toBe(true);
 });
 
-test("Test scroll", async () => {
-  await driver.scroll(10, 100);
-  expect(await driver.hasElementByAccessibilityId("card")).isDisplayed();
-
-  await driver.scroll(10, -100);
-  expect(await driver.hasElementByAccessibilityId("card")).isDisplayed();
+test("Test favourite/my offers button", async () => {
+  expect(
+    await driver.elementByAccessibilityId("nav_butotn").isDisplayed()
+  ).toBe(true);
+  expect(await driver.elementByAccessibilityId("nav_butotn").isEnabled()).toBe(
+    true
+  );
 });
