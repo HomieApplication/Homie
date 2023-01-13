@@ -8,6 +8,7 @@ import {
     ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SelectList } from "react-native-dropdown-select-list";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { displayAlertBox } from "../components/alert";
@@ -24,14 +25,14 @@ const SignUpScreen = ({ navigation }) => {
     const [correctPassword, setCorrectPassword] = useState(true);
     const [correctEmail, setCorrectEmail] = useState(true);
 
-    // const years = [
-    //     { id: "1", value: "1st" },
-    //     { id: "2", value: "2nd" },
-    //     { id: "3", value: "3rd" },
-    //     { id: "4", value: "4th" },
-    //     { id: "5", value: "5th" },
-    //     { id: ">5", value: ">5th" },
-    // ];
+    const years = [
+        { key: "1", value: "1" },
+        { key: "2", value: "2" },
+        { key: "3", value: "3" },
+        { key: "4", value: "4" },
+        { key: "5", value: "5" },
+        { key: "6", value: ">5" },
+    ];
 
     useEffect(() => {
         if (password.length < 6 && password.length > 0) {
@@ -60,7 +61,6 @@ const SignUpScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.h2}>Create Account</Text>
-            {/* <ScrollView style={styles.scroll}> */}
             <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangeLogin}
@@ -102,14 +102,22 @@ const SignUpScreen = ({ navigation }) => {
                 value={secondName}
                 placeholder="Second name"
             />
-            {/* zamiast tego trzeba zrobić żeby rok studiów wybierało się z listy */}
-            <TextInput
+            {/* <TextInput
                 style={styles.textboxes}
                 onChangeText={onChangeYearOfStudy}
                 value={yearOfStudy}
                 placeholder="Year of study"
+            /> */}
+            <SelectList
+                boxStyles={styles.dropdownBox}
+                dropdownStyles={styles.dropdown}
+                inputStyles={styles.dropdownInput}
+                data={years}
+                save="value"
+                placeholder="Year of study"
+                search={false}
+                setSelected={(val) => onChangeYearOfStudy(val)}
             />
-            {/* </ScrollView> */}
             <SignInBtn
                 style={styles.button}
                 title="Sign up"
@@ -206,6 +214,33 @@ const styles = StyleSheet.create({
         shadowRadius: 2.22,
         elevation: 3,
         backgroundColor: "#1a936f",
+    },
+    dropdownInput: {
+        fontSize: 15,
+        color: "grey",
+    },
+    dropdownBox: {
+        width: Dimensions.get("window").width * 0.9,
+        alignItems: "center",
+        fontSize: 15,
+        margin: 8,
+        height: 67,
+        borderColor: "grey",
+        borderWidth: 0.5,
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        elevation: 3,
+    },
+    dropdown: {
+        fontSize: 15,
+        margin: 8,
+        borderColor: "grey",
+        borderWidth: 0.5,
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        elevation: 3,
     },
     textboxes: {
         width: "90%",
