@@ -6,7 +6,7 @@ import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
   const [isFav, setIsFav] = useState(false)
 
 
@@ -22,7 +22,12 @@ export default function Card(props) {
         }
         
       </Pressable>
-      ): (null)}
+      ): (
+        <Pressable style={styles.iconStar}>
+          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={deleteFunction}/> 
+        </Pressable>
+      )
+      }
         
         <View style={styles.upperHalf}>
           <View style={styles.imgContainer}>

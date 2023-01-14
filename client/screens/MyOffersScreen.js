@@ -69,6 +69,10 @@ const MyOffers = ({navigation}) => {
             });
     }, []);
 
+    const deleteOffer = () => {
+        displayAlertBox("Usunięto oferte");
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             {loading ? (
@@ -102,6 +106,7 @@ const MyOffers = ({navigation}) => {
                                 idOffer={offer.offerId}
                                 onPress={push}
                                 isMine={true}
+                                deleteFunction={() => deleteOffer()}
                             />
                         );
                         })}
