@@ -18,10 +18,10 @@ import { displayAlertBox } from "../components/alert";
 const SignInScreen = ({ navigation }) => {
     const [email, onChangeLogin] = React.useState("");
     const [password, onChangePassword] = React.useState("");
-    const [correctPassword, setCorrectPassword] = useState(true);
-    const [correctEmail, setCorrectEmail] = useState(true);
+    const [correctPassword, setCorrectPassword] = React.useState(true);
+    const [correctEmail, setCorrectEmail] = React.useState(true);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (password.length < 6 && password.length > 0) {
             setCorrectPassword(false);
         } else {
@@ -29,7 +29,7 @@ const SignInScreen = ({ navigation }) => {
         }
     }, [password]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!validateEmail(email) && email.length > 0) {
             setCorrectEmail(false);
         } else {
