@@ -101,7 +101,7 @@ const AddOfferScreen = ({ navigation }) => {
   const setLocalization = (dorm, local) => {
     onChangeDormitory(dorm);
     onChangeLocalization(local);
-    console.log(dorm);
+    //console.log(dorm);
   }
   
   const pickImageAsync = async () => {

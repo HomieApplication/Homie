@@ -54,13 +54,13 @@ const FavsOffers = ({navigation}) => {
     const [myOffers, setmyOffers] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    console.log(myOffers)
+   // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
                 setmyOffers(offers);
-                console.log(offers);
+                //console.log(offers);
             })
             .catch((error) => {
                 console.log(error);

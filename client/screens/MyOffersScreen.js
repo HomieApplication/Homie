@@ -49,6 +49,7 @@ const MyOffers = ({navigation}) => {
                 setmyOffers(offers);
                 // console.log(offers);
             })
+            
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);

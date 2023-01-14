@@ -43,7 +43,7 @@ const UserProfile = ({ navigation }) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                //console.log(data);
             })
             .then(() => setLoading(false))
             .catch((error) => {
