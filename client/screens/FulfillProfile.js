@@ -95,7 +95,7 @@ const FulfillProfile = ({ navigation }) => {
                 university: university,
                 photoURL: uri,
                 description: description,
-                birthDate: dateOfBirth,
+                // birthDate: null,
                 interests: hobbies,
                 university: selectedUniversity,
                 gender: selectedGender,
@@ -173,18 +173,19 @@ const FulfillProfile = ({ navigation }) => {
     ];
 
     const univerities = [
-        { value: "agh", label: "Akademia Górniczo Hutnicza" },
-        { value: "uj", label: "Uniwersytet Jagielloński" },
-        { value: "pk", label: "Politechnika Krakowska" },
-        { value: "up", label: "Uniwersytet Pedagogiczny" },
-        { value: "ur", label: "Uniwersytet Rolniczy" },
-        { value: "ue", label: "Uniwersytet Ekonomiczny" },
-        { value: "oth", label: "other..." },
+        { label: "agh", value: "Akademia Górniczo Hutnicza" },
+        { label: "uj", value: "Uniwersytet Jagielloński" },
+        { label: "pk", value: "Politechnika Krakowska" },
+        { label: "up", value: "Uniwersytet Pedagogiczny" },
+        { label: "ur", value: "Uniwersytet Rolniczy" },
+        { label: "ue", value: "Uniwersytet Ekonomiczny" },
+        { label: "oth", value: "other..." },
     ];
 
     const genders = [
         { key: 1, value: "male" },
         { key: 2, value: "female" },
+        { key: 3, value: "other" },
     ];
 
     function getUniversityObject() {
@@ -222,16 +223,42 @@ const FulfillProfile = ({ navigation }) => {
                             <Text style={styles.h2}>Complete your profile</Text>
 
                             <Text style={styles.dataText}>University:</Text>
-                            {/* <RNPickerSelect
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => onChangeUniversity(value)}
-                        items={univerities}
-                    /> */}
-                            <TextInput
-                                style={styles.textboxes}
-                                onChangeText={onChangeUniversity}
-                                value={university}
-                                placeholder={university}
+                            <SelectList
+                                boxStyles={pickerSelectStyles.dropdownBox}
+                                dropdownStyles={pickerSelectStyles.dropdown}
+                                inputStyles={pickerSelectStyles.dropdownInput}
+                                data={univerities}
+                                save="value"
+                                placeholder="Select University"
+                                setSelected={(val) =>
+                                    setSelectedUniversity(val)
+                                }
+                                defaultOption={getUniversityObject()}
+                            />
+                            <Text style={styles.dataText}>Gender:</Text>
+                            <SelectList
+                                boxStyles={pickerSelectStyles.dropdownBox}
+                                dropdownStyles={
+                                    pickerSelectStyles.genderDropdown
+                                }
+                                inputStyles={pickerSelectStyles.dropdownInput}
+                                data={genders}
+                                save="value"
+                                placeholder="Select gender"
+                                search={false}
+                                setSelected={(val) => setSelectedGender(val)}
+                                defaultOption={getGenderObject()}
+                            />
+                            <Text style={styles.dataText}>Year of study:</Text>
+                            <SelectList
+                                boxStyles={pickerSelectStyles.dropdownBox}
+                                dropdownStyles={pickerSelectStyles.dropdown}
+                                inputStyles={pickerSelectStyles.dropdownInput}
+                                data={years}
+                                save="value"
+                                placeholder="Select year"
+                                search={false}
+                                setSelected={(val) => setSelectedYear(val)}
                             />
 
                             <Text style={styles.dataText}>Description:</Text>
@@ -244,7 +271,7 @@ const FulfillProfile = ({ navigation }) => {
                                 placeholder={description}
                             />
 
-                            <Text style={styles.dataText}>Date of birth:</Text>
+                            {/* <Text style={styles.dataText}>Date of birth:</Text>
                             <TextInput
                                 style={styles.textboxes}
                                 onChange={showDatePicker}
@@ -285,7 +312,7 @@ const FulfillProfile = ({ navigation }) => {
                                         onPress={showDatePicker}
                                     />
                                 </View>
-                            )}
+                            )} */}
                         </View>
                     }
                     ListFooterComponent={
@@ -325,50 +352,11 @@ const FulfillProfile = ({ navigation }) => {
                                 menuBarContainerStyle={styles.hobbyBox}
                                 buttonContainerStyle={styles.hobbyBox}
                             />
-                            <Text style={styles.dataText}>University:</Text>
-                            <SelectList
-                                boxStyles={pickerSelectStyles.dropdownBox}
-                                dropdownStyles={pickerSelectStyles.dropdown}
-                                inputStyles={pickerSelectStyles.dropdownInput}
-                                data={univerities}
-                                save="value"
-                                placeholder="Select University"
-                                setSelected={(val) =>
-                                    setSelectedUniversity(val)
-                                }
-                                defaultOption={getUniversityObject()}
-                            />
-                            <Text style={styles.dataText}>Gender:</Text>
-                            <SelectList
-                                boxStyles={pickerSelectStyles.dropdownBox}
-                                dropdownStyles={
-                                    pickerSelectStyles.genderDropdown
-                                }
-                                inputStyles={pickerSelectStyles.dropdownInput}
-                                data={genders}
-                                save="value"
-                                placeholder="Select gender"
-                                search={false}
-                                setSelected={(val) => setSelectedGender(val)}
-                                defaultOption={getGenderObject()}
-                            />
-                            <Text style={styles.dataText}>Year of study:</Text>
-                            <SelectList
-                                boxStyles={pickerSelectStyles.dropdownBox}
-                                dropdownStyles={pickerSelectStyles.dropdown}
-                                inputStyles={pickerSelectStyles.dropdownInput}
-                                data={years}
-                                save="value"
-                                placeholder="Select year"
-                                search={false}
-                                setSelected={(val) => setSelectedYear(val)}
-                            />
                             <SignInBtn
                                 style={styles.button}
                                 title="Save Changes"
                                 onPress={() => {
                                     setLoading(true);
-                                    console.log(selected);
                                     updateUserData().catch((error) =>
                                         displayAlertBox(
                                             "Please, try again later",
