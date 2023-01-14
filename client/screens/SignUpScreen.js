@@ -6,6 +6,7 @@ import {
     TextInput,
     Dimensions,
     ScrollView,
+    Pressable
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SelectList } from "react-native-dropdown-select-list";
@@ -13,6 +14,9 @@ import { SelectList } from "react-native-dropdown-select-list";
 import SignInBtn from "../components/signIn/SignInBtn";
 import { displayAlertBox } from "../components/alert";
 import { register } from "../components/auth";
+
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import COLORS from "../components/assets";
 
 const SignUpScreen = ({ navigation }) => {
     const [login, onChangeLogin] = useState("");
@@ -60,6 +64,14 @@ const SignUpScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+             <Pressable style={styles.goBack}>
+                <MaterialCommunityIcons
+                    name="arrow-left"
+                    color={COLORS.primary1}
+                    size={35}
+                    onPress={navigation.goBack}
+                />
+            </Pressable>
             <Text style={styles.h2}>Create Account</Text>
             <TextInput
                 style={styles.textboxes}
@@ -258,5 +270,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
         elevation: 3,
+    },
+    goBack: {
+        position: "absolute",
+        left: 10,
+        top: 30,
     },
 });
