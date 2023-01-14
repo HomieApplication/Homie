@@ -12,6 +12,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  Vibration,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -53,7 +54,7 @@ const AddOfferScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [dormitory, onChangeDormitory] = React.useState("");
   const [images, setImages] = React.useState([]);
-  
+
   const sendData = async () => {
       const urls = await Promise.all(
           images.map((image) => uploadImage(image))
@@ -73,6 +74,7 @@ const AddOfferScreen = ({ navigation }) => {
           .then(() => {
               setLoading(false);
               displayAlertBox("Offer successfully published!");
+              Vibration.vibrate();
               navigation.push("Main");
           })
           .catch((error) => {
@@ -82,10 +84,18 @@ const AddOfferScreen = ({ navigation }) => {
   };
 
   const domitoryChoiceHandler = () => {
-    displayAlertBox("You chose:", dormitory);
+
     if(dormitory == 'DS14 Kapitol')
     {
-      console.log("JEEEEEEEEJ");
+      // console.log("JEEEEEEEEJ");
+    }
+    if(dormitory == "")
+    {
+      displayAlertBox("You haven't chosen any 😢", "please choose dormitory");
+    }
+    else
+    {
+      displayAlertBox("You chose:", dormitory);
     }
   }
   const setLocalization = (dorm, local) => {
@@ -164,12 +174,11 @@ const AddOfferScreen = ({ navigation }) => {
             value={description}
             placeholder="Description"
           />
-          <TextInput
-            style={styles.textboxes}
-            // onChangeText={displayAlertBox("You chose: ", dormitory)}
-            value={dormitory}
-            placeholder="Dormitory"
-          />
+          <View style={styles.textboxes}>
+            <Text
+             >{dormitory}</Text>
+          </View>
+
           <View>
             <Modal
               animationType="slide"
@@ -220,7 +229,7 @@ const AddOfferScreen = ({ navigation }) => {
             </Modal>
             <SignInBtn
               style={styles.button}
-              onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}}
+              onPress={() => setModalVisible(!modalVisible)}
               title="Choose Dormitory"
               >
             </SignInBtn>
@@ -265,11 +274,11 @@ const AddOfferScreen = ({ navigation }) => {
               } else if (description === "") {
                 displayAlertBox("Failed to publish your offer", "Add description!");
               } else if (localization === "") {
-                displayAlertBox("Failed to publish your offer", "Choose localization!");
+                displayAlertBox("Failed to publish your offer", "Choose dormitory!");
               } else {
                 setLoading(true);
                 sendData().catch(error =>
-                displayAlertBox("Please, try again later", error.message))
+                displayAlertBox("Please, try again later", error.message));
               }
             }}
           ></SignInBtn>
