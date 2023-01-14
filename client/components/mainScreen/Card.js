@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Text, View, StyleSheet, Pressable, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Pressable, Image, Dimensions, TouchableOpacity, Button } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import COLORS from '../assets';
@@ -12,8 +12,7 @@ export default function Card(props) {
 
   return (
     <View style={styles.container}>
-      {!isMine ? (
-        <Pressable style={styles.iconStar}>
+      {!isMine ? <View style={styles.iconStar}>
         {isFav ? (
           <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
         ) :(
@@ -21,12 +20,9 @@ export default function Card(props) {
         )
         }
         
-      </Pressable>
-      ): (
-        <TouchableOpacity style={styles.iconStar}>
-          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={deleteFunction}/> 
-        </TouchableOpacity>
-      )
+      </View> : <View style={styles.iconStar} >
+          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={()=>deleteFunction()}/> 
+      </View>
       }
         
         <View style={styles.upperHalf}>
@@ -109,7 +105,7 @@ const styles = StyleSheet.create({
       margin:0,
     },
     iconStar:{
-      position: 'absolute',
+      // position: 'absolute',
       left: Dimensions.get('window').width * 0.77,
       top: 10,
 

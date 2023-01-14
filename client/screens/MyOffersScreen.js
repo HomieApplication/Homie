@@ -41,13 +41,13 @@ const MyOffers = ({navigation}) => {
     const [loading, setLoading] = useState(false);
     const [reloadSwitch, setReloadSwitch] = useState(false);
 
-    console.log(myOffers)
+    // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
                 setmyOffers(offers);
-                console.log(offers);
+                // console.log(offers);
             })
             .catch((error) => {
                 console.log(error);
@@ -61,7 +61,7 @@ const MyOffers = ({navigation}) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                // console.log(data);
             })
             .then(() => setLoading(false))
             .catch((error) => {
@@ -113,7 +113,7 @@ const MyOffers = ({navigation}) => {
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        console.log(offer)
+                        // console.log(offer)
                         return (
                             <Card
                                 key={i}
