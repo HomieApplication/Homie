@@ -23,8 +23,8 @@ export default function Card(props) {
         
       </Pressable>
       ): (
-        <Pressable style={styles.iconStar}>
-          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={deleteFunction}/> 
+        <Pressable style={styles.iconStar} onPress={deleteFunction}>
+          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35}/> 
         </Pressable>
       )
       }
