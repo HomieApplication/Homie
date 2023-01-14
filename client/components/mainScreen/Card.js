@@ -12,27 +12,39 @@ export default function Card(props) {
 
   return (
     <View style={styles.container}>
-      {!isMine ? <View style={styles.iconStar}>
-        {isFav ? (
-          <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
-        ) :(
-          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
-        )
-        }
-        
-      </View> : <View style={styles.iconStar} >
-          <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={()=>deleteFunction()}/> 
-      </View>
-      }
+
         
         <View style={styles.upperHalf}>
           <View style={styles.imgContainer}>
             <Image resizeMode={"cover"} style={styles.img} source={{uri: imgUrl}}/>
           </View>
-            <View>
+            <View style={{width: '100%'}}>
+              <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between', width: '70%'}}>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
-                <Text style={styles.description}>{university} {year} year</Text>
+                {!isMine ? <View style={styles.iconStar}>
+                    {isFav ? (
+                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+                      ) :(
+                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+                      )
+                    }
+                    
+                  </View> : <View style={styles.iconStar} >
+                      <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={()=>deleteFunction()}/> 
+                  </View>
+                }
+
+
+              </View>
+                
+                <Text style={styles.description}>{university}</Text> 
+                <Text style={styles.description}>{year} year</Text>
             </View>
+
+
+
+
+
         </View>
         <View>
             <Text style={styles.nameText}>{title}</Text>
@@ -106,8 +118,8 @@ const styles = StyleSheet.create({
     },
     iconStar:{
       // position: 'absolute',
-      left: Dimensions.get('window').width * 0.77,
-      top: 10,
+      //left: Dimensions.get('window').width * 0.77,
+      //top: 10,
 
       padding:0,
       margin:0,
