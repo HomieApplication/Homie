@@ -126,7 +126,7 @@ const MyOffers = ({navigation}) => {
                                 idOffer={offer.offerId}
                                 onPress={push}
                                 isMine={true}
-                                deleteFunction={deleteOffer(offer.offerId)}
+                                deleteFunction={() => deleteOffer(offer.offerId)}
                             />
                         );
                         })}
