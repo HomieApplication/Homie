@@ -50,7 +50,12 @@ const OfferScreen = ({route, navigation}) => {
                 longitudeDelta: 0.0015,
               }}
         >
-          <MapView.Marker image={mapMarker} coordinate={offerData.localization}></MapView.Marker>
+          <MapView.Marker coordinate={offerData.localization}>
+            <Image
+                source={mapMarker}
+                style={{width:30, height:30}}
+            />
+          </MapView.Marker>
         </MapView>
         }
         else

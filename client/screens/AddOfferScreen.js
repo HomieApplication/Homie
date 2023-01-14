@@ -24,7 +24,7 @@ import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
 
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
-import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png ładniej wygląda
+import mapMarker from "../assets/map_icon.png"; 
 import beutifulCastle from "../assets/beautiful_castle.png";
 import {markers} from "../components/AddOfferScreen/Markers";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -101,7 +101,8 @@ const AddOfferScreen = ({ navigation }) => {
   const setLocalization = (dorm, local) => {
     onChangeDormitory(dorm);
     onChangeLocalization(local);
-    //console.log(dorm);
+
+    // console.log(dorm);
   }
   
   const pickImageAsync = async () => {
@@ -207,17 +208,21 @@ const AddOfferScreen = ({ navigation }) => {
                     <MapView.Marker 
                       coordinate={marker.coordinates}
                       title={marker.title}
-                      image={mapMarker}
                       identifier={marker.identifier}
                       onPress={ e => setLocalization( e.nativeEvent.id, e.nativeEvent.coordinate)}
                       key={marker.identifier}
-                    />
+                    >                    
+                    <Image
+                    source={mapMarker}
+                    style={{width:12, height:18}}
+                    /></MapView.Marker>
                   ))}
-                  <MapView.Marker image={beutifulCastle} coordinate={{ latitude: 50.066, longitude: 19.9140}}></MapView.Marker>
+                  <MapView.Marker coordinate={{ latitude: 50.066, longitude: 19.9140}}>
+                    <Image
+                      source={beutifulCastle}
+                      style={{width:60, height:60}}
+                      /></MapView.Marker>
                 </MapView>
-                <SignInBtn>
-                  
-                </SignInBtn>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}
