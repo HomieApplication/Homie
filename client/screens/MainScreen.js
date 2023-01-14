@@ -126,6 +126,7 @@ const MainScreen = ({ navigation }) => {
     };
 
     function reload() {
+        setLoading(true);
         setReloadSwitch(!reloadSwitch);
     }
 
