@@ -9,6 +9,7 @@ import {
     ScrollView,
     Dimensions,
     Pressable,
+    Vibration
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -38,20 +39,22 @@ const MyOffers = ({navigation}) => {
     const [userData, setUser] = useState({});
     const [myOffers, setmyOffers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [reloadSwitch, setReloadSwitch] = useState(false);
 
-    console.log(myOffers)
+    // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
                 setmyOffers(offers);
-                console.log(offers);
+                // console.log(offers);
             })
+            
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             });
-    }, []);
+    }, [reloadSwitch]);
 
     useEffect(() => {
         axios
@@ -59,7 +62,7 @@ const MyOffers = ({navigation}) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                // console.log(data);
             })
             .then(() => setLoading(false))
             .catch((error) => {
@@ -68,6 +71,28 @@ const MyOffers = ({navigation}) => {
                 // logout();
             });
     }, []);
+
+    function reload() {
+        setLoading(true);
+        setReloadSwitch(!reloadSwitch);
+    }
+
+    const deleteOffer = (id) => {
+        setLoading(true)
+        axios
+            .delete(`/api/offers/${id}`)
+            .then(() => displayAlertBox("Usunięto oferte"))
+            .then(() => {
+                Vibration.vibrate();
+                reload();
+                setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false);
+                displayAlertBox("Please, try again later", error.message);
+            });
+        
+    }
 
     return(
         <SafeAreaView style={styles.container}>
@@ -89,7 +114,7 @@ const MyOffers = ({navigation}) => {
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        console.log(offer)
+                        // console.log(offer)
                         return (
                             <Card
                                 key={i}
@@ -102,6 +127,7 @@ const MyOffers = ({navigation}) => {
                                 idOffer={offer.offerId}
                                 onPress={push}
                                 isMine={true}
+                                deleteFunction={() => deleteOffer(offer.offerId)}
                             />
                         );
                         })}

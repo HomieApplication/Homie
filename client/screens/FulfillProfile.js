@@ -59,7 +59,7 @@ const FulfillProfile = ({ navigation }) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(userData);
+                //console.log(userData);
                 setDescription(data.description);
                 onChangeUniversity(data.university);
                 setImage(data.photoURL);
@@ -78,7 +78,7 @@ const FulfillProfile = ({ navigation }) => {
     const getSelectedHobbies = () => {
         var hobbies = [];
         selected.forEach((e) => {
-            console.log(e.value);
+            //console.log(e.value);
             hobbies.push(e.value);
         });
         return hobbies;
@@ -88,7 +88,7 @@ const FulfillProfile = ({ navigation }) => {
         const uri = imageChanged ? await uploadImage(image) : userData.photoURL;
 
         const hobbies = getSelectedHobbies();
-        console.log("hobbies: ", hobbies);
+        //console.log("hobbies: ", hobbies);
 
         axios
             .put(`/api/users`, {
@@ -126,7 +126,7 @@ const FulfillProfile = ({ navigation }) => {
                 "You did not select any image"
             );
         }
-        console.log(image);
+       // console.log(image);
     };
 
     const uploadImage = async (uri) => {

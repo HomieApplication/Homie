@@ -8,14 +8,17 @@ import {
     Button,
     ScrollView,
     Dimensions,
+    Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 import Card from "../components/mainScreen/Card";
 import { displayAlertBox } from "../components/alert";
+
 
 const fetchOffers = async () => {
     const offers = await axios
@@ -45,24 +48,25 @@ const fetchOffers = async () => {
     return offersWithUser;
 };
 
-const FavsOffers = () => {
+const FavsOffers = ({navigation}) => {
 
     const userId = getAuth().currentUser.uid;
-    const [favOffers, setfavOffers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [myOffers, setmyOffers] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+   // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
-                setfavOffers(offers);
+                setmyOffers(offers);
+                //console.log(offers);
             })
-            .then(() => setLoading(false))
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             });
     }, []);
-
 
     return(
         <SafeAreaView style={styles.container}>
@@ -71,13 +75,16 @@ const FavsOffers = () => {
             ) : (
                 <SafeAreaView style={styles.containerMain}>
                     <View style={styles.header}> 
+                        <Pressable style={styles.goBack}>
+                            <MaterialCommunityIcons name="arrow-left" color={COLORS.background} size={35} onPress={navigation.goBack}/>
+                        </Pressable>
                         <Text style={styles.h1}>My Favourite Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
-                    {favOffers.map((offer, i) => {
+                    <View style={styles.scroll}>
+                    {myOffers.map((offer, i) => {
 
                         const push = () => {
-                            console.log(offer.offerId)
                             navigation.push("Offer", {offer: offer})
                         }
 
@@ -85,19 +92,18 @@ const FavsOffers = () => {
                         return (
                             <Card
                                 key={i}
-                                userFirstName={offer.firstName}
-                                userLastName={offer.lastName}
+                                userFirstName={userData.firstName}
+                                userLastName={userData.lastName}
                                 description={offer.description}
-                                year={offer.yearOfStudy}
-                                localType={offer.localType}
-                                //localization={offer.localization}
-                                imgUrl={offer.photoURL}
+                                year={userData.yearOfStudy}
+                                title={offer.title}
+                                imgUrl={userData.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />
                         );
                         })}
-
+                    </View>
                     </ScrollView>
                 </SafeAreaView>
             )}
@@ -138,6 +144,11 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignContent: "center",
 
-        marginLeft: Dimensions.get('window').width*0.1,
+        marginLeft: 10,
+    },
+    goBack:{
+        position: 'absolute',
+        left: 20,
+        top: 10,
     },
 })
