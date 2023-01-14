@@ -9,6 +9,7 @@ import {
     ScrollView,
     Dimensions,
     Pressable,
+    Vibration
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -38,6 +39,7 @@ const MyOffers = ({navigation}) => {
     const [userData, setUser] = useState({});
     const [myOffers, setmyOffers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [reloadSwitch, setReloadSwitch] = useState(false);
 
     console.log(myOffers)
 
@@ -51,7 +53,7 @@ const MyOffers = ({navigation}) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             });
-    }, []);
+    }, [reloadSwitch]);
 
     useEffect(() => {
         axios
@@ -69,8 +71,26 @@ const MyOffers = ({navigation}) => {
             });
     }, []);
 
-    const deleteOffer = () => {
-        displayAlertBox("Usunięto oferte");
+    function reload() {
+        setLoading(true);
+        setReloadSwitch(!reloadSwitch);
+    }
+
+    const deleteOffer = (id) => {
+        setLoading(true)
+        axios
+            .delete(`/api/offers/${id}`)
+            .then(() => displayAlertBox("Usunięto oferte"))
+            .then(() => {
+                Vibration.vibrate();
+                reload();
+                setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false);
+                displayAlertBox("Please, try again later", error.message);
+            });
+        
     }
 
     return(
@@ -106,7 +126,7 @@ const MyOffers = ({navigation}) => {
                                 idOffer={offer.offerId}
                                 onPress={push}
                                 isMine={true}
-                                deleteFunction={() => deleteOffer()}
+                                deleteFunction={() => deleteOffer(offer.offerId)}
                             />
                         );
                         })}
