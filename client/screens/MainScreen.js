@@ -22,19 +22,21 @@ import COLORS from "../components/assets";
 import { auth } from "../components/firebase/config";
 import SignInBtn from "../components/signIn/SignInBtn";
 
+
 const MainScreen = ({ navigation }) => {
     
     //userData contains data about log in user
     //offersData contains data about every offer and its creator
     //loading is true when all data have been fetched
     //selectedFilters contains array of selected filters
-    //reloadSwitch is a flag 
 
     const [userData, setUser] = useState({});
     const [offersData, setOffersData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFilters, setSelectedFilters] = React.useState([]);
     const [reloadSwitch, setReloadSwitch] = useState(false);
+
+    //const [favOffers, setFavOffers] = useState([]);
 
     const filters = [
         { key: "1", value: "male" },
@@ -141,6 +143,28 @@ const MainScreen = ({ navigation }) => {
         setReloadSwitch(!reloadSwitch);
     }
 
+    const onStarClick = async (isFav, id) => {
+        if(isFav){
+            axios
+                .post(`/api/users/favs`,{
+                    offerId: id
+                })
+                .then(() => displayAlertBox("new fav offer"))
+                .catch((error) => {
+                    displayAlertBox("Please, try again later", error.message);
+                });
+        }else{
+            axios
+                .delete(`/api/users/delete`, {
+                    offerId: id
+                })
+                .then(()=> displayAlertBox("you don't like this offer now"))
+                .catch((error) => {
+                    displayAlertBox("Please, try again later", error.message);
+                });
+        }
+    }
+
     useEffect(() => {
         setTimeout(() => {
             axios
@@ -224,6 +248,7 @@ const MainScreen = ({ navigation }) => {
                                         university={offer.university}
                                         idOffer={offer.offerId}
                                         onPress={push}
+                                        onStarClick={onStarClick}
                                     />
                                 );
                             })

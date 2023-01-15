@@ -10,8 +10,20 @@ const size = 80;
 //if isMain == true: show delete option 
 
 export default function Card(props) { 
-  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
+  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction, onStarClick } = props;
   const [isFav, setIsFav] = useState(false)
+
+
+  function setAsFav(){
+    setIsFav(true)
+    onStarClick(isFav, idOffer)
+  }
+
+
+  function setAsNotFav(){
+    setIsFav(false)
+    onStarClick(isFav, idOffer)
+  }
 
 
   return (
@@ -27,9 +39,9 @@ export default function Card(props) {
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
                 {!isMine ? <View style={styles.iconStar}>
                     {isFav ? (
-                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setAsNotFav()}/> 
                       ) :(
-                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setAsFav()}/>
                       )
                     }
                     
