@@ -1,2 +1,2 @@
 ## Homie
-#App for finding your future roommates.
+### App for finding your future roommates.
