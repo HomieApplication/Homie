@@ -119,15 +119,14 @@ const FulfillProfile = ({ navigation }) => {
         const uri = imageChanged ? await uploadImage(image) : userData.photoURL;
 
         const hobbies = getSelectedHobbies();
-        //console.log("hobbies: ", hobbies);
 
         axios
             .put(`/api/users`, {
                 photoURL: uri,
                 description: description,
-                birthDate: dateOfBirth,
                 interests: hobbies,
                 university: selectedUniversity,
+                birthDate: dateOfBirth,
                 gender: selectedGender,
                 yearOfStudy: selectedYear,
                 firstName: firstName,
@@ -161,7 +160,7 @@ const FulfillProfile = ({ navigation }) => {
                 "You did not select any image"
             );
         }
-        // console.log(image);
+
     };
 
     const uploadImage = async (uri) => {
@@ -302,7 +301,6 @@ const FulfillProfile = ({ navigation }) => {
                                 value={description}
                                 placeholder={description || "Set description"}
                             />
-
                             {/* <Text style={styles.dataText}>Date of birth:</Text>
                             <View style={styles.textboxes}>
                                 <Text>
@@ -344,6 +342,8 @@ const FulfillProfile = ({ navigation }) => {
                                     />
                                 </View>
                             )} */}
+                            
+
                         </View>
                     }
                     ListFooterComponent={

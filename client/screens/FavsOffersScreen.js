@@ -13,12 +13,11 @@ import {
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
-import { getAuth } from "@firebase/auth";
+import { getAuth, reload } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 import Card from "../components/mainScreen/Card";
 import { displayAlertBox } from "../components/alert";
-
 
 const fetchOffers = async () => {
     const offers = await axios
@@ -48,69 +47,92 @@ const fetchOffers = async () => {
     return offersWithUser;
 };
 
-const FavsOffers = ({navigation}) => {
-
+const FavsOffers = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
-    const [myOffers, setmyOffers] = useState([]);
+    const [favOffers, setfavOffers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [reloadSwitch, setReloadSwitch] = useState(false);
 
-   // console.log(myOffers)
+    // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
-                setmyOffers(offers);
-                //console.log(offers);
+                setfavOffers(offers);
             })
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             });
-    }, []);
+    }, [reloadSwitch]);
 
-    return(
+    function reload() {
+        setReloadSwitch(!reloadSwitch);
+    }
+
+    return (
         <SafeAreaView style={styles.container}>
             {loading ? (
-                <LoadingAnimation text="Loading"/>
+                <LoadingAnimation text="Loading" />
             ) : (
                 <SafeAreaView style={styles.containerMain}>
-                    <View style={styles.header}> 
+                    <View style={styles.header}>
                         <Pressable style={styles.goBack}>
-                            <MaterialCommunityIcons name="arrow-left" color={COLORS.background} size={35} onPress={navigation.goBack}/>
+                            <MaterialCommunityIcons
+                                name="arrow-left"
+                                color={COLORS.background}
+                                size={35}
+                                onPress={navigation.goBack}
+                            />
                         </Pressable>
                         <Text style={styles.h1}>My Favourite Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
-                    <View style={styles.scroll}>
-                    {myOffers.map((offer, i) => {
+                        <View style={styles.scroll}>
+                            {favOffers.map((offer, i) => {
+                                const push = () => {
+                                    navigation.push("Offer", { offer: offer });
+                                };
 
-                        const push = () => {
-                            navigation.push("Offer", {offer: offer})
-                        }
-
-                        console.log(offer)
-                        return (
-                            <Card
-                                key={i}
-                                userFirstName={userData.firstName}
-                                userLastName={userData.lastName}
-                                description={offer.description}
-                                year={userData.yearOfStudy}
-                                title={offer.title}
-                                imgUrl={userData.photoURL}
-                                idOffer={offer.offerId}
-                                onPress={push}
-                            />
-                        );
-                        })}
-                    </View>
+                                console.log(offer);
+                                return (
+                                    <Card
+                                        key={i}
+                                        userFirstName={offer.firstName}
+                                        userLastName={offer.lastName}
+                                        description={offer.description}
+                                        gender={offer.gender}
+                                        year={offer.yearOfStudy}
+                                        title={offer.title}
+                                        imgUrl={offer.photoURL}
+                                        idOffer={offer.offerId}
+                                        onPress={push}
+                                        isFavourite={true}
+                                        onStarClick={(isFav, id) => {
+                                            axios
+                                                .delete(`/api/users/favs`, {
+                                                    data: { offerId: id },
+                                                })
+                                                .then(() => reload())
+                                                .catch((error) => {
+                                                    displayAlertBox(
+                                                        "Please, try again later",
+                                                        error.response.data
+                                                            .message
+                                                    );
+                                                });
+                                        }}
+                                    />
+                                );
+                            })}
+                        </View>
                     </ScrollView>
                 </SafeAreaView>
             )}
         </SafeAreaView>
-    )
-}
-export default FavsOffers
+    );
+};
+export default FavsOffers;
 
 const styles = StyleSheet.create({
     container: {
@@ -122,17 +144,16 @@ const styles = StyleSheet.create({
     containerMain: {
         marginTop: 50,
         flex: 1,
-        width: '100%',
+        width: "100%",
         alignItems: "flex-start",
         justifyContent: "flex-start",
     },
     header: {
-        width: '100%',
+        width: "100%",
         flex: 0.15,
         backgroundColor: COLORS.primary1,
         alignItems: "center",
         justifyContent: "center",
-
     },
     h1: {
         color: COLORS.textProfile,
@@ -146,9 +167,9 @@ const styles = StyleSheet.create({
 
         marginLeft: 10,
     },
-    goBack:{
-        position: 'absolute',
+    goBack: {
+        position: "absolute",
         left: 20,
         top: 10,
     },
-})
+});

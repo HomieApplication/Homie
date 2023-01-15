@@ -5,9 +5,25 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import COLORS from '../assets';
 const size = 80;
 
+//Card componnet is used in MainScreen and My/FavsOffersScreen
+//This component shows basic information about offer and its user
+//if isMain == true: show delete option 
+
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
-  const [isFav, setIsFav] = useState(false)
+  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction, onStarClick, isFavourite } = props;
+  const [isFav, setIsFav] = useState(isFavourite || false)
+
+
+  function setAsFav(){
+    setIsFav(true)
+    onStarClick(isFav, idOffer)
+  }
+
+
+  function setAsNotFav(){
+    setIsFav(false)
+    onStarClick(isFav, idOffer)
+  }
 
 
   return (
@@ -23,9 +39,9 @@ export default function Card(props) {
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
                 {!isMine ? <View style={styles.iconStar}>
                     {isFav ? (
-                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setAsNotFav()}/> 
                       ) :(
-                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setAsFav()}/>
                       )
                     }
                     
@@ -38,7 +54,7 @@ export default function Card(props) {
               </View>
                 
                 <Text style={styles.description}>{university}</Text> 
-                <Text style={styles.description}>{year} year</Text>
+                <Text style={styles.description}>{year} year, {gender}</Text>
             </View>
 
 

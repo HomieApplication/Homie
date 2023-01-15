@@ -20,12 +20,21 @@ import COLORS from "../components/assets";
 import { auth } from "../components/firebase/config";
 import SignInBtn from "../components/signIn/SignInBtn";
 
+
 const MainScreen = ({ navigation }) => {
+    
+    //userData contains data about log in user
+    //offersData contains data about every offer and its creator
+    //loading is true when all data have been fetched
+    //selectedFilters contains array of selected filters
+
     const [userData, setUser] = useState({});
     const [offersData, setOffersData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedFilters, setSelectedFilters] = React.useState([]);
     const [reloadSwitch, setReloadSwitch] = useState(false);
+
+    //const [favOffers, setFavOffers] = useState([]);
 
     const filters = [
         { key: "1", value: "male" },
@@ -48,6 +57,8 @@ const MainScreen = ({ navigation }) => {
     ];
 
     const fetchOffers = async () => {
+
+        //get all offers feom database
         const offers = await axios
             .get("/api/offers")
             .then((res) => res.data)
@@ -57,6 +68,8 @@ const MainScreen = ({ navigation }) => {
                 // logout();
             });
 
+        //for each offer get information about user
+        //return map with offers and users data
         const offersWithUser = await Promise.all(
             offers.map(async (offer) => {
                 const userData = await axios
@@ -68,20 +81,19 @@ const MainScreen = ({ navigation }) => {
                             "Please, try again later",
                             error.message
                         );
-                        // logout();
                     });
                 return { ...userData, ...offer };
             })
         ).catch((error) => {
             console.log(error);
             displayAlertBox("Please, try again later", error.message);
-            // logout();
         });
 
         const notUsersOffers = offersWithUser.filter(
             (offer) => offer.userId !== auth.currentUser.uid
         );
 
+        //function return offers with selected filters
         const filteredOffers = notUsersOffers.filter((offer) => {
             if (selectedFilters.length === 0) {
                 return true;
@@ -125,9 +137,33 @@ const MainScreen = ({ navigation }) => {
         return filteredOffers;
     };
 
+    //reload main page
     function reload() {
         setLoading(true);
         setReloadSwitch(!reloadSwitch);
+    }
+
+    const onStarClick = async (isFav, id) => {
+        if(!isFav){
+            axios
+                .post(`/api/users/favs`,{
+                    offerId: id
+                })
+                // .then(() => displayAlertBox("new fav offer"))
+                .catch((error) => {
+                    displayAlertBox("Please, try again later", error.response.data.message);
+                });
+        } else {
+            console.log(id);
+            axios
+                .delete(`/api/users/favs`, {
+                    data: { offerId: id}
+                })
+                // .then(()=> displayAlertBox("you don't like this offer now"))
+                .catch((error) => {
+                    displayAlertBox("Please, try again later", error.response.data.message);
+                });
+        }
     }
 
     useEffect(() => {
@@ -144,6 +180,7 @@ const MainScreen = ({ navigation }) => {
             });
     }, [reloadSwitch]);
 
+    //on reloadSwith or selectedFilters change -> get current offers from database  
     useEffect(() => {
         setTimeout(() => {
             if (JSON.stringify(userData) === "{}") reload();
@@ -162,6 +199,9 @@ const MainScreen = ({ navigation }) => {
                 // logout();
             });
     }, [selectedFilters, reloadSwitch]);
+
+
+    //if loading is true show LoadingAnimation component
 
     return (
         <SafeAreaView style={styles.containerMain}>
@@ -204,6 +244,7 @@ const MainScreen = ({ navigation }) => {
                                         key={i}
                                         userFirstName={offer.firstName}
                                         userLastName={offer.lastName}
+                                        gender={offer.gender}
                                         description={offer.description}
                                         year={offer.yearOfStudy}
                                         imgUrl={offer.photoURL}
@@ -211,6 +252,7 @@ const MainScreen = ({ navigation }) => {
                                         university={offer.university}
                                         idOffer={offer.offerId}
                                         onPress={push}
+                                        onStarClick={onStarClick}
                                     />
                                 );
                             })

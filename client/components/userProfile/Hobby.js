@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-nati
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from '../assets.js'
 
+//Hobby is a element of a list of interests in ProfileHeaderFull component
+
 const Hobby = (props) => {
     const {name} = props;
 

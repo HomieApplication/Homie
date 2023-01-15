@@ -120,6 +120,7 @@ const MyOffers = ({navigation}) => {
                                 key={i}
                                 userFirstName={userData.firstName}
                                 userLastName={userData.lastName}
+                                gender={userData.gender}
                                 description={offer.description}
                                 year={userData.yearOfStudy}
                                 title={offer.title}

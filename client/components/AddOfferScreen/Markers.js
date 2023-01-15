@@ -1,3 +1,5 @@
+//Markers with coordinates, name and key of every dormitory on AGH 
+
 export const markers = [
     {
     title: 'I DS Alfa',

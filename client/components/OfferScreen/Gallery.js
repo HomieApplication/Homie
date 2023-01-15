@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import COLORS from '../assets'
 
-
+//Gallery component used in OfferScrren
+//shows images added to offer
 
 const Gallery = (props) => {
     const {images} = props;
-    //const [imgs, setImages] = useState(images);
     const [index, setIndex] = useState(0);
 
     console.log(images)
