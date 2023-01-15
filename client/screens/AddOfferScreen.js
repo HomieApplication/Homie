@@ -278,8 +278,8 @@ const AddOfferScreen = ({ navigation }) => {
                 displayAlertBox("Failed to publish your offer", "Add title!");
               } else if (description === "") {
                 displayAlertBox("Failed to publish your offer", "Add description!");
-              } else if (localization === "") {
-                displayAlertBox("Failed to publish your offer", "Choose dormitory!");
+              // } else if (localization === "") {
+              //   displayAlertBox("Failed to publish your offer", "Choose dormitory!");
               } else {
                 setLoading(true);
                 sendData().catch(error =>
