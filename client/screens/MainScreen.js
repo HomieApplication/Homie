@@ -186,33 +186,33 @@ const MainScreen = ({ navigation }) => {
                     <ScrollView style={styles.scroll}>
                         <View style={styles.dropdownContainer}>
                         <MultipleSelectList
-                            boxStyles={styles.dropdown0}
+                            boxStyles={styles.box0}
                             dropdownStyles={styles.dropdown0}
                             setSelected={(val) => setSelectedFilters(val)}
                             data={filters0}
                             save="value"
                             label="Filters"
-                            placeholder="Select gender"
+                            placeholder="Gender"
                             search={false}
                         />
                         <MultipleSelectList
-                            boxStyles={styles.dropdown1}
-                            dropdownStyles={styles.dropdown1}
-                            setSelected={(val) => setSelectedFilters(val)}
-                            data={filters1}
-                            save="value"
-                            label="Filters"
-                            placeholder="Select year of study"
-                            search={false}
-                        />
-                        <MultipleSelectList
-                            boxStyles={styles.dropdown2}
+                            boxStyles={styles.box2}
                             dropdownStyles={styles.dropdown2}
                             setSelected={(val) => setSelectedFilters(val)}
                             data={filters2}
                             save="value"
                             label="Filters"
-                            placeholder="Select hobby"
+                            placeholder="Hobby"
+                            search={false}
+                        />
+                        <MultipleSelectList
+                            boxStyles={styles.box1}
+                            dropdownStyles={styles.dropdown1}
+                            setSelected={(val) => setSelectedFilters(val)}
+                            data={filters1}
+                            save="value"
+                            label="Filters"
+                            placeholder="Year of study"
                             search={false}
                         />
                         </View>
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.primary1,
     },
     dropdown0: {
-        width: "50%",
+        flex: 1,
         fontSize: 13,
         // margin: 8,
         borderColor: "grey",
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     dropdown1: {
-        width: "50%",
+        flex: 2,
         fontSize: 13,
         // margin: 8,
         borderColor: "grey",
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     dropdown2: {
-        width: "50%",
+        flex: 3,
         fontSize: 13,
         // margin: 8,
         borderColor: "grey",
@@ -337,10 +337,16 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         elevation: 3,
     },
+    box0: {
+        width: 90,
+    },
+    box1: {
+        width: 150,
+    },
+    box2: {
+        width: 90,
+    },
     dropdownContainer: {
-        // flex: 1,
         flexDirection: 'row',
-        // flexWrap: 'wrap',
-        // alignItems: 'flex-start' // if you want to fill rows left to right
     },
 });
