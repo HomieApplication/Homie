@@ -30,14 +30,28 @@ Please contact any of our maintainers for more information on what we're looking
 <a name="gen"></a>
 ## 📖 General Usage
 **Login/Register**:\
-Launching an application moves you to Login Screen. You can log in with existing account or create one by clicking at 'Register here' button. Registration require your: e-mail, passowrd, full name and year of study. After you register, you can log in with your account. If you forget the password, you can click 'Forgot password' button to get a 'reset password lnik' sent to your e-mail adress( don't forget to fullfill e-mail box before clicking on the button😉).\
+Launching an application moves you to Login Screen. 
+You can log in with existing account or create one by clicking at 'Register here' button. 
+Registration require your: e-mail, passowrd, full name and year of study. 
+After you register, you can log in with your account. 
+If you forget the password, you can click 'Forgot password' button to get a 'reset password lnik' sent to your e-mail adress( don't forget to fullfill e-mail box before clicking on the button😉).\
 **Main Screen**:\
-After succesfull log in, you are redirected to Main Screen. Here you can see your personal information at the top of the screen. You can click 'Edit Profile' button to edit and fulfill your profile information( fulfilling your profile is required for correct posting an offer! ).\
-Below You can see a list of all posted offers which can be filtered out using 'Select filter'. You can certainly see any offer that interests you by clicking arrow on the buttom of each offer. Clicking a star icon on the offer add it to your 'Favourites offers'. You can see your favourite offers by cliking on the star in upper right corner of the screen or by cliking profile icon on the buttom and selecting 'Favourites offers'.\
+After succesfull log in, you are redirected to Main Screen 🏠. 
+Here You can see Your personal information at the top of the screen. 
+You can click 'Edit Profile' button to edit and fulfill Your profile information( fulfilling Your profile is required for correct posting an offer! ).\
+Below You can see a list of all posted offers which can be filtered out using 'Select filter'. 
+You can certainly see any offer that interests you by clicking arrow on the buttom of each offer. 
+Clicking a star icon ⭐️ on the offer add it to your 'Favourites offers'. 
+You can see your favourite offers by cliking on the star in upper right corner of the screen or by cliking profile icon on the buttom and selecting 'Favourites offers'.\
 **Add Offer Screen**:\
-You can add Your new offer using '+' button on the buttom. Here you provide all the necessery data like offer title, description and location of a desired dormitory( location is optional; you can leave this record empty if You're not sure which you preffer ). After clicking 'Create offer' button your offer is now visible to all the users. You can see your created offers by cliking by cliking profile icon on the buttom and selecting 'My offers'.\
+You can add Your new offer using '➕' button on the buttom. 
+Here you provide all the necessery data like offer title, description and location of a desired dormitory( location is optional; you can leave this record empty if You're not sure which you preffer ). 
+After clicking 'Create offer' button your offer is now visible to all the users. 
+You can see your created offers by cliking by cliking profile icon on the buttom and selecting 'My offers'.\
 **Profile Screen**:\
-On the right bottom corner is a buttton, that moves you to Your Profile Screen. There you can see all your favourite offers, as well as all the offers you posted. There is also a button that lets you log out of the app.
+On the right bottom corner is a buttton 👤, that moves you to Your Profile Screen. 
+There you can see all your favourite offers, as well as all the offers you posted. 
+There is also a button that lets you log out of the app.
 
 <a name="ack"></a>
 ## 👥 Acknowledgements
