@@ -144,23 +144,24 @@ const MainScreen = ({ navigation }) => {
     }
 
     const onStarClick = async (isFav, id) => {
-        if(isFav){
+        if(!isFav){
             axios
                 .post(`/api/users/favs`,{
                     offerId: id
                 })
                 .then(() => displayAlertBox("new fav offer"))
                 .catch((error) => {
-                    displayAlertBox("Please, try again later", error.message);
+                    displayAlertBox("Please, try again later", error.response.data.message);
                 });
-        }else{
+        } else {
+            console.log(id);
             axios
-                .delete(`/api/users/delete`, {
-                    offerId: id
+                .delete(`/api/users/favs`, {
+                    data: { offerId: id}
                 })
                 .then(()=> displayAlertBox("you don't like this offer now"))
                 .catch((error) => {
-                    displayAlertBox("Please, try again later", error.message);
+                    displayAlertBox("Please, try again later", error.response.data.message);
                 });
         }
     }
