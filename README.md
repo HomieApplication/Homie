@@ -23,7 +23,7 @@ You can install [Expo Go](https://expo.dev/client) on your IOS or Android device
 In the future we are planning to deploy our app to Google Play and App Store, to enable quick and effortless installation and usage. Going forward we would like to add possibility to find a roommate to your own flat and enable looking for residents to your own flat.
 
 <a name="cont"></a>
-## 👏 Contributing
+## 👏 Contribution
 We'd love to have your helping hand on Homie app! Any help with issues and pull requests are always appreciated.
 Please contact any of our maintainers for more information on what we're looking for and how to get started.
 
