@@ -1,0 +1,151 @@
+# npm audit report
+
+ansi-html  <0.0.8
+Severity: high
+Uncontrolled Resource Consumption in ansi-html - https://github.com/advisories/GHSA-whgm-jr23-g3j9
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/ansi-html
+  webpack-dev-server  2.0.0-beta - 4.7.2
+  Depends on vulnerable versions of ansi-html
+  Depends on vulnerable versions of chokidar
+  Depends on vulnerable versions of selfsigned
+  node_modules/webpack-dev-server
+    @expo/webpack-config  >=0.5.1
+    Depends on vulnerable versions of optimize-css-assets-webpack-plugin
+    Depends on vulnerable versions of react-dev-utils
+    Depends on vulnerable versions of webpack-dev-server
+    node_modules/@expo/webpack-config
+
+browserslist  4.0.0 - 4.16.4
+Severity: moderate
+Regular Expression Denial of Service in browserslist - https://github.com/advisories/GHSA-w8qv-6jwh-64r5
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/react-dev-utils/node_modules/browserslist
+  react-dev-utils  0.5.2 - 12.0.0-next.60
+  Depends on vulnerable versions of browserslist
+  Depends on vulnerable versions of immer
+  Depends on vulnerable versions of loader-utils
+  Depends on vulnerable versions of recursive-readdir
+  Depends on vulnerable versions of shell-quote
+  node_modules/react-dev-utils
+
+glob-parent  <5.1.2
+Severity: high
+glob-parent before 5.1.2 vulnerable to Regular Expression Denial of Service in enclosure regex - https://github.com/advisories/GHSA-ww39-953v-wcq6
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/watchpack-chokidar2/node_modules/glob-parent
+node_modules/webpack-dev-server/node_modules/glob-parent
+  chokidar  1.0.0-rc1 - 2.1.8
+  Depends on vulnerable versions of glob-parent
+  node_modules/watchpack-chokidar2/node_modules/chokidar
+  node_modules/webpack-dev-server/node_modules/chokidar
+    watchpack-chokidar2  *
+    Depends on vulnerable versions of chokidar
+    node_modules/watchpack-chokidar2
+      watchpack  1.7.2 - 1.7.5
+      Depends on vulnerable versions of watchpack-chokidar2
+      node_modules/watchpack
+
+immer  <=9.0.5
+Severity: critical
+Prototype Pollution in immer - https://github.com/advisories/GHSA-c36v-fmgq-m8hx
+Prototype Pollution in immer - https://github.com/advisories/GHSA-33f9-j839-rf8h
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/immer
+
+json5  <1.0.2
+Severity: high
+Prototype Pollution in JSON5 via Parse Method - https://github.com/advisories/GHSA-9c47-m6qq-7p4h
+fix available via `npm audit fix --force`
+Will install expo@1.0.0, which is a breaking change
+node_modules/find-babel-config/node_modules/json5
+  find-babel-config  <=1.2.0
+  Depends on vulnerable versions of json5
+  node_modules/find-babel-config
+    babel-plugin-module-resolver  2.3.0 - 4.1.0
+    Depends on vulnerable versions of find-babel-config
+    node_modules/babel-plugin-module-resolver
+      babel-preset-expo  *
+      Depends on vulnerable versions of babel-plugin-module-resolver
+      node_modules/babel-preset-expo
+        expo  >=14.0.0
+        Depends on vulnerable versions of babel-preset-expo
+        node_modules/expo
+
+loader-utils  2.0.0 - 2.0.3
+Severity: critical
+loader-utils is vulnerable to Regular Expression Denial of Service (ReDoS) via url variable - https://github.com/advisories/GHSA-3rfm-jhwj-7488
+loader-utils is vulnerable to Regular Expression Denial of Service (ReDoS) - https://github.com/advisories/GHSA-hhq3-ff78-jv3g
+Prototype pollution in webpack loader-utils - https://github.com/advisories/GHSA-76p3-8jx3-jpfq
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/react-dev-utils/node_modules/loader-utils
+
+minimatch  <3.0.5
+Severity: high
+minimatch ReDoS vulnerability - https://github.com/advisories/GHSA-f8q6-p94x-37v3
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/recursive-readdir/node_modules/minimatch
+  recursive-readdir  1.2.0 - 2.2.2
+  Depends on vulnerable versions of minimatch
+  node_modules/recursive-readdir
+
+node-forge  <=1.2.1
+Severity: high
+Open Redirect in node-forge - https://github.com/advisories/GHSA-8fr3-hfg3-gpgp
+Prototype Pollution in node-forge debug API. - https://github.com/advisories/GHSA-5rrq-pxf6-6jx5
+Improper Verification of Cryptographic Signature in `node-forge` - https://github.com/advisories/GHSA-2r2c-g63r-vccr
+Improper Verification of Cryptographic Signature in node-forge - https://github.com/advisories/GHSA-x4jg-mjrx-434g
+Improper Verification of Cryptographic Signature in node-forge - https://github.com/advisories/GHSA-cfm4-qjh2-4765
+URL parsing in node-forge could lead to undesired behavior. - https://github.com/advisories/GHSA-gf8q-jrpm-jvxq
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/selfsigned/node_modules/node-forge
+  selfsigned  1.1.1 - 1.10.14
+  Depends on vulnerable versions of node-forge
+  node_modules/selfsigned
+
+nth-check  <2.0.1
+Severity: high
+Inefficient Regular Expression Complexity in nth-check - https://github.com/advisories/GHSA-rp65-9cf3-cjxr
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/svgo/node_modules/nth-check
+  css-select  <=3.1.0
+  Depends on vulnerable versions of nth-check
+  node_modules/svgo/node_modules/css-select
+    svgo  1.0.0 - 1.3.2
+    Depends on vulnerable versions of css-select
+    node_modules/svgo
+      postcss-svgo  4.0.0-nightly.2020.1.9 - 5.0.0-rc.2
+      Depends on vulnerable versions of svgo
+      node_modules/postcss-svgo
+        cssnano-preset-default  <=4.0.8
+        Depends on vulnerable versions of postcss-svgo
+        node_modules/cssnano-preset-default
+          cssnano  4.0.0-nightly.2020.1.9 - 4.1.11
+          Depends on vulnerable versions of cssnano-preset-default
+          node_modules/cssnano
+            optimize-css-assets-webpack-plugin  3.2.1 || 5.0.0 - 5.0.8
+            Depends on vulnerable versions of cssnano
+            node_modules/optimize-css-assets-webpack-plugin
+
+shell-quote  <=1.7.2
+Severity: critical
+Improper Neutralization of Special Elements used in a Command in Shell-quote - https://github.com/advisories/GHSA-g4rg-993r-mgx7
+fix available via `npm audit fix --force`
+Will install @expo/webpack-config@0.16.19, which is a breaking change
+node_modules/react-dev-utils/node_modules/shell-quote
+
+28 vulnerabilities (2 moderate, 22 high, 4 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force

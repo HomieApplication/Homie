@@ -11,10 +11,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
-import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
-
 import { displayAlertBox } from "../components/alert";
 import { logout } from "../components/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -54,6 +52,7 @@ const MainScreen = ({ navigation }) => {
         { key: "13", value: "Journey" },
         { key: "14", value: "Music" },
         { key: "15", value: "Video Games" },
+        { key: "16", value: "Movies" },
         // Można by dodać jeszcze filtry na wiek i uniwersytet, ale trzeba  by to uporządkować jakoś
     ];
 
@@ -128,7 +127,8 @@ const MainScreen = ({ navigation }) => {
                 (selectedFilters.includes("Music") &&
                     offer.hobby !== "Music") ||
                 (selectedFilters.includes("Video Games") &&
-                    offer.hobby !== "Video Games")
+                    offer.hobby !== "Video Games") ||
+                (selectedFilters.includes("Movies") && offer.hobby !== "Movies")
             )
                 return false;
             else return true;
@@ -167,23 +167,26 @@ const MainScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            axios
-                .get("/api/users")
-                .then((res) => res.data)
-                .then((data) => {
-                    setUser(data);
-                    // console.log(data);
-                })
-                .catch((error) => {
-                    console.log("Connection error: " + error.message);
-                    displayAlertBox("Please, try again later", error.message);
-                    logout();
-                });
-        }, 1000);
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
+            .then((data) => {
+                setUser(data);
+                // console.log(data);
+            })
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                // logout();
+            });
     }, [reloadSwitch]);
 
     //on reloadSwith or selectedFilters change -> get current offers from database  
+    useEffect(() => {
+        setTimeout(() => {
+            if (JSON.stringify(userData) === "{}") reload();
+        }, 2000);
+    }, []);
+
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
@@ -254,7 +257,6 @@ const MainScreen = ({ navigation }) => {
                                 );
                             })
                         )}
-                        {/* Nawet to nie takie brzydkie trzeba dodać jakiś komunikat, że odświeżono, to samo można pododawac do innych screenów */}
                         <SignInBtn
                             style={styles.button}
                             onPress={reload}

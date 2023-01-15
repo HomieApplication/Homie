@@ -8,6 +8,7 @@ import {
     User,
 } from "firebase/auth";
 import axios from "axios";
+import { auth } from "./firebase/config";
 
 import { displayAlertBox } from "../components/alert";
 
@@ -31,15 +32,17 @@ export function register(email, password, userData) {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            axios.post("/api/users", userData).catch((error) => {
-                displayAlertBox("Failed to register", error.message);
-            });
+            axios
+                .post("/api/users", userData)
+                .then(() => emailVerification())
+                .catch((error) => {
+                    displayAlertBox("Failed to register", error.message);
+                });
         })
         .catch((error) => {
             displayAlertBox("Failed to register", error.message);
         });
 
-    emailVerification();
     return auth.currentUser;
 }
 
@@ -86,7 +89,7 @@ function emailVerification() {
             console.log(`Email verification sent!`);
         })
         .catch((error) => {
-            displayAlertBox("Failed to sent verification mail", error.message);
+            console.log("Failed to sent verification mail. " + error.message);
         });
     // user.emailVerified
 }
@@ -103,20 +106,9 @@ export function resetPassword(email) {
             displayAlertBox("Password reset email sent", email);
         })
         .catch((error) => {
-            displayAlertBox("Failed to reset password", "Check your email address");
-        });
-}
-
-/**
- * Deletes currently logged in user
- */
-export function deleteCurrentUser() {
-    const auth = getAuth();
-    deleteUser(auth.currentUser)
-        .then(() => {
-            console.log(`Successfully deleted user!`);
-        })
-        .catch((error) => {
-            displayAlertBox("Failed to delete user", error.message);
+            displayAlertBox(
+                "Failed to reset password",
+                "Check your email address"
+            );
         });
 }
