@@ -108,7 +108,7 @@ const AddOfferScreen = ({ navigation }) => {
   const pickImageAsync = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
-          quality: 1,
+          quality: 0.5,
       }).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
@@ -176,8 +176,9 @@ const AddOfferScreen = ({ navigation }) => {
             placeholder="Description"
           />
           <View style={styles.textboxes}>
-            <Text
-             >{dormitory}</Text>
+            {dormitory ? <Text
+             >{dormitory}</Text> : <Text style={{color: "gray"}}
+             >Choose dormitory</Text>}
           </View>
 
           <View>

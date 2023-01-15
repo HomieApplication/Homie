@@ -17,22 +17,19 @@ import SignInBtn from "../components/signIn/SignInBtn";
 import RNMultiSelect from "@freakycoder/react-native-multiple-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { SelectList } from "react-native-dropdown-select-list";
-
-import { getAuth } from "@firebase/auth";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import COLORS from "../components/assets";
 import { displayAlertBox } from "../components/alert";
+import { auth } from "../components/firebase/config";
 import LoadingAnimation from "../components/LoadingAnimation";
 
 const storage = getStorage();
 
 const FulfillProfile = ({ navigation }) => {
-    const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     const [loading, setLoading] = React.useState(true);
-    const [university, onChangeUniversity] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [image, setImage] = React.useState("");
     const [selected, setSelected] = React.useState([]);
@@ -59,9 +56,7 @@ const FulfillProfile = ({ navigation }) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                //console.log(userData);
                 setDescription(data.description);
-                onChangeUniversity(data.university);
                 setImage(data.photoURL);
                 setDateOfBirth(new Date(data.birthDate));
                 setSelectedGender(data.gender);
@@ -92,14 +87,13 @@ const FulfillProfile = ({ navigation }) => {
 
         axios
             .put(`/api/users`, {
-                university: university,
                 photoURL: uri,
                 description: description,
-                // birthDate: null,
+                birthDate: dateOfBirth,
                 interests: hobbies,
                 university: selectedUniversity,
                 gender: selectedGender,
-                year: selectedYear,
+                yearOfStudy: selectedYear,
             })
             .then(() => {
                 setLoading(false);
@@ -108,14 +102,17 @@ const FulfillProfile = ({ navigation }) => {
             })
             .catch((error) => {
                 setLoading(false);
-                displayAlertBox("Please, try again later", error.message);
+                displayAlertBox(
+                    "Please, try again later",
+                    error.response.data.message
+                );
             });
     };
 
     const pickImageAsync = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            quality: 1,
+            quality: 0.3,
         });
 
         if (!result.cancelled) {
@@ -126,7 +123,7 @@ const FulfillProfile = ({ navigation }) => {
                 "You did not select any image"
             );
         }
-       // console.log(image);
+        // console.log(image);
     };
 
     const uploadImage = async (uri) => {
@@ -332,6 +329,7 @@ const FulfillProfile = ({ navigation }) => {
                                 onPress={() => {
                                     setImageChanged(true);
                                     pickImageAsync().catch((error) => {
+                                        setLoading(false);
                                         displayAlertBox(
                                             "Please, try again later",
                                             error.message
@@ -363,7 +361,6 @@ const FulfillProfile = ({ navigation }) => {
                                             error.message
                                         )
                                     );
-                                    setLoading(false);
                                 }}
                             ></SignInBtn>
                         </View>

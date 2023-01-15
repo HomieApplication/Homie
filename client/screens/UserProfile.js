@@ -48,6 +48,7 @@ const UserProfile = ({ navigation }) => {
             .then(() => setLoading(false))
             .catch((error) => {
                 console.log("Connection error: " + error.message);
+                setLoading(false)
                 displayAlertBox("Please, try again later", error.message);
             });
     }, []);

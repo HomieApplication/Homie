@@ -11,10 +11,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileHeader from "../components/userProfile/ProfileHeader";
 import Card from "../components/mainScreen/Card";
-import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
-
 import { displayAlertBox } from "../components/alert";
 import { logout } from "../components/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -131,21 +129,24 @@ const MainScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            axios
-                .get("/api/users")
-                .then((res) => res.data)
-                .then((data) => {
-                    setUser(data);
-                    // console.log(data);
-                })
-                .catch((error) => {
-                    console.log("Connection error: " + error.message);
-                    displayAlertBox("Please, try again later", error.message);
-                    logout();
-                });
-        }, 1000);
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
+            .then((data) => {
+                setUser(data);
+                console.log(data);
+            })
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                // logout();
+            });
     }, [reloadSwitch]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (JSON.stringify(userData) === '{}') reload();
+        }, 2000);
+    }, []);
 
     useEffect(() => {
         fetchOffers()
@@ -212,7 +213,6 @@ const MainScreen = ({ navigation }) => {
                                 );
                             })
                         )}
-                        {/* Nawet to nie takie brzydkie trzeba dodać jakiś komunikat, że odświeżono, to samo można pododawac do innych screenów */}
                         <SignInBtn
                             style={styles.button}
                             onPress={reload}

@@ -499,7 +499,7 @@ router.put("/", async (req, res) => {
                 ...req.body,
                 birthDate: req.body.birthDate
                     ? new Date(req.body.birthDate)
-                    : req.body.birthDate,
+                    : undefined,
             })
             .catch((error) => res.status(500).send({ message: error.message }));
 
@@ -512,7 +512,9 @@ router.put("/", async (req, res) => {
 
         res.send({
             ...userData,
-            birthDate: userData.birthDate.toDate(),
+            birthDate: userData.birthDate
+                ? userData.birthDate.toDate()
+                : undefined,
             age: userData.birthDate
                 ? calculateAge(userData.birthDate.toDate())
                 : userData.age,
