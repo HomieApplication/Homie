@@ -216,6 +216,7 @@ const MainScreen = ({ navigation }) => {
                                         key={i}
                                         userFirstName={offer.firstName}
                                         userLastName={offer.lastName}
+                                        gender={offer.gender}
                                         description={offer.description}
                                         year={offer.yearOfStudy}
                                         imgUrl={offer.photoURL}

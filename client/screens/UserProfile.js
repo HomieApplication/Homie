@@ -20,8 +20,6 @@ import COLORS from "../components/assets";
 import LoadingAnimation from "../components/LoadingAnimation";
 
 
-//Tabs are maped under ProfileHeaderFul component 
-
 const Tabs = [
     {
         id: "1",

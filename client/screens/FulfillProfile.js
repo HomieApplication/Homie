@@ -19,6 +19,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { SelectList } from "react-native-dropdown-select-list";
 
 import { getAuth } from "@firebase/auth";
+import { auth } from "../components/firebase/config";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -88,7 +89,6 @@ const FulfillProfile = ({ navigation }) => {
         const uri = imageChanged ? await uploadImage(image) : userData.photoURL;
 
         const hobbies = getSelectedHobbies();
-        //console.log("hobbies: ", hobbies);
 
         axios
             .put(`/api/users`, {
@@ -97,6 +97,7 @@ const FulfillProfile = ({ navigation }) => {
                 description: description,
                 interests: hobbies,
                 university: selectedUniversity,
+                birthDate: dateOfBirth,
                 gender: selectedGender,
                 year: selectedYear,
             })
@@ -138,7 +139,7 @@ const FulfillProfile = ({ navigation }) => {
         });
         const imageRef = ref(
             storage,
-            `images/${userId}/${uri.substring(
+            `images/${auth.currentUser.uid}/${uri.substring(
                 uri.lastIndexOf("/") + 1
             )}`
         );
@@ -268,6 +269,49 @@ const FulfillProfile = ({ navigation }) => {
                                 value={description}
                                 placeholder={description}
                             />
+                            {/* <Text style={styles.dataText}>Date of birth:</Text>
+                            <TextInput
+                                style={styles.textboxes}
+                                onChange={showDatePicker}
+                            >
+                                {dateOfBirth
+                                    ? dateOfBirth.toDateString()
+                                    : undefined}
+                            </TextInput>
+
+                            {datePicker && (
+                                <DateTimePicker
+                                    value={dateOfBirth}
+                                    mode={"date"}
+                                    display={
+                                        Platform.OS === "ios"
+                                            ? "spinner"
+                                            : "default"
+                                    }
+                                    is24Hour={true}
+                                    onChange={onDateSelected}
+                                    style={styles.datePicker}
+                                />
+                            )}
+
+                            {!datePicker && (
+                                <View
+                                    style={{
+                                        marginBottom: 20,
+                                        paddingVertical: 12,
+                                        paddingHorizontal: 32,
+                                        width: 240,
+                                        borderRadius: 50,
+                                    }}
+                                >
+                                    <Button
+                                        title="Show Date Picker"
+                                        color={COLORS.primary1}
+                                        onPress={showDatePicker}
+                                    />
+                                </View>
+                            )} */}
+                            
 
                         </View>
                     }

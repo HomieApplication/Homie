@@ -51,7 +51,7 @@ const fetchOffers = async () => {
 const FavsOffers = ({navigation}) => {
 
     const userId = getAuth().currentUser.uid;
-    const [myOffers, setmyOffers] = useState([]);
+    const [favOffers, setfavOffers] = useState([]);
     const [loading, setLoading] = useState(false);
 
    // console.log(myOffers)
@@ -59,8 +59,7 @@ const FavsOffers = ({navigation}) => {
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
-                setmyOffers(offers);
-                //console.log(offers);
+                setfavOffers(offers);
             })
             .catch((error) => {
                 console.log(error);
@@ -82,7 +81,7 @@ const FavsOffers = ({navigation}) => {
                     </View>
                     <ScrollView style={styles.scroll}>
                     <View style={styles.scroll}>
-                    {myOffers.map((offer, i) => {
+                    {favOffers.map((offer, i) => {
 
                         const push = () => {
                             navigation.push("Offer", {offer: offer})
@@ -92,12 +91,13 @@ const FavsOffers = ({navigation}) => {
                         return (
                             <Card
                                 key={i}
-                                userFirstName={userData.firstName}
-                                userLastName={userData.lastName}
+                                userFirstName={offer.firstName}
+                                userLastName={offer.lastName}
                                 description={offer.description}
-                                year={userData.yearOfStudy}
+                                gender={offer.gender}
+                                year={offer.yearOfStudy}
                                 title={offer.title}
-                                imgUrl={userData.photoURL}
+                                imgUrl={offer.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
                             />

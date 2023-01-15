@@ -10,7 +10,7 @@ const size = 80;
 //if isMain == true: show delete option 
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
+  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
   const [isFav, setIsFav] = useState(false)
 
 
@@ -42,7 +42,7 @@ export default function Card(props) {
               </View>
                 
                 <Text style={styles.description}>{university}</Text> 
-                <Text style={styles.description}>{year} year</Text>
+                <Text style={styles.description}>{year} year, {gender}</Text>
             </View>
 
 
