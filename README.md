@@ -29,7 +29,15 @@ Please contact any of our maintainers for more information on what we're looking
 
 <a name="gen"></a>
 ## 📖 General Usage
-Register to our application through ...TODO
+**Login/Register**:\
+Launching an application moves you to Login Screen. You can login with existing account or create one by clicking at 'Register here' button. Registration require your: e-mail, passowrd, full name and year of study. After you register, you can login with your account. If you forget your password, you can click 'Forgot password' button to have a reset password e-mail sent to you.\
+**Main Screen**:\
+After succesfull login, you are redirected to Main Screen. Here you can see your personal information at the top of the screen. You can click 'Edit Profile' button to edit and fulfill your profile information. Fulfilling your profile is required for posting an offer.\
+Below the profile information tile there is a list of all posted offers which you can filter out using 'Select filter' drop-down list. You can of course click any offer that interests you to see its details. Every offer can be marked as favourite by clicking a star icon next to it.\
+**Add Offer Screen**:\
+By clicking at the central element of bottom navigation bar, you enter screen that lets you add the offer. Here you provide all the necessery data like offer title, description and location of a desired dormitory. After clicking 'Create offer' button your offer is now visible to all the users.\
+**Profile Screen**:\
+At the right on the bottom navigation bar there is a buttton, that moves you to Your Profile Screen. There you can see all your favourite offers, as well as all the offers you posted. There is also a button that lets you log out of the app.
 
 <a name="ack"></a>
 ## 👥 Acknowledgements
