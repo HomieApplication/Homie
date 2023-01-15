@@ -1,5 +1,5 @@
 # Homie
-App for finding your future roommates.
+Application for finding your future roommates or/and soulmate.
 
 ## Conributing
 This project is being maintained by four friends from [AGH - University of Science and Technology](https://www.agh.edu.pl/en) in Cracow, and any help with issues and pull requests are always appreciated.
