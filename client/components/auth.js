@@ -112,18 +112,3 @@ export function resetPassword(email) {
             );
         });
 }
-
-/**
- * Deletes currently logged in user
- */
-export function deleteCurrentUser() {
-    const auth = getAuth();
-    // TODO: delete user from database and profile picture
-    deleteUser(auth.currentUser)
-        .then(() => {
-            console.log(`Successfully deleted user!`);
-        })
-        .catch((error) => {
-            displayAlertBox("Failed to delete user", error.message);
-        });
-}

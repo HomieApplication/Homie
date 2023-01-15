@@ -43,6 +43,7 @@ const MainScreen = ({ navigation }) => {
         { key: "13", value: "Journey" },
         { key: "14", value: "Music" },
         { key: "15", value: "Video Games" },
+        { key: "16", value: "Movies" },
         // Można by dodać jeszcze filtry na wiek i uniwersytet, ale trzeba  by to uporządkować jakoś
     ];
 
@@ -114,7 +115,8 @@ const MainScreen = ({ navigation }) => {
                 (selectedFilters.includes("Music") &&
                     offer.hobby !== "Music") ||
                 (selectedFilters.includes("Video Games") &&
-                    offer.hobby !== "Video Games")
+                    offer.hobby !== "Video Games") ||
+                (selectedFilters.includes("Movies") && offer.hobby !== "Movies")
             )
                 return false;
             else return true;
@@ -134,7 +136,7 @@ const MainScreen = ({ navigation }) => {
             .then((res) => res.data)
             .then((data) => {
                 setUser(data);
-                console.log(data);
+                // console.log(data);
             })
             .catch((error) => {
                 console.log("Connection error: " + error.message);
@@ -144,7 +146,7 @@ const MainScreen = ({ navigation }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            if (JSON.stringify(userData) === '{}') reload();
+            if (JSON.stringify(userData) === "{}") reload();
         }, 2000);
     }, []);
 

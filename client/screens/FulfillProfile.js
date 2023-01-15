@@ -32,14 +32,15 @@ const FulfillProfile = ({ navigation }) => {
     const [loading, setLoading] = React.useState(true);
     const [description, setDescription] = React.useState("");
     const [image, setImage] = React.useState("");
-    const [selected, setSelected] = React.useState([]);
+    const [selectedHobbies, setSelectedHobbies] = React.useState([]);
     const [datePicker, setDatePicker] = React.useState(false);
     const [dateOfBirth, setDateOfBirth] = React.useState(null);
-    const [selectedHobbies, setSelectedHobbies] = useState([]);
     const [selectedUniversity, setSelectedUniversity] = useState("");
     const [selectedGender, setSelectedGender] = useState("");
     const [imageChanged, setImageChanged] = useState(false);
-    const [selectedYear, setSelectedYear] = useState(false);
+    const [selectedYear, setSelectedYear] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
 
     const years = [
         { key: "1", value: "1" },
@@ -47,7 +48,40 @@ const FulfillProfile = ({ navigation }) => {
         { key: "3", value: "3" },
         { key: "4", value: "4" },
         { key: "5", value: "5" },
-        { key: "6", value: ">5" },
+        { key: ">5", value: ">5" },
+    ];
+
+    const univerities = [
+        {
+            key: "Akademia Górniczo Hutnicza",
+            value: "Akademia Górniczo Hutnicza",
+        },
+        { key: "Uniwersytet Jagielloński", value: "Uniwersytet Jagielloński" },
+        { key: "Politechnika Krakowska", value: "Politechnika Krakowska" },
+        { key: "Uniwersytet Pedagogiczny", value: "Uniwersytet Pedagogiczny" },
+        { key: "Uniwersytet Rolniczy", value: "Uniwersytet Rolniczy" },
+        { key: "Uniwersytet Ekonomiczny", value: "Uniwersytet Ekonomiczny" },
+        { key: "AWF", value: "AWF" },
+        { key: "oth", value: "other..." },
+    ];
+
+    const genders = [
+        { key: "male", value: "male" },
+        { key: "female", value: "female" },
+        { key: "other", value: "other" },
+    ];
+
+    const staticData = [
+        { id: 0, value: "Sport", isChecked: false },
+        { id: 1, value: "Computers", isChecked: false },
+        { id: 2, value: "Cooking", isChecked: false },
+        { id: 3, value: "Art", isChecked: false },
+        { id: 4, value: "Literature", isChecked: false },
+        { id: 5, value: "Journey", isChecked: false },
+        { id: 6, value: "Music", isChecked: false },
+        { id: 7, value: "Video games", isChecked: false },
+        { id: 8, value: "Movies", isChecked: false },
+        { id: 9, value: "other...", isChecked: false },
     ];
 
     useEffect(() => {
@@ -61,7 +95,9 @@ const FulfillProfile = ({ navigation }) => {
                 setDateOfBirth(new Date(data.birthDate));
                 setSelectedGender(data.gender);
                 setSelectedUniversity(data.university);
-                setSelectedHobbies(data.interests);
+                setSelectedYear(data.yearOfStudy);
+                setFirstName(data.firstName);
+                setLastName(data.lastName);
                 setLoading(false);
             })
             .catch((error) => {
@@ -72,7 +108,7 @@ const FulfillProfile = ({ navigation }) => {
 
     const getSelectedHobbies = () => {
         var hobbies = [];
-        selected.forEach((e) => {
+        selectedHobbies.forEach((e) => {
             //console.log(e.value);
             hobbies.push(e.value);
         });
@@ -94,6 +130,8 @@ const FulfillProfile = ({ navigation }) => {
                 university: selectedUniversity,
                 gender: selectedGender,
                 yearOfStudy: selectedYear,
+                firstName: firstName,
+                lastName: lastName,
             })
             .then(() => {
                 setLoading(false);
@@ -148,49 +186,25 @@ const FulfillProfile = ({ navigation }) => {
         return getDownloadURL(imageRef);
     };
 
-    function showDatePicker() {
-        setDatePicker(true);
-    }
+    // function showDatePicker() {
+    //     setDatePicker(true);
+    // }
 
-    function onDateSelected(event, value) {
-        setDateOfBirth(value);
-        setDatePicker(false);
-    }
-
-    const staticData = [
-        { id: 0, value: "Sport", isChecked: false },
-        { id: 1, value: "Computers", isChecked: false },
-        { id: 2, value: "Cooking", isChecked: false },
-        { id: 3, value: "Art", isChecked: false },
-        { id: 4, value: "Literature", isChecked: false },
-        { id: 5, value: "Journey", isChecked: false },
-        { id: 6, value: "Music", isChecked: false },
-        { id: 7, value: "Video games", isChecked: false },
-        { id: 8, value: "other...", isChecked: false },
-    ];
-
-    const univerities = [
-        { label: "agh", value: "Akademia Górniczo Hutnicza" },
-        { label: "uj", value: "Uniwersytet Jagielloński" },
-        { label: "pk", value: "Politechnika Krakowska" },
-        { label: "up", value: "Uniwersytet Pedagogiczny" },
-        { label: "ur", value: "Uniwersytet Rolniczy" },
-        { label: "ue", value: "Uniwersytet Ekonomiczny" },
-        { label: "oth", value: "other..." },
-    ];
-
-    const genders = [
-        { key: 1, value: "male" },
-        { key: 2, value: "female" },
-        { key: 3, value: "other" },
-    ];
+    // function onDateSelected(event, value) {
+    //     setDateOfBirth(value);
+    //     setDatePicker(false);
+    // }
 
     function getUniversityObject() {
-        return univerities.find((obj) => obj.value === selectedUniversity);
+        return univerities.find((obj) => obj.key === selectedUniversity);
     }
 
     function getGenderObject() {
-        return genders.find((obj) => obj.value === selectedGender);
+        return genders.find((obj) => obj.key === selectedGender);
+    }
+
+    function getYearObject() {
+        return years.find((obj) => obj.key === selectedYear);
     }
 
     return (
@@ -218,6 +232,26 @@ const FulfillProfile = ({ navigation }) => {
                                 />
                             </Pressable>
                             <Text style={styles.h2}>Complete your profile</Text>
+
+                            <Text style={styles.dataText}>First Name:</Text>
+                            <TextInput
+                                style={styles.textboxes}
+                                onChangeText={(value) => {
+                                    setFirstName(value);
+                                }}
+                                value={firstName}
+                                placeholder={firstName || "Set description"}
+                            />
+
+                            <Text style={styles.dataText}>Last Name:</Text>
+                            <TextInput
+                                style={styles.textboxes}
+                                onChangeText={(value) => {
+                                    setLastName(value);
+                                }}
+                                value={lastName}
+                                placeholder={lastName || "Set description"}
+                            />
 
                             <Text style={styles.dataText}>University:</Text>
                             <SelectList
@@ -256,6 +290,7 @@ const FulfillProfile = ({ navigation }) => {
                                 placeholder="Select year"
                                 search={false}
                                 setSelected={(val) => setSelectedYear(val)}
+                                defaultOption={getYearObject()}
                             />
 
                             <Text style={styles.dataText}>Description:</Text>
@@ -265,18 +300,17 @@ const FulfillProfile = ({ navigation }) => {
                                     setDescription(value);
                                 }}
                                 value={description}
-                                placeholder={description}
+                                placeholder={description || "Set description"}
                             />
 
                             {/* <Text style={styles.dataText}>Date of birth:</Text>
-                            <TextInput
-                                style={styles.textboxes}
-                                onChange={showDatePicker}
-                            >
-                                {dateOfBirth
-                                    ? dateOfBirth.toDateString()
-                                    : undefined}
-                            </TextInput>
+                            <View style={styles.textboxes}>
+                                <Text>
+                                    {dateOfBirth
+                                        ? dateOfBirth.toDateString()
+                                        : undefined}
+                                </Text>
+                            </View>
 
                             {datePicker && (
                                 <DateTimePicker
@@ -345,7 +379,7 @@ const FulfillProfile = ({ navigation }) => {
                                 disableAbsolute
                                 data={staticData}
                                 onSelect={(selectedItems) =>
-                                    setSelected(selectedItems)
+                                    setSelectedHobbies(selectedItems)
                                 }
                                 menuBarContainerStyle={styles.hobbyBox}
                                 buttonContainerStyle={styles.hobbyBox}
