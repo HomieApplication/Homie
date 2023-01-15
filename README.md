@@ -2,7 +2,7 @@
 # Homie
 
 <img src="https://github.com/HomieApplication/Homie/blob/main/client/assets/icon.png" width="200"/>
-Homie is a mobile application for finding your future roommate or/and soulmate. It is dedicated for students who want to find a perfect person to share a room with in the future. Our app is the best platform for looking for other students' shared accommodation offers as well as for posting your own room-sharing proposal. Thanks to Homie you can find a roommate that matches your hobbies and interests, and that you certainly will get along with.
+Homie is a mobile application for finding your future roommate or/and soulmate. It is dedicated for students who want to find a perfect person to share a room with in the future. Our app is perfect platform for looking for other students' shared accommodation offers as well as for posting your own room-sharing proposal. Thanks to Homie you can find a roommate that matches your hobbies and interests, and that you certainly will get along with.
 
 ## Contents
  - [Requirements](#req) 
