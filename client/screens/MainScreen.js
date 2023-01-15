@@ -29,22 +29,28 @@ const MainScreen = ({ navigation }) => {
     const [selectedFilters, setSelectedFilters] = React.useState([]);
     const [reloadSwitch, setReloadSwitch] = useState(false);
 
-    const filters = [
+    const filters0 = [
         { key: "1", value: "male" },
         { key: "2", value: "female" },
-        { key: "3", value: "1st year" },
-        { key: "4", value: "2nd year" },
-        { key: "5", value: "3rd year" },
-        { key: "6", value: "4th year" },
-        { key: "7", value: "5th year" },
-        { key: "8", value: ">5th year" },
-        { key: "9", value: "Sport" },
-        { key: "10", value: "Computers" },
-        { key: "11", value: "Cooking" },
-        { key: "12", value: "Literature" },
-        { key: "13", value: "Journey" },
-        { key: "14", value: "Music" },
-        { key: "15", value: "Video Games" },
+        { key: "3", value: "other" },
+    ];
+    const filters1 = [
+        { key: "4", value: "1st year" },
+        { key: "5", value: "2nd year" },
+        { key: "6", value: "3rd year" },
+        { key: "7", value: "4th year" },
+        { key: "8", value: "5th year" },
+        { key: "9", value: ">5th year" },
+        // Można by dodać jeszcze filtry na wiek i uniwersytet, ale trzeba  by to uporządkować jakoś
+    ];
+    const filters2 = [
+        { key: "10", value: "Sport" },
+        { key: "11", value: "Computers" },
+        { key: "12", value: "Cooking" },
+        { key: "13", value: "Literature" },
+        { key: "14", value: "Journey" },
+        { key: "15", value: "Music" },
+        { key: "16", value: "Video Games" },
         // Można by dodać jeszcze filtry na wiek i uniwersytet, ale trzeba  by to uporządkować jakoś
     ];
 
@@ -91,6 +97,8 @@ const MainScreen = ({ navigation }) => {
                 (selectedFilters.includes("male") && offer.gender !== "male") ||
                 (selectedFilters.includes("female") &&
                     offer.gender !== "female") ||
+                (selectedFilters.includes("other") &&
+                    offer.gender !== "other") ||
                 (selectedFilters.includes("1st year") &&
                     offer.yearOfStudy !== "1") ||
                 (selectedFilters.includes("2nd year") &&
@@ -176,16 +184,39 @@ const MainScreen = ({ navigation }) => {
                         }}
                     />
                     <ScrollView style={styles.scroll}>
+                        <View style={styles.dropdownContainer}>
                         <MultipleSelectList
-                            boxStyles={styles.dropdown}
-                            dropdownStyles={styles.dropdown}
+                            boxStyles={styles.dropdown0}
+                            dropdownStyles={styles.dropdown0}
                             setSelected={(val) => setSelectedFilters(val)}
-                            data={filters}
+                            data={filters0}
                             save="value"
                             label="Filters"
-                            placeholder="Select filters"
+                            placeholder="Select gender"
                             search={false}
                         />
+                        <MultipleSelectList
+                            boxStyles={styles.dropdown1}
+                            dropdownStyles={styles.dropdown1}
+                            setSelected={(val) => setSelectedFilters(val)}
+                            data={filters1}
+                            save="value"
+                            label="Filters"
+                            placeholder="Select year of study"
+                            search={false}
+                        />
+                        <MultipleSelectList
+                            boxStyles={styles.dropdown2}
+                            dropdownStyles={styles.dropdown2}
+                            setSelected={(val) => setSelectedFilters(val)}
+                            data={filters2}
+                            save="value"
+                            label="Filters"
+                            placeholder="Select hobby"
+                            search={false}
+                        />
+                        </View>
+
                         {offersData.length === 0 ? (
                             <Text style={styles.notFoundText}>No offers</Text>
                         ) : (
@@ -273,15 +304,43 @@ const styles = StyleSheet.create({
         elevation: 3,
         backgroundColor: COLORS.primary1,
     },
-    dropdown: {
-        width: "87%",
+    dropdown0: {
+        width: "50%",
         fontSize: 13,
-        margin: 8,
+        // margin: 8,
         borderColor: "grey",
         borderWidth: 0.5,
         borderRadius: 10,
         backgroundColor: "#fff",
         shadowColor: "#000",
         elevation: 3,
+    },
+    dropdown1: {
+        width: "50%",
+        fontSize: 13,
+        // margin: 8,
+        borderColor: "grey",
+        borderWidth: 0.5,
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        elevation: 3,
+    },
+    dropdown2: {
+        width: "50%",
+        fontSize: 13,
+        // margin: 8,
+        borderColor: "grey",
+        borderWidth: 0.5,
+        borderRadius: 10,
+        backgroundColor: "#fff",
+        shadowColor: "#000",
+        elevation: 3,
+    },
+    dropdownContainer: {
+        // flex: 1,
+        flexDirection: 'row',
+        // flexWrap: 'wrap',
+        // alignItems: 'flex-start' // if you want to fill rows left to right
     },
 });
