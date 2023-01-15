@@ -5,7 +5,7 @@ App for finding your future roommates.
 This project is being maintained by four friends from [AGH - University of Science and Technology](https://www.agh.edu.pl/en) in Cracow, and any help with issues and pull requests are always appreciated.
 
 ## Installation
-You can install [Expo Go](https://expo.dev/client) on your IOS or Android device. Subsequently run our application by scanning QR code from [this link](https://expo.dev/@kubijaku/Homie?release-channel=9000)
+You can install [Expo Go](https://expo.dev/client) on your IOS or Android device. Subsequently run our application by scanning QR code from the special linkg you ( you can get it from one of contributors )
 
 ## General Usage
 Register to our application through ...TODO
