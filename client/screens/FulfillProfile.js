@@ -95,7 +95,6 @@ const FulfillProfile = ({ navigation }) => {
                 university: university,
                 photoURL: uri,
                 description: description,
-                // birthDate: null,
                 interests: hobbies,
                 university: selectedUniversity,
                 gender: selectedGender,
@@ -126,7 +125,6 @@ const FulfillProfile = ({ navigation }) => {
                 "You did not select any image"
             );
         }
-       // console.log(image);
     };
 
     const uploadImage = async (uri) => {
@@ -140,7 +138,7 @@ const FulfillProfile = ({ navigation }) => {
         });
         const imageRef = ref(
             storage,
-            `images/${auth.currentUser.uid}/${uri.substring(
+            `images/${userId}/${uri.substring(
                 uri.lastIndexOf("/") + 1
             )}`
         );
@@ -271,48 +269,6 @@ const FulfillProfile = ({ navigation }) => {
                                 placeholder={description}
                             />
 
-                            {/* <Text style={styles.dataText}>Date of birth:</Text>
-                            <TextInput
-                                style={styles.textboxes}
-                                onChange={showDatePicker}
-                            >
-                                {dateOfBirth
-                                    ? dateOfBirth.toDateString()
-                                    : undefined}
-                            </TextInput>
-
-                            {datePicker && (
-                                <DateTimePicker
-                                    value={dateOfBirth}
-                                    mode={"date"}
-                                    display={
-                                        Platform.OS === "ios"
-                                            ? "spinner"
-                                            : "default"
-                                    }
-                                    is24Hour={true}
-                                    onChange={onDateSelected}
-                                    style={styles.datePicker}
-                                />
-                            )}
-
-                            {!datePicker && (
-                                <View
-                                    style={{
-                                        marginBottom: 20,
-                                        paddingVertical: 12,
-                                        paddingHorizontal: 32,
-                                        width: 240,
-                                        borderRadius: 50,
-                                    }}
-                                >
-                                    <Button
-                                        title="Show Date Picker"
-                                        color={COLORS.primary1}
-                                        onPress={showDatePicker}
-                                    />
-                                </View>
-                            )} */}
                         </View>
                     }
                     ListFooterComponent={

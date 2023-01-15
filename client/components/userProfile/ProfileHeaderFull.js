@@ -6,6 +6,9 @@ import Hobby from './Hobby.js';
 
 const size = 120;
 
+//ProfileHeaderFull is component which shows log in user data but with details
+//used in UserProfile screen
+
 const ProfileHeaderFull = (props) => {
   const { user } = props;
   const [userData, setUserData] = useState([]);

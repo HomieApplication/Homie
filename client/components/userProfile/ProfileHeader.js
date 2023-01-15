@@ -6,6 +6,9 @@ import SignInBtn from '../signIn/SignInBtn.js';
 
 const size = 120;
 
+//ProfileHeader is component which shows log in user data
+//used in MainScreen
+
 const ProfileHeader = (props) => {
   const { user, onPress, onPressEdit } = props;
   const [userData, setUserData] = useState([]);

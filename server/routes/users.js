@@ -497,9 +497,9 @@ router.put("/", async (req, res) => {
             .doc(user.uid)
             .update({
                 ...req.body,
-                birthDate: req.body.birthDate
-                    ? new Date(req.body.birthDate)
-                    : req.body.birthDate,
+                // birthDate: req.body.birthDate
+                //     ? new Date(req.body.birthDate)
+                //     : req.body.birthDate,
             })
             .catch((error) => res.status(500).send({ message: error.message }));
 
@@ -512,10 +512,10 @@ router.put("/", async (req, res) => {
 
         res.send({
             ...userData,
-            birthDate: userData.birthDate.toDate(),
-            age: userData.birthDate
-                ? calculateAge(userData.birthDate.toDate())
-                : userData.age,
+            // birthDate: userData.birthDate.toDate(),
+            // age: userData.birthDate
+            //     ? calculateAge(userData.birthDate.toDate())
+            //     : userData.age,
         });
     } catch (error) {
         res.status(500).send({ message: error.message });

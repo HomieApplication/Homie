@@ -19,6 +19,9 @@ import { displayAlertBox } from "../components/alert";
 import COLORS from "../components/assets";
 import LoadingAnimation from "../components/LoadingAnimation";
 
+
+//Tabs are maped under ProfileHeaderFul component 
+
 const Tabs = [
     {
         id: "1",
@@ -58,24 +61,19 @@ const UserProfile = ({ navigation }) => {
                 <LoadingAnimation text="Loading please wait" />
             ) :(
                 <View style={styles.container}>
-                    <ProfileHeaderFull
-                                    user={userData}
-                                />
-                                {Tabs.map((item) => {
-                                    return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>;
-                                })}
-                                <SignInBtn
-                                    title="Log out"
-                                    style={styles.btn}
-                                    onPress={() => {
-                                        try {
-                                            logout();
-                                        } catch (error) {
-                                            displayAlertBox("Failed to sign out", error.message);
-                                        }
-                                        // navigation.push("SignIn");
-                                    }}
-                                />
+                    <ProfileHeaderFull user={userData}/>
+                        {Tabs.map((item) => { return <Tab key={item.id} title={item.title} onPress={() => navigation.push(item.routeName)}/>; })}
+                        <SignInBtn
+                            title="Log out"
+                            style={styles.btn}
+                            onPress={() => {
+                                try {
+                                    logout();
+                                } catch (error) {
+                                    displayAlertBox("Failed to sign out", error.message);
+                                }
+                            }}
+                        />
                 </View>
             )}
 

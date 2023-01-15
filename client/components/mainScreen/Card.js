@@ -5,6 +5,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import COLORS from '../assets';
 const size = 80;
 
+//Card componnet is used in MainScreen and My/FavsOffersScreen
+//This component shows basic information about offer and its user
+//if isMain == true: show delete option 
+
 export default function Card(props) { 
   const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
   const [isFav, setIsFav] = useState(false)

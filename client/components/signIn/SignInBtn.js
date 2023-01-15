@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 
+//This button is used in the majority of screens
+
 export default function SignInBtn(props) {
   const { onPress, title = 'Save', style } = props;
   return (

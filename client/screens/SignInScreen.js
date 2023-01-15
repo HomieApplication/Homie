@@ -21,6 +21,8 @@ const SignInScreen = ({ navigation }) => {
     const [correctPassword, setCorrectPassword] = React.useState(true);
     const [correctEmail, setCorrectEmail] = React.useState(true);
 
+    //checking if entered password is valid to use
+    //useEffect is activated on every password state change
     React.useEffect(() => {
         if (password.length < 6 && password.length > 0) {
             setCorrectPassword(false);
@@ -29,6 +31,9 @@ const SignInScreen = ({ navigation }) => {
         }
     }, [password]);
 
+
+    //checks if entered email is valid
+    //useEffect is activated on every email state change
     React.useEffect(() => {
         if (!validateEmail(email) && email.length > 0) {
             setCorrectEmail(false);

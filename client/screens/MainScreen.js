@@ -23,6 +23,13 @@ import { auth } from "../components/firebase/config";
 import SignInBtn from "../components/signIn/SignInBtn";
 
 const MainScreen = ({ navigation }) => {
+    
+    //userData contains data about log in user
+    //offersData contains data about every offer and its creator
+    //loading is true when all data have been fetched
+    //selectedFilters contains array of selected filters
+    //reloadSwitch is a flag 
+
     const [userData, setUser] = useState({});
     const [offersData, setOffersData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,6 +56,8 @@ const MainScreen = ({ navigation }) => {
     ];
 
     const fetchOffers = async () => {
+
+        //get all offers feom database
         const offers = await axios
             .get("/api/offers")
             .then((res) => res.data)
@@ -58,6 +67,8 @@ const MainScreen = ({ navigation }) => {
                 // logout();
             });
 
+        //for each offer get information about user
+        //return map with offers and users data
         const offersWithUser = await Promise.all(
             offers.map(async (offer) => {
                 const userData = await axios
@@ -69,20 +80,19 @@ const MainScreen = ({ navigation }) => {
                             "Please, try again later",
                             error.message
                         );
-                        // logout();
                     });
                 return { ...userData, ...offer };
             })
         ).catch((error) => {
             console.log(error);
             displayAlertBox("Please, try again later", error.message);
-            // logout();
         });
 
         const notUsersOffers = offersWithUser.filter(
             (offer) => offer.userId !== auth.currentUser.uid
         );
 
+        //function return offers with selected filters
         const filteredOffers = notUsersOffers.filter((offer) => {
             if (selectedFilters.length === 0) {
                 return true;
@@ -125,6 +135,7 @@ const MainScreen = ({ navigation }) => {
         return filteredOffers;
     };
 
+    //reload main page
     function reload() {
         setLoading(true);
         setReloadSwitch(!reloadSwitch);
@@ -147,6 +158,7 @@ const MainScreen = ({ navigation }) => {
         }, 1000);
     }, [reloadSwitch]);
 
+    //on reloadSwith or selectedFilters change -> get current offers from database  
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
@@ -159,6 +171,9 @@ const MainScreen = ({ navigation }) => {
                 // logout();
             });
     }, [selectedFilters, reloadSwitch]);
+
+
+    //if loading is true show LoadingAnimation component
 
     return (
         <SafeAreaView style={styles.containerMain}>

@@ -32,22 +32,9 @@ import COLORS from "../components/assets";
 
 const storage = getStorage();
 
-// function LoadingAnimation() {
-//   return (
-//     <View style={styles.indicatorWrapper}>
-//       <ActivityIndicator
-//         size="large"
-//         color="#114B5F"
-//         style={styles.indicator}
-//       />
-//       <Text style={styles.indicatorText}>Adding offer...</Text>
-//     </View>
-//   );
-// }
 
 const AddOfferScreen = ({ navigation }) => {
   const [title, onChangeTitle] = React.useState("");
-  // const [localType, onChangeLocalType] = React.useState("");
   const [description, onChangeDescription] = React.useState("");
   const [localization, onChangeLocalization] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -55,6 +42,7 @@ const AddOfferScreen = ({ navigation }) => {
   const [dormitory, onChangeDormitory] = React.useState("");
   const [images, setImages] = React.useState([]);
 
+  //post new offer 
   const sendData = async () => {
       const urls = await Promise.all(
           images.map((image) => uploadImage(image))
@@ -83,12 +71,8 @@ const AddOfferScreen = ({ navigation }) => {
           });
   };
 
+  //checks if dormitory was selected
   const domitoryChoiceHandler = () => {
-
-    if(dormitory == 'DS14 Kapitol')
-    {
-      // console.log("JEEEEEEEEJ");
-    }
     if(dormitory == "")
     {
       displayAlertBox("You haven't chosen any 😢", "please choose dormitory");
@@ -98,13 +82,15 @@ const AddOfferScreen = ({ navigation }) => {
       displayAlertBox("You chose:", dormitory);
     }
   }
+
+  //changes states 
   const setLocalization = (dorm, local) => {
     onChangeDormitory(dorm);
     onChangeLocalization(local);
-
-    // console.log(dorm);
   }
   
+
+  //picking images
   const pickImageAsync = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
@@ -114,6 +100,7 @@ const AddOfferScreen = ({ navigation }) => {
         displayAlertBox("Please, try again later", error.message);
       });
 
+      //add picked images to array
       if (!result.cancelled) {
           setImages([result.uri, ...images]);
       } else {
@@ -124,6 +111,7 @@ const AddOfferScreen = ({ navigation }) => {
       }
   };
 
+  //uploading picked images (urls) to firebase storage
   const uploadImage = async (uri) => {
       const response = await fetch(uri).catch((error) => {
         setLoading(false);
@@ -145,6 +133,7 @@ const AddOfferScreen = ({ navigation }) => {
       });
       return getDownloadURL(imageRef);
   };
+
 
   const clearImages = () => {
       setImages([]);
