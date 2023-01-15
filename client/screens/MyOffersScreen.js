@@ -8,8 +8,11 @@ import {
     Button,
     ScrollView,
     Dimensions,
+    Pressable,
+    Vibration
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import { getAuth } from "@firebase/auth";
 import LoadingAnimation from "../components/LoadingAnimation";
@@ -27,44 +30,69 @@ const fetchOffers = async () => {
             displayAlertBox("Please, try again later", error.message);
         });
 
-    const offersWithUser = await Promise.all(
-        offers.map(async (offer) => {
-            const userData = await axios
-                .get(`/api/users/${offer.userId}`)
-                .then((res) => res.data)
-                .then(() => console.log(offer))
-                .catch((error) => {
-                    console.log(error);
-                    displayAlertBox("Please, try again later", error.message);
-                });
-            return { ...userData, ...offer };
-        })
-    ).catch((error) => {
-        console.log(error);
-        displayAlertBox("Please, try again later", error.message);
-    });
-
-    return offersWithUser;
+    return offers;
 };
 
-const MyOffers = () => {
+const MyOffers = ({navigation}) => {
 
     const userId = getAuth().currentUser.uid;
+    const [userData, setUser] = useState({});
     const [myOffers, setmyOffers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [reloadSwitch, setReloadSwitch] = useState(false);
+
+    // console.log(myOffers)
 
     useEffect(() => {
         fetchOffers()
             .then((offers) => {
                 setmyOffers(offers);
+                // console.log(offers);
             })
-            .then(() => setLoading(false))
+            
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
             });
+    }, [reloadSwitch]);
+
+    useEffect(() => {
+        axios
+            .get("/api/users")
+            .then((res) => res.data)
+            .then((data) => {
+                setUser(data);
+                // console.log(data);
+            })
+            .then(() => setLoading(false))
+            .catch((error) => {
+                console.log("Connection error: " + error.message);
+                displayAlertBox("Please, try again later", error.message);
+                // logout();
+            });
     }, []);
 
+    function reload() {
+        setLoading(true);
+        setReloadSwitch(!reloadSwitch);
+    }
+
+    const deleteOffer = (id) => {
+        setLoading(true)
+        axios
+            .delete(`/api/offers/${id}`)
+            .then(() => displayAlertBox("Usunięto oferte"))
+            .then(() => {
+                Vibration.vibrate();
+                reload();
+                setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false);
+                displayAlertBox("Please, try again later", error.message);
+            });
+        
+    }
 
     return(
         <SafeAreaView style={styles.container}>
@@ -73,32 +101,37 @@ const MyOffers = () => {
             ) : (
                 <SafeAreaView style={styles.containerMain}>
                     <View style={styles.header}> 
+                        <Pressable style={styles.goBack}>
+                            <MaterialCommunityIcons name="arrow-left" color={COLORS.background} size={35} onPress={navigation.goBack}/>
+                        </Pressable>
                         <Text style={styles.h1}>My Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
+                    <View style={styles.scroll}>
                     {myOffers.map((offer, i) => {
 
                         const push = () => {
                             navigation.push("Offer", {offer: offer})
                         }
 
-                        console.log(offer)
+                        // console.log(offer)
                         return (
                             <Card
                                 key={i}
-                                userFirstName={offer.firstName}
-                                userLastName={offer.lastName}
+                                userFirstName={userData.firstName}
+                                userLastName={userData.lastName}
                                 description={offer.description}
-                                year={offer.yearOfStudy}
-                                localType={offer.localType}
-                                //localization={offer.localization}
-                                imgUrl={offer.photoURL}
+                                year={userData.yearOfStudy}
+                                title={offer.title}
+                                imgUrl={userData.photoURL}
                                 idOffer={offer.offerId}
                                 onPress={push}
+                                isMine={true}
+                                deleteFunction={() => deleteOffer(offer.offerId)}
                             />
                         );
                         })}
-
+                    </View>
                     </ScrollView>
                 </SafeAreaView>
             )}
@@ -139,6 +172,11 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignContent: "center",
 
-        marginLeft: Dimensions.get('window').width*0.1,
+        marginLeft: 10,
+    },
+    goBack:{
+        position: 'absolute',
+        left: 20,
+        top: 10,
     },
 })

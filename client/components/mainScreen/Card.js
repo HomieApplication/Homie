@@ -1,29 +1,50 @@
-import React from 'react';
-import { Text, View, StyleSheet, Pressable, Image, Dimensions } from 'react-native';
+import React, {useState} from 'react';
+import { Text, View, StyleSheet, Pressable, Image, Dimensions, TouchableOpacity, Button } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import COLORS from '../assets';
 const size = 80;
 
 export default function Card(props) { 
-  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, localization, idOffer, navigation } = props;
+  const { onPress, userFirstName, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction } = props;
+  const [isFav, setIsFav] = useState(false)
 
-  Card.defaultProps = {
-    imgUrl: require('../../assets/defaultImg.png')
-  }
 
-  //trzeba będzie zrobić system favs - zmiana ikonki na 'star' i color też trzeba zmienic po kliknięciu 
   return (
     <View style={styles.container}>
-        <Pressable style={styles.iconStar}>
-          <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35}/> 
-        </Pressable>
+
+        
         <View style={styles.upperHalf}>
-            <Image style={styles.img} source={{uri: imgUrl}}/>
-            <View>
+          <View style={styles.imgContainer}>
+            <Image resizeMode={"cover"} style={styles.img} source={{uri: imgUrl}}/>
+          </View>
+            <View style={{width: '100%'}}>
+              <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'space-between', width: '70%'}}>
                 <Text style={styles.nameText}>{userFirstName} {userLastName}</Text>
+                {!isMine ? <View style={styles.iconStar}>
+                    {isFav ? (
+                        <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={() => setIsFav(false)}/> 
+                      ) :(
+                        <MaterialCommunityIcons name="star-outline" color={COLORS.star} size={35} onPress={() => setIsFav(true)}/>
+                      )
+                    }
+                    
+                  </View> : <View style={styles.iconStar} >
+                      <MaterialCommunityIcons name="delete-outline" color={COLORS.primary1} size={35} onPress={()=>deleteFunction()}/> 
+                  </View>
+                }
+
+
+              </View>
+                
+                <Text style={styles.description}>{university}</Text> 
                 <Text style={styles.description}>{year} year</Text>
             </View>
+
+
+
+
+
         </View>
         <View>
             <Text style={styles.nameText}>{title}</Text>
@@ -61,12 +82,21 @@ const styles = StyleSheet.create({
       padding:0,
       margin:0,
     },
+    imgContainer:{
+      width: size,
+      height: size,
+      marginRight: 10,
+      marginBottom: 10,
+      
+    },
     img:{
-        width: size,
-        height: size,
+        borderWidth: 0.5,
+        width: '100%',
+        height: '100%',
         borderRadius: 10,
-        marginRight: 10,
-        marginBottom: 10,
+        borderColor: COLORS.primary1,
+        borderRadius: 10,
+        overflow: 'hidden'
       },
     upperHalf:{
         flexDirection: 'row',
@@ -87,9 +117,9 @@ const styles = StyleSheet.create({
       margin:0,
     },
     iconStar:{
-      position: 'absolute',
-      left: Dimensions.get('window').width * 0.77,
-      top: 10,
+      // position: 'absolute',
+      //left: Dimensions.get('window').width * 0.77,
+      //top: 10,
 
       padding:0,
       margin:0,

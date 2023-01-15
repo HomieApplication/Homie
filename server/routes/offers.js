@@ -62,7 +62,7 @@ router.get("/", async (req, res) => {
  * @param {express.Response} res
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization [latitude, longitude]
+ * @param {Array<number>} req.body.localization
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *
@@ -181,7 +181,7 @@ router.get("/:id", async (req, res) => {
  * @param {string} req.params.id
  * @param {string} req.body.localType
  * @param {string} req.body.description
- * @param {string} req.body.localization [latitude, longitude]
+ * @param {Array<number>} req.body.localization
  * @param {Array<string>} req.body.photoURLArray
  * @param {string} req.body.title
  *

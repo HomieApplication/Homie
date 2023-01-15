@@ -12,6 +12,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  Vibration,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -22,10 +23,10 @@ import SignInBtn from "../components/signIn/SignInBtn";
 import { auth } from "../components/firebase/config";
 import { displayAlertBox } from "../components/alert";
 
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import mapMarker from "../assets/map_icon.png"; //według mnie icons8-marker.png ładniej wygląda
+import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
+import mapMarker from "../assets/map_icon.png"; 
 import beutifulCastle from "../assets/beautiful_castle.png";
-import { markers } from "../components/AddOfferScreen/Markers";
+import {markers} from "../components/AddOfferScreen/Markers";
 import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 
@@ -55,82 +56,112 @@ const AddOfferScreen = ({ navigation }) => {
   const [images, setImages] = React.useState([]);
 
   const sendData = async () => {
-    const urls = await Promise.all(images.map((image) => uploadImage(image)));
-
-    axios
-      .post(`/api/offers`, {
-        title: title,
-        // localType: localType,
-        description: description,
-        localization: localization,
-        photoURLArray: urls,
-      })
-      .then(() => {
-        setLoading(false);
-        displayAlertBox("Offer successfully published!");
-        navigation.push("Main");
-      })
-      .catch((error) => {
-        setLoading(false);
-        displayAlertBox("Please, try again later", error.message);
+      const urls = await Promise.all(
+          images.map((image) => uploadImage(image))
+      ).catch((error) => {
+          setLoading(false);
+          displayAlertBox("Please, try again later", error.message);
       });
+
+      axios
+          .post(`/api/offers`, {
+              title: title,
+              // localType: localType,
+              description: description,
+              localization: localization,
+              photoURLArray: urls,
+          })
+          .then(() => {
+              setLoading(false);
+              displayAlertBox("Offer successfully published!");
+              Vibration.vibrate();
+              navigation.push("Main");
+          })
+          .catch((error) => {
+              setLoading(false);
+              displayAlertBox("Please, try again later", error.message);
+          });
   };
 
   const domitoryChoiceHandler = () => {
-    displayAlertBox("You chose:", dormitory);
-    if (dormitory == "DS14 Kapitol") {
-      console.log("JEEEEEEEEJ");
+
+    if(dormitory == 'DS14 Kapitol')
+    {
+      // console.log("JEEEEEEEEJ");
     }
-  };
+    if(dormitory == "")
+    {
+      displayAlertBox("You haven't chosen any 😢", "please choose dormitory");
+    }
+    else
+    {
+      displayAlertBox("You chose:", dormitory);
+    }
+  }
   const setLocalization = (dorm, local) => {
     onChangeDormitory(dorm);
     onChangeLocalization(local);
-    console.log(dorm);
-  };
 
+    // console.log(dorm);
+  }
+  
   const pickImageAsync = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 1,
-    });
+      let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+      }).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
 
-    if (!result.cancelled) {
-      setImages([result.uri, ...images]);
-    } else {
-      displayAlertBox("Please, try again", "You did not select any image");
-    }
+      if (!result.cancelled) {
+          setImages([result.uri, ...images]);
+      } else {
+          displayAlertBox(
+              "Please, try again",
+              "You did not select any image"
+          );
+      }
   };
 
   const uploadImage = async (uri) => {
-    const response = await fetch(uri);
-    const imageBlob = await response.blob();
-    const imageRef = ref(
-      storage,
-      `images/${auth.currentUser.uid}/${uri.substring(
-        uri.lastIndexOf("/") + 1
-      )}`
-    );
-    await uploadBytes(imageRef, imageBlob);
-    return getDownloadURL(imageRef);
+      const response = await fetch(uri).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
+      const imageBlob = await response.blob().catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
+      const imageRef = ref(
+          storage,
+          `images/${auth.currentUser.uid}/${uri.substring(
+              uri.lastIndexOf("/") + 1
+          )}`
+      );
+      await uploadBytes(imageRef, imageBlob).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
+      return getDownloadURL(imageRef);
   };
 
   const clearImages = () => {
-    setImages([]);
+      setImages([]);
   };
 
   return (
     <SafeAreaView style={styles.containerMain}>
       {loading ? (
-        <LoadingAnimation text="Adding offer" />
+        <LoadingAnimation text="Adding offer"/>
       ) : (
         <View style={styles.container}>
           <Text style={styles.h2}>Post new offer</Text>
           <TextInput
-            style={styles.textboxes}
-            onChangeText={onChangeTitle}
-            value={title}
-            placeholder="Offer title"
-            accessibilityLabel="offer_title"
+              style={styles.textboxes}
+              onChangeText={onChangeTitle}
+              value={title}
+              placeholder="Offer title"
           />
           {/* <TextInput
             style={styles.textboxes}
@@ -143,21 +174,17 @@ const AddOfferScreen = ({ navigation }) => {
             onChangeText={onChangeDescription}
             value={description}
             placeholder="Description"
-            accessibilityLabel="description"
           />
-          <TextInput
-            style={styles.textboxes}
-            // onChangeText={displayAlertBox("You chose: ", dormitory)}
-            value={dormitory}
-            placeholder="Dormitory"
-            accessibilityLabel="dormitory"
-          />
+          <View style={styles.textboxes}>
+            <Text
+             >{dormitory}</Text>
+          </View>
+
           <View>
             <Modal
               animationType="slide"
               visible={modalVisible}
               transparent={true}
-              accessibilityLabel="modal_map"
               onRequestClose={() => {
                 Alert.alert("Modal has been closed.");
                 setModalVisible(!modalVisible);
@@ -165,45 +192,41 @@ const AddOfferScreen = ({ navigation }) => {
             >
               <View style={styles.modalView}>
                 <MapView
-                  style={styles.map}
-                  showsUserLocation={true}
-                  provider={PROVIDER_GOOGLE}
-                  loadingEnabled
-                  showsCompass={true}
-                  initialRegion={{
-                    latitude: 50.066,
-                    longitude: 19.91,
-                    latitudeDelta: 0.001,
-                    longitudeDelta: 0.015,
-                  }}
+                    style={styles.map}
+                    showsUserLocation={true}
+                    provider={PROVIDER_GOOGLE}
+                    loadingEnabled
+                    showsCompass = {true}
+                    initialRegion={{
+                        latitude: 50.066, 
+                        longitude: 19.91,
+                        latitudeDelta: 0.001,
+                        longitudeDelta: 0.015,
+                      }}
                 >
-                  {markers.map((marker) => (
-                    <MapView.Marker
+                  {markers.map(marker => (
+                    <MapView.Marker 
                       coordinate={marker.coordinates}
                       title={marker.title}
-                      image={mapMarker}
                       identifier={marker.identifier}
-                      onPress={(e) =>
-                        setLocalization(
-                          e.nativeEvent.id,
-                          e.nativeEvent.coordinate
-                        )
-                      }
+                      onPress={ e => setLocalization( e.nativeEvent.id, e.nativeEvent.coordinate)}
                       key={marker.identifier}
-                    />
+                    >                    
+                    <Image
+                    source={mapMarker}
+                    style={{width:12, height:18}}
+                    /></MapView.Marker>
                   ))}
-                  <MapView.Marker
-                    image={beutifulCastle}
-                    coordinate={{ latitude: 50.066, longitude: 19.914 }}
-                  ></MapView.Marker>
+                  <MapView.Marker coordinate={{ latitude: 50.066, longitude: 19.9140}}>
+                    <Image
+                      source={beutifulCastle}
+                      style={{width:60, height:60}}
+                      /></MapView.Marker>
                 </MapView>
-                <SignInBtn></SignInBtn>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
-                  accessibilityLabel="map_done"
-                  onPress={() => {
-                    setModalVisible(!modalVisible), domitoryChoiceHandler();
-                  }}
+                  onPress={() => {setModalVisible(!modalVisible), domitoryChoiceHandler()}
+                  }
                 >
                   <Text style={styles.itemText}>Done</Text>
                 </Pressable>
@@ -211,52 +234,57 @@ const AddOfferScreen = ({ navigation }) => {
             </Modal>
             <SignInBtn
               style={styles.button}
-              onPress={() => {
-                setModalVisible(!modalVisible), domitoryChoiceHandler();
-              }}
+              onPress={() => setModalVisible(!modalVisible)}
               title="Choose Dormitory"
-              accessibilityLabel="choose_dorm_button"
-            ></SignInBtn>
+              >
+            </SignInBtn>
           </View>
 
           <SignInBtn
-            style={styles.button}
-            title="Add image"
-            onPress={() => {
-              pickImageAsync().catch((error) => {
-                displayAlertBox("Please, try again later", error.message);
-              });
-            }}
+              style={styles.button}
+              title="Add image"
+              onPress={() => {
+                  pickImageAsync().catch((error) => {
+                    setLoading(false);
+                    displayAlertBox("Please, try again later", error.message);
+                });
+              }}
           ></SignInBtn>
           <View style={{ flexDirection: "row" }}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            >
-              {images.map((image) => (
-                <Image
-                  key={image}
-                  source={{ uri: image }}
-                  style={{ width: 150, height: 150, marginHorizontal: 5 }}
-                />
-              ))}
-            </ScrollView>
+              <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+              >
+                  {images.map((image) => (
+                      <Image
+                          key={image}
+                          source={{ uri: image }}
+                          style={{ width: 150, height: 150, marginHorizontal: 5}}
+                      />
+                  ))}
+              </ScrollView>
           </View>
           {/* Tu też na pewno da się ładniej */}
           {images.length > 0 && (
-            <Pressable onPress={clearImages}>
-              <Text>Clear all images</Text>
-            </Pressable>
+              <Pressable onPress={clearImages}>
+                  <Text>Clear all images</Text>
+              </Pressable>
           )}
           <SignInBtn
             style={styles.buttonComfirm}
             title="Create offer"
-            accessibilityLabel="create_offer_button"
             onPress={() => {
-              setLoading(true);
-              sendData().catch((error) =>
-                displayAlertBox("Please, try again later", error.message)
-              );
+              if (title === "") {
+                displayAlertBox("Failed to publish your offer", "Add title!");
+              } else if (description === "") {
+                displayAlertBox("Failed to publish your offer", "Add description!");
+              } else if (localization === "") {
+                displayAlertBox("Failed to publish your offer", "Choose dormitory!");
+              } else {
+                setLoading(true);
+                sendData().catch(error =>
+                displayAlertBox("Please, try again later", error.message));
+              }
             }}
           ></SignInBtn>
         </View>
@@ -272,7 +300,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.background
   },
   container: {
     flex: 1,
@@ -292,7 +320,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 32,
     marginVertical: 10,
-    width: 200,
+    width:200,
     borderRadius: 4,
     shadowColor: "#000",
     shadowOffset: {

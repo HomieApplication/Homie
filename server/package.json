@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
     "start": "node server",
     "dev": "nodemon server"
   },
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-assertions": "^7.20.0",
+    "@babel/preset-env": "^7.20.2",
     "nodemon": "^2.0.20",
     "supertest": "^6.3.3"
   },

@@ -25,16 +25,19 @@ const ProfileHeader = (props) => {
         <View style={styles.textContainer}>
           <Text style={styles.text}>Year of study: {userData.yearOfStudy}</Text>
           <Text style={styles.textDescription}>{userData.description}</Text>
-          <SignInBtn
-            style={styles.button}
-            title="Edit Profile"
-            onPress={onPressEdit}
-          >
-          </SignInBtn>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+            <SignInBtn
+              style={styles.button}
+              title="Edit Profile"
+              onPress={onPressEdit}
+            >
+            </SignInBtn>
+            <Pressable style={styles.icon}>
+              <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={onPress}/>
+            </Pressable>
+          </View>
+
         </View>
-        <Pressable style={styles.icon}>
-          <MaterialCommunityIcons name="star" color={COLORS.star} size={35} onPress={onPress}/>
-        </Pressable>
       </View>    
       <Image style={styles.img} source={{uri: userData.photoURL}}/>
       
@@ -100,9 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   icon:{
-    position: 'absolute',
-    left: Dimensions.get('window').width * 0.8,
-    top: size*0.65,
+    marginRight: 20
   },
   button: {
     alignItems: "flex-start",
