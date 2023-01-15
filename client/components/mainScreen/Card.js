@@ -10,8 +10,8 @@ const size = 80;
 //if isMain == true: show delete option 
 
 export default function Card(props) { 
-  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction, onStarClick } = props;
-  const [isFav, setIsFav] = useState(false)
+  const { onPress, userFirstName,gender, userLastName, description, year, imgUrl, title, university, idOffer, isMine, deleteFunction, onStarClick, isFavourite } = props;
+  const [isFav, setIsFav] = useState(isFavourite || false)
 
 
   function setAsFav(){
