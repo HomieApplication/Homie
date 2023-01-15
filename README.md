@@ -44,7 +44,7 @@ You can certainly see any offer that interests you by clicking arrow on the butt
 Clicking a star icon ⭐️ on the offer add it to your 'Favourites offers'. 
 You can see your favourite offers by cliking on the star in upper right corner of the screen or by cliking profile icon on the buttom and selecting 'Favourites offers'.\
 **Add Offer Screen**:\
-You can add Your new offer using '➕' button on the buttom. 
+You can add Your new offer using ➕ button on the buttom. 
 Here you provide all the necessery data like offer title, description and location of a desired dormitory( location is optional; you can leave this record empty if You're not sure which you preffer ). 
 After clicking 'Create offer' button your offer is now visible to all the users. 
 You can see your created offers by cliking by cliking profile icon on the buttom and selecting 'My offers'.\
