@@ -17,7 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { auth } from "../components/firebase/config";
@@ -127,7 +127,7 @@ const AddOfferScreen = ({ navigation }) => {
               uri.lastIndexOf("/") + 1
           )}`
       );
-      await uploadBytes(imageRef, imageBlob).catch((error) => {
+      await uploadBytesResumable(imageRef, imageBlob).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
       });
