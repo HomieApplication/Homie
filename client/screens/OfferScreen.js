@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View, Image, Pressable } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, Image, Pressable, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { PROVIDER_GOOGLE, Marker} from "react-native-maps";
@@ -10,6 +10,7 @@ import { async } from '@firebase/util';
 
 import COLORS from '../components/assets';
 import Gallery from '../components/OfferScreen/Gallery';
+import Hobby from '../components/userProfile/Hobby';
 
 const fetchUser = async (o) => {
     const userData = await axios
@@ -76,13 +77,13 @@ const OfferScreen = ({route, navigation}) => {
         if(typeof offerData.localization !== "undefined" && offerData.localization !== ""){
             return <View>
                     {constPlaces.map((marker, i) => (
-                        <Text key={i} style={{marginVertical:3}}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
+                        <Text key={i} style={[styles.text,{marginVertical:3, fontSize: 13}]}>{marker.title}: {distanceFromCoordinates(marker.coordinates, offerData.localization)}km</Text>
                     ))}
                     </View>
         }
         else return <View>
                     {constPlaces.map((marker, i) => (
-                        <Text key={i} style={{marginVertical:3}}>{marker.title}: who knows?...</Text>
+                        <Text key={i} style={[styles.text,{marginVertical:3, fontSize: 13}]}>{marker.title}: who knows?...</Text>
                     ))}
                     </View>
     }
@@ -121,9 +122,13 @@ const OfferScreen = ({route, navigation}) => {
 
 
     return (
-        <View style={{flex:1, width:'100%', backgroundColor: COLORS.background, justifyContent:'flex-start'}}>        
+        <View style={{flex:1, width:'100%', backgroundColor: COLORS.background, justifyContent:'flex-start'}}>   
+        <ScrollView style={{width:'100%'}}>       
             <View style={styles.card}>
             <View style={styles.contentContainer}>
+                <Pressable style={styles.goBack}>
+                    <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
+                </Pressable>
                 <View style={styles.headerContainer}>
                     <Image
                         source={{uri: userData.photoURL}}
@@ -131,16 +136,28 @@ const OfferScreen = ({route, navigation}) => {
                     </Image>
                     <View style={styles.headerText}>
                         <Text style={styles.textTitle}>{userData.firstName} {userData.lastName}</Text>
-                        <Text style={styles.text}>year of study: {userData.yearOfStudy}</Text>
-                        <Text style={styles.text}>{userData.description}</Text>
+                        <Text style={[styles.text, {fontSize: 12}]}>Year of study: {userData.yearOfStudy}</Text>
+                        <Text style={[styles.text, {fontSize: 12}]}>University: {userData.university}</Text>
+                        <Text style={[styles.text, {fontSize: 12}]}>{userData.description}</Text>
                     </View>
-                    <Pressable style={styles.goBack}>
-                        <MaterialCommunityIcons name="arrow-left" color={COLORS.primary1} size={35} onPress={navigation.goBack}/>
-                    </Pressable>
                 </View>
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.textTitle}>{offerData.title}</Text>
                     <Text style={styles.text}>{offer.description}</Text>
+                    <Text style={[styles.textTitle, {marginTop: 15}]}>
+                        My interests:
+                    </Text>
+                    {typeof userData.interests !== 'undefined' ? (
+                        <View style={styles.list}>
+                            {userData.interests.map(hobby => {
+                            return(
+                                <Hobby key={hobby} textStyle={styles.text} name={hobby}/>
+                            )
+                            })}
+                        </View>
+                    ): (
+                        null
+                    )}
                     <View style={styles.galleryContainer}>
                       <Gallery images={offerData.photoURLArray}/>
                     </View>
@@ -155,6 +172,7 @@ const OfferScreen = ({route, navigation}) => {
                 </View>
             </View>
         </View>
+        </ScrollView>
         </View>
 
     )
@@ -166,8 +184,7 @@ const styles = StyleSheet.create({
     card:{
         width: '100%',
         height: '90%',
-        marginBottom:20,
-        marginTop:10,
+        paddingTop:40,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
@@ -188,7 +205,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width:'100%',
         flex:3,
-        marginTop:30,
+        paddingTop: 70,
         borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
@@ -215,6 +232,7 @@ const styles = StyleSheet.create({
 
     headerContainer:{
         width: '100%',
+        marginTop:30,
         paddingLeft: 20,
         flexDirection: 'row',
         alignItems: 'flex-end',
@@ -244,6 +262,16 @@ const styles = StyleSheet.create({
         color: COLORS.textCard,
     },
 
+    list:{
+        padding:5,
+        paddingLeft: 20,
+        borderWidth:1,
+        borderColor: COLORS.primary1,
+        borderRadius: 10,
+        marginTop: 5,
+        marginBottom: 10
+    },
+
     galleryContainer:{
         width: '100%',
         paddingVertical: 10,
@@ -259,8 +287,10 @@ const styles = StyleSheet.create({
         width:'100%', 
         flexDirection: 'row',
         paddingVertical: 10,
+        paddingBottom: 50,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
+        marginBottom: 20,
     },
     map:{
         //borderWidth: 1,
@@ -302,6 +332,6 @@ const styles = StyleSheet.create({
     goBack:{
         position: 'absolute',
         left: 20,
-        top: 10,
+        top: 50,
     }
 })

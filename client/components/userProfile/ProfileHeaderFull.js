@@ -35,7 +35,7 @@ const ProfileHeaderFull = (props) => {
               <View style={styles.list}>
                 {userData.interests.map(hobby => {
                   return(
-                    <Hobby key={hobby} name={hobby}/>
+                    <Hobby key={hobby} textStyle={styles.textHobby} name={hobby}/>
                   )
                 })}
               </View>
@@ -114,5 +114,8 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor: COLORS.background,
     borderRadius: 10,
-  }
+  },
+  textHobby: {
+    color: COLORS.background,
+  },
 })

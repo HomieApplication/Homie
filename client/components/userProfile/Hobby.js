@@ -5,12 +5,12 @@ import COLORS from '../assets.js'
 //Hobby is a element of a list of interests in ProfileHeaderFull component
 
 const Hobby = (props) => {
-    const {name} = props;
+    const {name, textStyle} = props;
 
     return(
         <View style={styles.container}>
             <MaterialCommunityIcons name="arrow-right" color={COLORS.star} size={30} />
-            <Text style={styles.text}>{name}</Text>
+            <Text style={textStyle}>{name}</Text>
         </View>
     )
 
@@ -25,7 +25,4 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
-    text: {
-        color: COLORS.background,
-    }
 })
