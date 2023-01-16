@@ -121,6 +121,7 @@ const MyOffers = ({navigation}) => {
                                 userFirstName={userData.firstName}
                                 userLastName={userData.lastName}
                                 gender={userData.gender}
+                                university={offer.university}
                                 description={offer.description}
                                 year={userData.yearOfStudy}
                                 title={offer.title}

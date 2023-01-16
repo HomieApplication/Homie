@@ -103,6 +103,7 @@ const FavsOffers = ({ navigation }) => {
                                         description={offer.description}
                                         gender={offer.gender}
                                         year={offer.yearOfStudy}
+                                        university={offer.university}
                                         title={offer.title}
                                         imgUrl={offer.photoURL}
                                         idOffer={offer.offerId}
