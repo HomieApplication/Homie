@@ -44,13 +44,12 @@ const AddOfferScreen = ({ navigation }) => {
 
   //post new offer 
   const sendData = async () => {
-      const urls = await Promise.all(
+      const urls = await Promise.allSettled(
           images.map((image) => uploadImage(image))
       ).catch((error) => {
           setLoading(false);
           displayAlertBox("Please, try again later", error.message);
       });
-
       axios
           .post(`/api/offers`, {
               title: title,
@@ -94,7 +93,7 @@ const AddOfferScreen = ({ navigation }) => {
   const pickImageAsync = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
-          quality: 0.5,
+          quality: 0.2,
       }).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
@@ -127,11 +126,19 @@ const AddOfferScreen = ({ navigation }) => {
               uri.lastIndexOf("/") + 1
           )}`
       );
-      await uploadBytesResumable(imageRef, imageBlob).catch((error) => {
-        setLoading(false);
-        displayAlertBox("Please, try again later", error.message);
-      });
-      return getDownloadURL(imageRef);
+      // await uploadBytes(imageRef, imageBlob).catch((error) => {
+      //   setLoading(false);
+      //   displayAlertBox("Please, try again later", error.message);
+      // });
+
+      try {
+        const uploadTask = await uploadBytesResumable(imageRef, imageBlob);
+        return await getDownloadURL(imageRef);
+      } catch(e) {
+        displayAlertBox("Try again later", "or add offer without images");
+        return null;
+      }
+
   };
 
 
