@@ -20,9 +20,7 @@ import COLORS from "../components/assets";
 import { auth } from "../components/firebase/config";
 import SignInBtn from "../components/signIn/SignInBtn";
 
-
 const MainScreen = ({ navigation }) => {
-    
     //userData contains data about log in user
     //offersData contains data about every offer and its creator
     //loading is true when all data have been fetched
@@ -57,7 +55,6 @@ const MainScreen = ({ navigation }) => {
     ];
 
     const fetchOffers = async () => {
-
         //get all offers feom database
         const offers = await axios
             .get("/api/offers")
@@ -115,19 +112,19 @@ const MainScreen = ({ navigation }) => {
                 (selectedFilters.includes(">5th year") &&
                     offer.yearOfStudy !== ">5") ||
                 (selectedFilters.includes("Sport") &&
-                    offer.hobby !== "Sport") ||
+                    !offer.interests.includes("Sport")) ||
                 (selectedFilters.includes("Computers") &&
-                    offer.hobby !== "Computers") ||
+                    !offer.interests.includes("Computers")) ||
                 (selectedFilters.includes("Cooking") &&
-                    offer.hobby !== "Cooking") ||
+                    !offer.interests.includes("Cooking")) ||
                 (selectedFilters.includes("Literature") &&
-                    offer.hobby !== "Literature") ||
+                    !offer.interests.includes("Literature")) ||
                 (selectedFilters.includes("Journey") &&
-                    offer.hobby !== "Journey") ||
+                    !offer.interests.includes("Journey")) ||
                 (selectedFilters.includes("Music") &&
-                    offer.hobby !== "Music") ||
+                    !offer.interests.includes("Music")) ||
                 (selectedFilters.includes("Video Games") &&
-                    offer.hobby !== "Video Games") ||
+                    !offer.interests.includes("Video Games")) ||
                 (selectedFilters.includes("Movies") && offer.hobby !== "Movies")
             )
                 return false;
@@ -141,30 +138,37 @@ const MainScreen = ({ navigation }) => {
     function reload() {
         setLoading(true);
         setReloadSwitch(!reloadSwitch);
+        setSelectedFilters([]);
     }
 
     const onStarClick = async (isFav, id) => {
-        if(!isFav){
+        if (!isFav) {
             axios
-                .post(`/api/users/favs`,{
-                    offerId: id
+                .post(`/api/users/favs`, {
+                    offerId: id,
                 })
                 // .then(() => displayAlertBox("new fav offer"))
                 .catch((error) => {
-                    displayAlertBox("Please, try again later", error.response.data.message);
+                    displayAlertBox(
+                        "Please, try again later",
+                        error.response.data.message
+                    );
                 });
         } else {
             console.log(id);
             axios
                 .delete(`/api/users/favs`, {
-                    data: { offerId: id}
+                    data: { offerId: id },
                 })
                 // .then(()=> displayAlertBox("you don't like this offer now"))
                 .catch((error) => {
-                    displayAlertBox("Please, try again later", error.response.data.message);
+                    displayAlertBox(
+                        "Please, try again later",
+                        error.response.data.message
+                    );
                 });
         }
-    }
+    };
 
     useEffect(() => {
         axios
@@ -180,7 +184,7 @@ const MainScreen = ({ navigation }) => {
             });
     }, [reloadSwitch]);
 
-    //on reloadSwith or selectedFilters change -> get current offers from database  
+    //on reloadSwith or selectedFilters change -> get current offers from database
     useEffect(() => {
         setTimeout(() => {
             if (JSON.stringify(userData) === "{}") reload();
@@ -199,7 +203,6 @@ const MainScreen = ({ navigation }) => {
                 // logout();
             });
     }, [selectedFilters, reloadSwitch]);
-
 
     //if loading is true show LoadingAnimation component
 
