@@ -29,29 +29,115 @@ Please contact any of our maintainers for more information on what we're looking
 
 <a name="gen"></a>
 ## 📖 General Usage
-**Login/Register**:\
+
+
+### Login/Register:
 Launching an application moves you to Login Screen. 
 You can log in with an existing account or create one by clicking at 'Register here' button. 
 Registration requires your: e-mail, password, full name and year of study. 
 After registration, you can log in with your account. 
-If you forget the password, you can click 'Forgot password' button to get a 'reset password link' sent to your e-mail adress( don't forget to fill-in an e-mail box before clicking on the button😉).\
-**Main Screen**:\
+<p>
+   <Image width=300 alt='Login' src="./client/assets/edited_screens/login.jpg"></Image>
+   <Image width=300 alt='Rejister' src="./client/assets/edited_screens/SignIn.jpg"></Image>
+</p>
+
+**Login screen**:
+1. If you already have created account -> enter valid email and password 
+2. Log in by pressing on "Confirm" button
+3. Register button
+4. If you forget the password, you can click 'Forgot password' button to get a 'reset password link' sent to your e-mail adress( don't forget to fill-in an e-mail box before clicking on the button😉).
+
+**Register screen:**
+1. You can go back to Login screen by pressing the arrow icon on the left top corner.
+2. Fill up all necessary data. 
+3. Create account. 
+
+
+### Main Screen:
 After succesful log in, you will be redirected to Main Screen 🏠. 
 Here, at the top of the screen, You can see Your personal information. 
-You can click 'Edit Profile' button to edit and fill-in Your profile information( complete Your profile is required for correct posting an offer! ).\
-Below You can see a list of all posted offers which can be filtered out using 'Select filter'. 
-You can certainly see any offer that interests you by clicking an arrow at the buttom of each offer. 
-Clicking a star icon ⭐️ on the offer add it to your 'Favourites offers'. 
-You can see your favourite offers by cliking on the star in upper right corner of the screen or by clicking profile icon at the bottom and selecting 'Favourites offers'.\
-**Add Offer Screen**:\
-You can add Your new offer using ➕ button on the buttom. 
+
+<p>
+   <Image width=300 alt='Main' src="./client/assets/edited_screens/main.jpg"></Image>
+</p>
+
+1. You can click 'Edit Profile' button to edit and fill-in Your profile information (complete Your profile is required for correct posting an offer!).
+2. Clicking a star icon ⭐️ next to "Edit Profile", you can move to the list of your favourite offers.
+
+Below You can see a list of all posted offers which can be filtered out using 'Select filter' (5). 
+You can certainly see any offer that interests you by clicking an arrow at the buttom of each offer (3). 
+Clicking a star icon ⭐️ on the offer add it to your 'Favourites offers' (4). 
+
+On the bottom of the screen you can see tab navigation bar: <br>
+
+6. Home icon 🏠 takes you to main screen.<br>
+7. Plus icon ➕ navigates you page where you can add new offer.<br>
+8. Profile icon 👤 takes you to your profile page where you can see detiles about your profile.<br>
+
+### Edite Profile Screen:
+
+<p>
+   <Image width=300 alt='ffp_v1' src="./client/assets/edited_screens/ffp_v1.jpg"></Image>
+   <Image width=300 alt='ffp_v2' src="./client/assets/edited_screens/ffp_v2.jpg"></Image>
+   <Image width=300 alt='ffp_v3' src="./client/assets/edited_screens/ffp_v3.jpg"></Image>
+</p>
+
+1. You can go back to Main Screen 🏠 by pressing the arrow icon on the top-left corner.
+2. Fill up all data you want to change.
+3. Select image which you want to make your profile picture.
+4. Select your interests.
+5. Save your changes.
+
+
+### Add Offer Screen:
+You can add Your new offer using ➕ button on the bottom. 
 Here you need to provide all required data like offer title, description and location of a desired dormitory (location is optional; you can leave this record empty if You're not sure which you prefer ). 
 After clicking 'Create offer' button your offer will be visible to all the users. 
-You can see your offers by clicking profile icon at the bottom and selecting 'My offers'.\
-**Profile Screen**:\
+You can see your offers by clicking profile icon at the bottom and selecting 'My offers'.
+
+
+### Profile Screen:
 On the right bottom corner is a button 👤, that moves you to Your Profile Screen. 
-There you can see all your favourite offers, as well as all the offers you posted. 
-There is also a button that lets you log out of the app.
+
+<p>
+   <Image width=300 alt='profile' src="./client/assets/edited_screens/userProfile.jpg"></Image>
+</p>
+
+1. There you can see all your favourite offers.
+2. Here you can see and delete all the offers you posted. 
+3. Thats a button that lets you log out of the app.
+
+
+### My (Favourite) Offers Screen:
+
+<p>
+   <Image width=300 alt='My' src="./client/assets/edited_screens/myOffers.jpg"></Image>
+   <Image width=300 alt='Favs' src="./client/assets/edited_screens/favOffers.jpg"></Image>
+</p>
+
+**My Offers screen:**
+1. You can go back to Profile Screen 👤 by pressing the arrow icon on the left top corner.
+2. Delete your offer.
+3. Show details about your offer.
+
+**My Favoutire Offers screen:**
+1. You can go back to previous screen by pressing the arrow icon on the left top corner.
+2. Unlike the offer by clicking a star icon ⭐️.
+3. Show details about offer.
+
+
+### Offer Screen:
+You can get here by clicking down-arrow on any offer card. This screen constains more information about chosen offer.
+On top you can see information about creator, offer's title and its description.
+
+<p>
+   <Image width=300 alt='My' src="./client/assets/edited_screens/offerScreen.jpg"></Image>
+</p>
+
+1. You can go back to previous screen by pressing the arrow icon on the left top corner.
+2. You can change images added to the offer, using arrows
+
+
 
 <a name="ack"></a>
 ## 👥 Acknowledgements
