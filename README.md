@@ -9,6 +9,13 @@ Homie is a mobile application for finding your future roommate and/or soulmate. 
  - [Installation](#inst)
  - [Contributing](#cont)
  - [General Usage](#gen)
+   - [Login/Register](#login)
+   - [Main Page](#main)
+   - [Edit Profile](#edit)
+   - [Add New Offer](#addOffer)
+   - [User Profile](#profile)
+   - [My and My Favourite Offers](#fav)
+   - [Offer Details](#offer)
  - [Acknowledgements](#ack)
  - [License](#lic)
 
@@ -30,7 +37,7 @@ Please contact any of our maintainers for more information on what we're looking
 <a name="gen"></a>
 ## 📖 General Usage
 
-
+<a name="login"></a>
 ### Login/Register:
 Launching an application moves you to Login Screen. 
 You can log in with an existing account or create one by clicking at 'Register here' button. 
@@ -52,7 +59,7 @@ After registration, you can log in with your account.
 2. Fill up all necessary data. 
 3. Create account. 
 
-
+<a name="main"></a>
 ### Main Screen:
 After succesful log in, you will be redirected to Main Screen 🏠. 
 Here, at the top of the screen, You can see Your personal information. 
@@ -74,6 +81,7 @@ On the bottom of the screen you can see tab navigation bar: <br>
 7. Plus icon ➕ navigates you page where you can add new offer.<br>
 8. Profile icon 👤 takes you to your profile page where you can see detiles about your profile.<br>
 
+<a name="edit"></a>
 ### Edite Profile Screen:
 
 <p>
@@ -88,14 +96,14 @@ On the bottom of the screen you can see tab navigation bar: <br>
 4. Select your interests.
 5. Save your changes.
 
-
+<a name="addOffer"></a>
 ### Add Offer Screen:
 You can add Your new offer using ➕ button on the bottom. 
 Here you need to provide all required data like offer title, description and location of a desired dormitory (location is optional; you can leave this record empty if You're not sure which you prefer ). 
 After clicking 'Create offer' button your offer will be visible to all the users. 
 You can see your offers by clicking profile icon at the bottom and selecting 'My offers'.
 
-
+<a name="profile"></a>
 ### Profile Screen:
 On the right bottom corner is a button 👤, that moves you to Your Profile Screen. 
 
@@ -107,7 +115,7 @@ On the right bottom corner is a button 👤, that moves you to Your Profile Scre
 2. Here you can see and delete all the offers you posted. 
 3. Thats a button that lets you log out of the app.
 
-
+<a name="fav"></a>
 ### My (Favourite) Offers Screen:
 
 <p>
@@ -125,7 +133,7 @@ On the right bottom corner is a button 👤, that moves you to Your Profile Scre
 2. Unlike the offer by clicking a star icon ⭐️.
 3. Show details about offer.
 
-
+<a name="offer"></a>
 ### Offer Screen:
 You can get here by clicking down-arrow on any offer card. This screen constains more information about chosen offer.
 On top you can see information about creator, offer's title and its description.
