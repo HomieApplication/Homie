@@ -17,7 +17,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import SignInBtn from "../components/signIn/SignInBtn";
 import { auth } from "../components/firebase/config";
@@ -44,12 +44,13 @@ const AddOfferScreen = ({ navigation }) => {
 
   //post new offer 
   const sendData = async () => {
-      const urls = await Promise.allSettled(
+      const urls = await Promise.all(
           images.map((image) => uploadImage(image))
       ).catch((error) => {
           setLoading(false);
           displayAlertBox("Please, try again later", error.message);
       });
+
       axios
           .post(`/api/offers`, {
               title: title,
@@ -93,7 +94,7 @@ const AddOfferScreen = ({ navigation }) => {
   const pickImageAsync = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: true,
-          quality: 0.2,
+          quality: 0.5,
       }).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
@@ -112,7 +113,6 @@ const AddOfferScreen = ({ navigation }) => {
 
   //uploading picked images (urls) to firebase storage
   const uploadImage = async (uri) => {
-    try {
       const response = await fetch(uri).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
@@ -127,19 +127,11 @@ const AddOfferScreen = ({ navigation }) => {
               uri.lastIndexOf("/") + 1
           )}`
       );
-      // await uploadBytes(imageRef, imageBlob).catch((error) => {
-      //   setLoading(false);
-      //   displayAlertBox("Please, try again later", error.message);
-      // });
-        const uploadTask = await uploadBytesResumable(imageRef, imageBlob);
-        return await getDownloadURL(imageRef);
-
-        
-      } catch(e) {
-        displayAlertBox("Try again later", "or add offer without images");
-        return ;
-      }
-
+      await uploadBytes(imageRef, imageBlob).catch((error) => {
+        setLoading(false);
+        displayAlertBox("Please, try again later", error.message);
+      });
+      return getDownloadURL(imageRef);
   };
 
 
