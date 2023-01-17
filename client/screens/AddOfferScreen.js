@@ -175,7 +175,7 @@ const AddOfferScreen = ({ navigation }) => {
           <View style={styles.textboxes}>
             {dormitory ? <Text
              >{dormitory}</Text> : <Text style={{color: "gray"}}
-             >Dormitory not selected</Text>}
+             >Choose dormitory</Text>}
           </View>
 
           <View>
