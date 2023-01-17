@@ -149,7 +149,8 @@ On top you can see information about creator, offer's title and its description.
 1. You can go back to previous screen by pressing the arrow icon on the left top corner.
 2. You can change images added to the offer, using arrows
 
-
+## Backend API
+Documentation <a href="https://github.com/HomieApplication/Homie/wiki/Backend-API-documentation">here</a>
 <a name="ack"></a>
 ## 👥 Acknowledgements
 This project is being maintained by four friends from [AGH - University of Science and Technology](https://www.agh.edu.pl/en) in Cracow:
