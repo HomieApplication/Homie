@@ -112,6 +112,7 @@ const AddOfferScreen = ({ navigation }) => {
 
   //uploading picked images (urls) to firebase storage
   const uploadImage = async (uri) => {
+    try {
       const response = await fetch(uri).catch((error) => {
         setLoading(false);
         displayAlertBox("Please, try again later", error.message);
@@ -131,9 +132,9 @@ const AddOfferScreen = ({ navigation }) => {
       //   displayAlertBox("Please, try again later", error.message);
       // });
 
-      try {
         const uploadTask = await uploadBytesResumable(imageRef, imageBlob);
         return await getDownloadURL(imageRef);
+        
       } catch(e) {
         displayAlertBox("Try again later", "or add offer without images");
         return null;
