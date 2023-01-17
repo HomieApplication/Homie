@@ -1,7 +1,11 @@
 
 # Homie
 
-<img src="https://github.com/HomieApplication/Homie/blob/main/client/assets/icon.png" width="200"/>
+![GitHub](https://img.shields.io/github/license/HomieApplication/Homie?style=for-the-badge) 
+![GitHub Repo stars](https://img.shields.io/github/stars/HomieApplication/Homie?style=for-the-badge)
+
+<br>
+<img src="https://github.com/HomieApplication/Homie/blob/main/client/assets/icon.png" width="200"/> <br>
 Homie is a mobile application for finding your future roommate and/or soulmate. It is dedicated for students who want to find a perfect person to share a room with in the future. Our app is quintessential platform to look for other students' shared accommodation offers and for posting your own room-sharing proposal. Thanks to Homie you can find a roommate that matches your hobbies and interests, and that you certainly will get along with.
 
 ## Contents
@@ -146,7 +150,6 @@ On top you can see information about creator, offer's title and its description.
 2. You can change images added to the offer, using arrows
 
 
-
 <a name="ack"></a>
 ## 👥 Acknowledgements
 This project is being maintained by four friends from [AGH - University of Science and Technology](https://www.agh.edu.pl/en) in Cracow:
@@ -158,5 +161,6 @@ This project is being maintained by four friends from [AGH - University of Scien
 
 <a name="lic"></a>
 ## 📄 License
+![GitHub](https://img.shields.io/github/license/HomieApplication/Homie?style=for-the-badge) <br>
 Homie is MIT licensed, as found in the  [LICENSE](https://github.com/HomieApplication/Homie/blob/main/LICENSE)  file.
 
