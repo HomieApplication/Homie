@@ -239,7 +239,7 @@ const FulfillProfile = ({ navigation }) => {
                                     setFirstName(value);
                                 }}
                                 value={firstName}
-                                placeholder={firstName || "Set description"}
+                                placeholder={firstName || "Set Name"}
                             />
 
                             <Text style={styles.dataText}>Last Name:</Text>
@@ -249,7 +249,7 @@ const FulfillProfile = ({ navigation }) => {
                                     setLastName(value);
                                 }}
                                 value={lastName}
-                                placeholder={lastName || "Set description"}
+                                placeholder={lastName || "Set Last Name"}
                             />
 
                             <Text style={styles.dataText}>University:</Text>
@@ -292,14 +292,14 @@ const FulfillProfile = ({ navigation }) => {
                                 defaultOption={getYearObject()}
                             />
 
-                            <Text style={styles.dataText}>Description:</Text>
+                            <Text style={styles.dataText}>Contact:</Text>
                             <TextInput
                                 style={styles.textboxes}
                                 onChangeText={(value) => {
                                     setDescription(value);
                                 }}
                                 value={description}
-                                placeholder={description || "Set description"}
+                                placeholder={description || "Set contact"}
                             />
                             {/* <Text style={styles.dataText}>Date of birth:</Text>
                             <View style={styles.textboxes}>
