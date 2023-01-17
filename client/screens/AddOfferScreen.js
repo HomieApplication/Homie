@@ -131,13 +131,21 @@ const AddOfferScreen = ({ navigation }) => {
       //   setLoading(false);
       //   displayAlertBox("Please, try again later", error.message);
       // });
-
+      if(imageBlob && imageRef)
+      {
         const uploadTask = await uploadBytesResumable(imageRef, imageBlob);
         return await getDownloadURL(imageRef);
+      }
+      else
+      {
+        displayAlertBox("Try again later", "or add offer without images");
+        return ;
+      }
+
         
       } catch(e) {
         displayAlertBox("Try again later", "or add offer without images");
-        return null;
+        return ;
       }
 
   };
