@@ -9,7 +9,7 @@ import {
     ScrollView,
     Dimensions,
     Pressable,
-    Vibration
+    Vibration,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -19,7 +19,7 @@ import LoadingAnimation from "../components/LoadingAnimation";
 import COLORS from "../components/assets";
 import Card from "../components/mainScreen/Card";
 import { displayAlertBox } from "../components/alert";
-
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const fetchOffers = async () => {
     const offers = await axios
@@ -33,8 +33,7 @@ const fetchOffers = async () => {
     return offers;
 };
 
-const MyOffers = ({navigation}) => {
-
+const MyOffers = ({ navigation }) => {
     const userId = getAuth().currentUser.uid;
     const [userData, setUser] = useState({});
     const [myOffers, setmyOffers] = useState([]);
@@ -49,7 +48,7 @@ const MyOffers = ({navigation}) => {
                 setmyOffers(offers);
                 // console.log(offers);
             })
-            
+
             .catch((error) => {
                 console.log(error);
                 displayAlertBox("Please, try again later", error.message);
@@ -77,70 +76,103 @@ const MyOffers = ({navigation}) => {
         setReloadSwitch(!reloadSwitch);
     }
 
-    const deleteOffer = (id) => {
-        setLoading(true)
-        axios
+    const deleteOffer = async (id) => {
+        setLoading(true);
+
+        const storage = getStorage();
+        const offerToDelete = myOffers.find((offer) => offer.offerId === id); 
+        const imagesUrls = offerToDelete.photoURLArray;
+        const imagesNames = imagesUrls.map(
+            (url) => url.split("%2F")[2].split("?")[0]
+        );
+        const imagesRefs = imagesNames.map((name) =>
+            ref(storage, `images/${userId}/${name}`)
+        );
+        imagesRefs.forEach((ref) => {
+            deleteObject(ref)
+                .then(() => console.log("deleted"))
+                .catch((error) => {
+                    console.log(error);
+                    setLoading(false);
+                });
+        });
+
+        await axios
             .delete(`/api/offers/${id}`)
-            .then(() => displayAlertBox("Usunięto oferte"))
+            .then(() => displayAlertBox("Success!", "Offer deleted"))
             .then(() => {
                 Vibration.vibrate();
                 reload();
-                setLoading(false)
+                setLoading(false);
             })
             .catch((error) => {
                 setLoading(false);
                 displayAlertBox("Please, try again later", error.message);
             });
-        
-    }
+    };
 
-    return(
+    return (
         <SafeAreaView style={styles.container}>
             {loading ? (
-                <LoadingAnimation text="Loading"/>
+                <LoadingAnimation text="Loading" />
             ) : (
                 <SafeAreaView style={styles.containerMain}>
-                    <View style={styles.header}> 
+                    <View style={styles.header}>
                         <Pressable style={styles.goBack}>
-                            <MaterialCommunityIcons name="arrow-left" color={COLORS.background} size={35} onPress={navigation.goBack}/>
+                            <MaterialCommunityIcons
+                                name="arrow-left"
+                                color={COLORS.background}
+                                size={35}
+                                onPress={navigation.goBack}
+                            />
                         </Pressable>
                         <Text style={styles.h1}>My Offers</Text>
                     </View>
                     <ScrollView style={styles.scroll}>
-                    <View style={styles.scroll}>
-                    {myOffers.map((offer, i) => {
+                        <View style={styles.scroll}>
+                            {myOffers.map((offer, i) => {
+                                const push = () => {
+                                    navigation.push("Offer", { offer: offer });
+                                };
 
-                        const push = () => {
-                            navigation.push("Offer", {offer: offer})
-                        }
-
-                        // console.log(offer)
-                        return (
-                            <Card
-                                key={i}
-                                userFirstName={userData.firstName}
-                                userLastName={userData.lastName}
-                                gender={userData.gender}
-                                university={offer.university}
-                                description={offer.description}
-                                year={userData.yearOfStudy}
-                                title={offer.title}
-                                imgUrl={userData.photoURL}
-                                idOffer={offer.offerId}
-                                onPress={push}
-                                isMine={true}
-                                deleteFunction={() => deleteOffer(offer.offerId)}
-                            />
-                        );
-                        })}
-                    </View>
+                                // console.log(offer)
+                                return (
+                                    <Card
+                                        key={i}
+                                        userFirstName={userData.firstName}
+                                        userLastName={userData.lastName}
+                                        gender={userData.gender}
+                                        university={offer.university}
+                                        description={offer.description}
+                                        year={userData.yearOfStudy}
+                                        title={offer.title}
+                                        imgUrl={userData.photoURL}
+                                        idOffer={offer.offerId}
+                                        onPress={push}
+                                        isMine={true}
+                                        deleteFunction={() =>
+                                            deleteOffer(offer.offerId).catch(
+                                                (error) => {
+                                                    console.log(error);
+                                                    setLoading(false);
+                                                    displayAlertBox(
+                                                        "Offer deletion failed",
+                                                        error.message
+                                                    );
+                                                }
+                                            )
+                                        }
+                                    />
+                                );
+                            })}
+                        </View>
                     </ScrollView>
                 </SafeAreaView>
             )}
         </SafeAreaView>
-    )
-}
-export default MyOffers
+    );
+};
+export default MyOffers;
 
 const styles = StyleSheet.create({
     container: {
@@ -152,17 +184,16 @@ const styles = StyleSheet.create({
     containerMain: {
         marginTop: 50,
         flex: 1,
-        width: '100%',
+        width: "100%",
         alignItems: "flex-start",
         justifyContent: "flex-start",
     },
     header: {
-        width: '100%',
+        width: "100%",
         flex: 0.15,
         backgroundColor: COLORS.primary1,
         alignItems: "center",
         justifyContent: "center",
-
     },
     h1: {
         color: COLORS.textProfile,
@@ -176,9 +207,9 @@ const styles = StyleSheet.create({
 
         marginLeft: 10,
     },
-    goBack:{
-        position: 'absolute',
+    goBack: {
+        position: "absolute",
         left: 20,
         top: 10,
     },
-})
+});
